@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+	"math"
 )
 
 var (
@@ -133,14 +134,8 @@ func scanAsBinarySets(s *Sets[[]byte], value interface{}) error {
 	for _, v := range sv {
 		cv, ok := v.([]byte)
 		if !ok {
-			switch v := v.(type) {
-			case string:
-				cv = []byte(v)
-				ok = true
-			default:
-				*s = nil
-				return ErrValueIsIncompatibleOfBinarySlice
-			}
+			*s = nil
+			return ErrValueIsIncompatibleOfBinarySlice
 		}
 		*s = append(*s, cv)
 	}
@@ -155,11 +150,11 @@ func (s Sets[T]) IsCompatible(value interface{}) (compatible bool) {
 	var t T
 	switch (interface{})(t).(type) {
 	case string:
-		compatible = true
+		compatible = isStringSetsCompatible(sValue)
 	case int:
 		compatible = isIntSetsCompatible(sValue)
 	case float64:
-		compatible = isFloat63SetsCompatible(sValue)
+		compatible = isFloat64SetsCompatible(sValue)
 	case []byte:
 		compatible = isBinarySetsCompatible(sValue)
 	}
@@ -167,47 +162,65 @@ func (s Sets[T]) IsCompatible(value interface{}) (compatible bool) {
 }
 
 func isIntSetsCompatible(value []interface{}) (compatible bool) {
-	compatible = true
 	for _, v := range value {
 		if _, ok := v.(int); ok {
+			compatible = true
 			continue
 		}
-		switch v.(type) {
-		case float32, float64:
-			continue
+		switch v := v.(type) {
+		case float64:
+			if math.Floor(v) == v {
+				compatible = true
+				continue
+			}
+			compatible = false
+			return
 		default:
 			compatible = false
 			return
 		}
 	}
-	return true
+	return
 }
 
-func isFloat63SetsCompatible(value []interface{}) (compatible bool) {
-	compatible = true
+func isStringSetsCompatible(value []interface{}) (compatible bool) {
 	for _, v := range value {
-		if _, ok := v.(float64); ok {
+		if _, ok := v.(string); ok {
+			compatible = true
 			continue
 		}
+		compatible = false
+		break
+	}
+	return
+}
+
+func isFloat64SetsCompatible(value []interface{}) (compatible bool) {
+	for _, v := range value {
 		switch v.(type) {
-		case float32, float64, int:
+		case float64:
+			compatible = true
 			continue
 		default:
 			compatible = false
 			return
 		}
 	}
-	return true
+	return
 }
 
 func isBinarySetsCompatible(value []interface{}) (compatible bool) {
-	compatible = true
 	for _, v := range value {
 		if _, ok := v.([]byte); ok {
+			compatible = true
 			continue
 		}
 		compatible = false
 		return
 	}
 	return
+}
+
+func newSets[T SetsSupportable]() Sets[T] {
+	return Sets[T]{}
 }

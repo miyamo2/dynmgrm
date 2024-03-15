@@ -45,32 +45,32 @@ func TestSets_Scan_String(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path/single-value": {
-			sut:           Sets[string]{},
+			sut:           newSets[string](),
 			args:          []interface{}{"test"},
 			expectedState: Sets[string]{"test"},
 		},
 		"happy-path/multiple-values": {
-			sut:           Sets[string]{},
+			sut:           newSets[string](),
 			args:          []interface{}{"test1", "test2"},
 			expectedState: Sets[string]{"test1", "test2"},
 		},
 		"happy-path/numeric-value": {
-			sut:           Sets[string]{},
+			sut:           newSets[string](),
 			args:          []interface{}{1.1, 1.2},
 			expectedState: Sets[string]{"1.1", "1.2"},
 		},
 		"happy-path/numeric-and-string": {
-			sut:           Sets[string]{},
+			sut:           newSets[string](),
 			args:          []interface{}{1.1, "1.2"},
 			expectedState: Sets[string]{"1.1", "1.2"},
 		},
 		"happy-path/null": {
-			sut:           Sets[string]{},
+			sut:           newSets[string](),
 			args:          nil,
 			expectedState: nil,
 		},
 		"unhappy-path/not-slice": {
-			sut:           Sets[string]{},
+			sut:           newSets[string](),
 			args:          "test",
 			want:          ErrValueIsIncompatibleOfInterfaceSlice,
 			expectedState: nil,
@@ -101,48 +101,48 @@ func TestSets_Scan_Int(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path/single-value": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          []interface{}{1},
 			expectedState: Sets[int]{1},
 		},
 		"happy-path/multiple-values": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          []interface{}{1, 2},
 			expectedState: Sets[int]{1, 2},
 		},
 		"happy-path/float-value": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          []interface{}{1.1, 1.2},
 			expectedState: Sets[int]{1, 1},
 		},
 		"happy-path/int-and-float32": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          []interface{}{1, float32(1.2)},
 			expectedState: Sets[int]{1, 1},
 		},
 		"happy-path/int-and-float64": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          []interface{}{1, float64(1.2)},
 			expectedState: Sets[int]{1, 1},
 		},
 		"happy-path/float32-and-float64": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          []interface{}{float32(1.1), float64(1.2)},
 			expectedState: Sets[int]{1, 1},
 		},
 		"happy-path/null": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          nil,
 			expectedState: nil,
 		},
 		"unhappy-path/not-slice": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          1,
 			want:          ErrValueIsIncompatibleOfInterfaceSlice,
 			expectedState: nil,
 		},
 		"unhappy-path/not-compatible-slice": {
-			sut:           Sets[int]{},
+			sut:           newSets[int](),
 			args:          []interface{}{"A"},
 			want:          ErrValueIsIncompatibleOfIntSlice,
 			expectedState: nil,
@@ -173,37 +173,37 @@ func TestSets_Scan_Float64(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path/single-value": {
-			sut:           Sets[float64]{},
+			sut:           newSets[float64](),
 			args:          []interface{}{1.1},
 			expectedState: Sets[float64]{1.1},
 		},
 		"happy-path/multiple-values": {
-			sut:           Sets[float64]{},
+			sut:           newSets[float64](),
 			args:          []interface{}{1.1, 1.2},
 			expectedState: Sets[float64]{1.1, 1.2},
 		},
 		"happy-path/int-value": {
-			sut:           Sets[float64]{},
+			sut:           newSets[float64](),
 			args:          []interface{}{1, 2},
 			expectedState: Sets[float64]{1, 2},
 		},
 		"happy-path/int-and-float64": {
-			sut:           Sets[float64]{},
+			sut:           newSets[float64](),
 			args:          []interface{}{1, 1.2},
 			expectedState: Sets[float64]{1, 1.2},
 		},
 		"happy-path/null": {
-			sut:           Sets[float64]{},
+			sut:           newSets[float64](),
 			args:          nil,
 			expectedState: nil,
 		},
 		"unhappy-path/not-slice": {
-			sut:  Sets[float64]{},
+			sut:  newSets[float64](),
 			args: 1,
 			want: ErrValueIsIncompatibleOfInterfaceSlice,
 		},
 		"unhappy-path/not-compatible-slice": {
-			sut:  Sets[float64]{},
+			sut:  newSets[float64](),
 			args: []interface{}{"A"},
 			want: ErrValueIsIncompatibleOfFloat64Slice,
 		},
@@ -232,12 +232,12 @@ func TestSets_Scan_Binary(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path/single-value": {
-			sut:           Sets[[]byte]{},
+			sut:           newSets[[]byte](),
 			args:          []interface{}{[]byte{116, 101, 115, 116, 49}},
 			expectedState: Sets[[]byte]{[]byte{116, 101, 115, 116, 49}},
 		},
 		"happy-path/multiple-value": {
-			sut: Sets[[]byte]{},
+			sut: newSets[[]byte](),
 			args: []interface{}{
 				[]byte{116, 101, 115, 116, 49},
 				[]byte{116, 101, 115, 116, 50},
@@ -247,25 +247,26 @@ func TestSets_Scan_Binary(t *testing.T) {
 				[]byte{116, 101, 115, 116, 50},
 			},
 		},
-		"happy-path/string-value": {
-			sut:           Sets[[]byte]{},
-			args:          []interface{}{"test"},
-			expectedState: Sets[[]byte]{[]byte("test")},
-		},
 		"happy-path/null": {
-			sut:           Sets[[]byte]{},
+			sut:           newSets[[]byte](),
 			args:          nil,
 			expectedState: nil,
 		},
 		"unhappy-path/not-slice": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: 1,
 			want: ErrValueIsIncompatibleOfInterfaceSlice,
 		},
 		"unhappy-path/not-compatible-slice": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: []interface{}{1},
 			want: ErrValueIsIncompatibleOfBinarySlice,
+		},
+		"unhappy-path/string-value": {
+			sut:           newSets[[]byte](),
+			args:          []interface{}{"test"},
+			expectedState: nil,
+			want:          ErrValueIsIncompatibleOfBinarySlice,
 		},
 	}
 	for name, tt := range tests {
@@ -290,7 +291,7 @@ func TestSets_GormDataType(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path": {
-			sut:  Sets[string]{},
+			sut:  newSets[string](),
 			want: "dgsets",
 		},
 	}
@@ -311,37 +312,37 @@ func TestSets_IsCompatible_String(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path": {
-			sut:  Sets[string]{},
+			sut:  newSets[string](),
 			args: []interface{}{"test"},
 			want: true,
 		},
 		"happy-path/int-value": {
-			sut:  Sets[string]{},
+			sut:  newSets[string](),
 			args: []interface{}{int(1)},
-			want: true,
+			want: false,
 		},
 		"happy-path/float64-value": {
-			sut:  Sets[string]{},
+			sut:  newSets[string](),
 			args: []interface{}{float64(1.1)},
-			want: true,
+			want: false,
 		},
 		"happy-path/float32-value": {
-			sut:  Sets[string]{},
+			sut:  newSets[string](),
 			args: []interface{}{float32(1.1)},
-			want: true,
+			want: false,
 		},
 		"happy-path/binary-value": {
-			sut:  Sets[string]{},
+			sut:  newSets[string](),
 			args: []interface{}{[]byte{116, 101, 115, 116, 49}},
-			want: true,
+			want: false,
 		},
 		"unhappy-path/not-slice": {
-			sut:  Sets[string]{},
+			sut:  newSets[string](),
 			args: 1,
 			want: false,
 		},
 		"unhappy-path/nil": {
-			sut:  Sets[string]{},
+			sut:  newSets[string](),
 			args: nil,
 			want: false,
 		},
@@ -364,37 +365,37 @@ func TestSets_IsCompatible_Int(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path": {
-			sut:  Sets[int]{},
+			sut:  newSets[int](),
 			args: []interface{}{int(1)},
 			want: true,
 		},
 		"happy-path/string-value": {
-			sut:  Sets[int]{},
+			sut:  newSets[int](),
 			args: []interface{}{"test"},
 			want: false,
 		},
 		"happy-path/float64-value": {
-			sut:  Sets[int]{},
+			sut:  newSets[int](),
 			args: []interface{}{float64(1.1)},
-			want: true,
+			want: false,
 		},
-		"happy-path/float32-value": {
-			sut:  Sets[int]{},
-			args: []interface{}{float32(1.1)},
+		"happy-path/float64-typed-int-value": {
+			sut:  newSets[int](),
+			args: []interface{}{float64(1)},
 			want: true,
 		},
 		"happy-path/binary-value": {
-			sut:  Sets[int]{},
+			sut:  newSets[int](),
 			args: []interface{}{[]byte{116, 101, 115, 116, 49}},
 			want: false,
 		},
 		"unhappy-path/not-slice": {
-			sut:  Sets[int]{},
+			sut:  newSets[int](),
 			args: 1,
 			want: false,
 		},
 		"unhappy-path/nil": {
-			sut:  Sets[int]{},
+			sut:  newSets[int](),
 			args: nil,
 			want: false,
 		},
@@ -417,37 +418,37 @@ func TestSets_IsCompatible_Float64(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path": {
-			sut:  Sets[float64]{},
+			sut:  newSets[float64](),
 			args: []interface{}{float64(1.1)},
 			want: true,
 		},
 		"unhappy-path/string-value": {
-			sut:  Sets[float64]{},
+			sut:  newSets[float64](),
 			args: []interface{}{"test"},
 			want: false,
 		},
-		"happy-path/int-value": {
-			sut:  Sets[float64]{},
+		"unhappy-path/int-value": {
+			sut:  newSets[float64](),
 			args: []interface{}{int(1)},
-			want: true,
+			want: false,
 		},
-		"happy-path/float32-value": {
-			sut:  Sets[float64]{},
+		"unhappy-path/float32-value": {
+			sut:  newSets[float64](),
 			args: []interface{}{float32(1.1)},
-			want: true,
+			want: false,
 		},
-		"happy-path/binary-value": {
-			sut:  Sets[float64]{},
+		"unhappy-path/binary-value": {
+			sut:  newSets[float64](),
 			args: []interface{}{[]byte{116, 101, 115, 116, 49}},
 			want: false,
 		},
 		"unhappy-path/not-slice": {
-			sut:  Sets[float64]{},
+			sut:  newSets[float64](),
 			args: 1,
 			want: false,
 		},
 		"unhappy-path/nil": {
-			sut:  Sets[float64]{},
+			sut:  newSets[float64](),
 			args: nil,
 			want: false,
 		},
@@ -470,37 +471,37 @@ func TestSets_IsCompatible_Binary(t *testing.T) {
 	}
 	tests := map[string]testCase{
 		"happy-path": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: []interface{}{[]byte{116, 101, 115, 116, 49}},
 			want: true,
 		},
 		"unhappy-path/string-value": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: []interface{}{"test"},
 			want: false,
 		},
 		"happy-path/int-value": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: []interface{}{int(1)},
 			want: false,
 		},
 		"happy-path/float64-value": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: []interface{}{float64(1.1)},
 			want: false,
 		},
 		"happy-path/float32-value": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: []interface{}{float32(1.1)},
 			want: false,
 		},
 		"unhappy-path/not-slice": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: 1,
 			want: false,
 		},
 		"unhappy-path/nil": {
-			sut:  Sets[[]byte]{},
+			sut:  newSets[[]byte](),
 			args: nil,
 			want: false,
 		},
