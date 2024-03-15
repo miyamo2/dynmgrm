@@ -8,14 +8,13 @@ import (
 var (
 	ErrValueIsIncompatibleOfInterfaceSlice = errors.New("value is incompatible of interface slice")
 	ErrValueIsIncompatibleOfIntSlice       = errors.New("value is incompatible of int slice")
-	ErrValueIsIncompatibleOfFloat32Slice   = errors.New("value is incompatible of float32 slice")
 	ErrValueIsIncompatibleOfFloat64Slice   = errors.New("value is incompatible of float64 slice")
 	ErrValueIsIncompatibleOfBinarySlice    = errors.New("value is incompatible of []byte slice")
 )
 
 // SetsSupportable are the types that support the Set
 type SetsSupportable interface {
-	string | []byte | int | float32 | float64
+	string | []byte | int | float64
 }
 
 // Sets is a set of values.
@@ -41,8 +40,6 @@ func (s *Sets[T]) Scan(value interface{}) error {
 	switch (interface{})(t).(type) {
 	case int:
 		return scanAsIntSets((interface{})(s).(*Sets[int]), value)
-	case float32:
-		return scanAsFloat32Sets((interface{})(s).(*Sets[float32]), value)
 	case float64:
 		return scanAsFloat64Sets((interface{})(s).(*Sets[float64]), value)
 	case string:
@@ -78,31 +75,6 @@ func scanAsIntSets(s *Sets[int], value interface{}) error {
 		if !ok {
 			*s = nil
 			return ErrValueIsIncompatibleOfIntSlice
-		}
-		*s = append(*s, cv)
-	}
-	return nil
-}
-
-// scanAsFloat32Sets scans the value as Sets[float32]
-func scanAsFloat32Sets(s *Sets[float32], value interface{}) error {
-	sv, ok := value.([]interface{})
-	if !ok {
-		*s = nil
-		return ErrValueIsIncompatibleOfInterfaceSlice
-	}
-	for _, v := range sv {
-		cv, ok := v.(float32)
-		if !ok {
-			switch v := v.(type) {
-			case int:
-				cv = float32(v)
-				ok = true
-			}
-		}
-		if !ok {
-			*s = nil
-			return ErrValueIsIncompatibleOfFloat32Slice
 		}
 		*s = append(*s, cv)
 	}
@@ -173,4 +145,69 @@ func scanAsBinarySets(s *Sets[[]byte], value interface{}) error {
 		*s = append(*s, cv)
 	}
 	return nil
+}
+
+func (s Sets[T]) IsCompatible(value interface{}) (compatible bool) {
+	sValue, ok := value.([]interface{})
+	if !ok {
+		return
+	}
+	var t T
+	switch (interface{})(t).(type) {
+	case string:
+		compatible = true
+	case int:
+		compatible = isIntSetsCompatible(sValue)
+	case float64:
+		compatible = isFloat63SetsCompatible(sValue)
+	case []byte:
+		compatible = isBinarySetsCompatible(sValue)
+	}
+	return
+}
+
+func isIntSetsCompatible(value []interface{}) (compatible bool) {
+	compatible = true
+	for _, v := range value {
+		if _, ok := v.(int); ok {
+			continue
+		}
+		switch v.(type) {
+		case float32, float64:
+			continue
+		default:
+			compatible = false
+			return
+		}
+	}
+	return true
+}
+
+func isFloat63SetsCompatible(value []interface{}) (compatible bool) {
+	compatible = true
+	for _, v := range value {
+		if _, ok := v.(float64); ok {
+			continue
+		}
+		switch v.(type) {
+		case float32, float64, int:
+			continue
+		default:
+			compatible = false
+			return
+		}
+	}
+	return true
+}
+
+func isBinarySetsCompatible(value []interface{}) (compatible bool) {
+	compatible = true
+	for _, v := range value {
+		if _, ok := v.([]byte); ok {
+			continue
+		}
+		compatible = false
+		return
+	}
+	return
 }

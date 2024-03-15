@@ -164,68 +164,6 @@ func TestSets_Scan_Int(t *testing.T) {
 	}
 }
 
-func TestSets_Scan_Float32(t *testing.T) {
-	type testCase struct {
-		sut           Sets[float32]
-		args          interface{}
-		want          error
-		expectedState Sets[float32]
-	}
-	tests := map[string]testCase{
-		"happy-path/single-value": {
-			sut:           Sets[float32]{},
-			args:          []interface{}{float32(1.1)},
-			expectedState: Sets[float32]{float32(1.1)},
-		},
-		"happy-path/multiple-values": {
-			sut:           Sets[float32]{},
-			args:          []interface{}{float32(1.1), float32(1.2)},
-			expectedState: Sets[float32]{float32(1.1), float32(1.2)},
-		},
-		"happy-path/int-value": {
-			sut:           Sets[float32]{},
-			args:          []interface{}{1, 2},
-			expectedState: Sets[float32]{1, 2},
-		},
-		"happy-path/int-and-float32": {
-			sut:           Sets[float32]{},
-			args:          []interface{}{1, float32(1.2)},
-			expectedState: Sets[float32]{1, 1.2},
-		},
-		"happy-path/null": {
-			sut:           Sets[float32]{},
-			args:          nil,
-			expectedState: nil,
-		},
-		"unhappy-path/not-slice": {
-			sut:           Sets[float32]{},
-			args:          1,
-			want:          ErrValueIsIncompatibleOfInterfaceSlice,
-			expectedState: nil,
-		},
-		"unhappy-path/not-compatible-slice": {
-			sut:           Sets[float32]{},
-			args:          []interface{}{"A"},
-			want:          ErrValueIsIncompatibleOfFloat32Slice,
-			expectedState: nil,
-		},
-	}
-
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			err := tt.sut.Scan(tt.args)
-			if !errors.Is(err, tt.want) {
-				t.Errorf("Scan() error = %v, want %v", err, tt.want)
-				return
-			}
-			if diff := cmp.Diff(tt.expectedState, tt.sut); diff != "" {
-				t.Errorf("Scan() mismatch (-want +got):\n%s", diff)
-				return
-			}
-		})
-	}
-}
-
 func TestSets_Scan_Float64(t *testing.T) {
 	type testCase struct {
 		sut           Sets[float64]
@@ -360,6 +298,218 @@ func TestSets_GormDataType(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			if got := tt.sut.GormDataType(); got != tt.want {
 				t.Errorf("GormDataType() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSets_IsCompatible_String(t *testing.T) {
+	type testCase struct {
+		sut  Sets[string]
+		args interface{}
+		want bool
+	}
+	tests := map[string]testCase{
+		"happy-path": {
+			sut:  Sets[string]{},
+			args: []interface{}{"test"},
+			want: true,
+		},
+		"happy-path/int-value": {
+			sut:  Sets[string]{},
+			args: []interface{}{int(1)},
+			want: true,
+		},
+		"happy-path/float64-value": {
+			sut:  Sets[string]{},
+			args: []interface{}{float64(1.1)},
+			want: true,
+		},
+		"happy-path/float32-value": {
+			sut:  Sets[string]{},
+			args: []interface{}{float32(1.1)},
+			want: true,
+		},
+		"happy-path/binary-value": {
+			sut:  Sets[string]{},
+			args: []interface{}{[]byte{116, 101, 115, 116, 49}},
+			want: true,
+		},
+		"unhappy-path/not-slice": {
+			sut:  Sets[string]{},
+			args: 1,
+			want: false,
+		},
+		"unhappy-path/nil": {
+			sut:  Sets[string]{},
+			args: nil,
+			want: false,
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.IsCompatible(tt.args)
+			if got != tt.want {
+				t.Errorf("IsCompatible() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSets_IsCompatible_Int(t *testing.T) {
+	type testCase struct {
+		sut  Sets[int]
+		args interface{}
+		want bool
+	}
+	tests := map[string]testCase{
+		"happy-path": {
+			sut:  Sets[int]{},
+			args: []interface{}{int(1)},
+			want: true,
+		},
+		"happy-path/string-value": {
+			sut:  Sets[int]{},
+			args: []interface{}{"test"},
+			want: false,
+		},
+		"happy-path/float64-value": {
+			sut:  Sets[int]{},
+			args: []interface{}{float64(1.1)},
+			want: true,
+		},
+		"happy-path/float32-value": {
+			sut:  Sets[int]{},
+			args: []interface{}{float32(1.1)},
+			want: true,
+		},
+		"happy-path/binary-value": {
+			sut:  Sets[int]{},
+			args: []interface{}{[]byte{116, 101, 115, 116, 49}},
+			want: false,
+		},
+		"unhappy-path/not-slice": {
+			sut:  Sets[int]{},
+			args: 1,
+			want: false,
+		},
+		"unhappy-path/nil": {
+			sut:  Sets[int]{},
+			args: nil,
+			want: false,
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.IsCompatible(tt.args)
+			if got != tt.want {
+				t.Errorf("IsCompatible() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSets_IsCompatible_Float64(t *testing.T) {
+	type testCase struct {
+		sut  Sets[float64]
+		args interface{}
+		want bool
+	}
+	tests := map[string]testCase{
+		"happy-path": {
+			sut:  Sets[float64]{},
+			args: []interface{}{float64(1.1)},
+			want: true,
+		},
+		"unhappy-path/string-value": {
+			sut:  Sets[float64]{},
+			args: []interface{}{"test"},
+			want: false,
+		},
+		"happy-path/int-value": {
+			sut:  Sets[float64]{},
+			args: []interface{}{int(1)},
+			want: true,
+		},
+		"happy-path/float32-value": {
+			sut:  Sets[float64]{},
+			args: []interface{}{float32(1.1)},
+			want: true,
+		},
+		"happy-path/binary-value": {
+			sut:  Sets[float64]{},
+			args: []interface{}{[]byte{116, 101, 115, 116, 49}},
+			want: false,
+		},
+		"unhappy-path/not-slice": {
+			sut:  Sets[float64]{},
+			args: 1,
+			want: false,
+		},
+		"unhappy-path/nil": {
+			sut:  Sets[float64]{},
+			args: nil,
+			want: false,
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.IsCompatible(tt.args)
+			if got != tt.want {
+				t.Errorf("IsCompatible() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSets_IsCompatible_Binary(t *testing.T) {
+	type testCase struct {
+		sut  Sets[[]byte]
+		args interface{}
+		want bool
+	}
+	tests := map[string]testCase{
+		"happy-path": {
+			sut:  Sets[[]byte]{},
+			args: []interface{}{[]byte{116, 101, 115, 116, 49}},
+			want: true,
+		},
+		"unhappy-path/string-value": {
+			sut:  Sets[[]byte]{},
+			args: []interface{}{"test"},
+			want: false,
+		},
+		"happy-path/int-value": {
+			sut:  Sets[[]byte]{},
+			args: []interface{}{int(1)},
+			want: false,
+		},
+		"happy-path/float64-value": {
+			sut:  Sets[[]byte]{},
+			args: []interface{}{float64(1.1)},
+			want: false,
+		},
+		"happy-path/float32-value": {
+			sut:  Sets[[]byte]{},
+			args: []interface{}{float32(1.1)},
+			want: false,
+		},
+		"unhappy-path/not-slice": {
+			sut:  Sets[[]byte]{},
+			args: 1,
+			want: false,
+		},
+		"unhappy-path/nil": {
+			sut:  Sets[[]byte]{},
+			args: nil,
+			want: false,
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.IsCompatible(tt.args)
+			if got != tt.want {
+				t.Errorf("IsCompatible() = %v, want %v", got, tt.want)
 			}
 		})
 	}
