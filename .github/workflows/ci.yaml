@@ -1,0 +1,60 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - "feat/**"
+      - "refactor/**"
+      - "fix/**"
+  pull_request:
+    branches:
+      - "main"
+  workflow_call:
+
+permissions: write-all
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goversion: [ ">=1.21.0"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.goversion }}
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Setup mockgen
+        run: |
+          go install go.uber.org/mock/mockgen@latest
+
+      - name: Go Generate
+        run: |
+          go mod tidy
+          go generate ./...
+          git diff --exit-code
+
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
+      - name: Setup staticcheck
+        run: |
+          go install honnef.co/go/tools/cmd/staticcheck@latest
+
+      - name: staticcheck with reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          staticcheck ./... | reviewdog -f=staticcheck -reporter=github-pr-check -level warning
+
+      - name: Go Test
+        run: |
+          go test ./... -v
