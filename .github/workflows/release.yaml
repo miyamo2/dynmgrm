@@ -1,0 +1,51 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions: write-all
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ">=1.21.0"
+          cache: true
+          cache-dependency-path: go.sum
+
+      - name: Setup mockgen
+        run: |
+          go install go.uber.org/mock/mockgen@latest
+
+      - name: Go Generate
+        run: |
+          go mod tidy
+          go generate ./...
+          git diff --exit-code
+
+      - name: Go Test
+        run: |
+          TARGET=$(go list ./... | grep -v "mock")
+          go test $TARGET -v -coverpkg=$TARGET -coverprofile=coverage.out
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.out
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{  github.ref_name }}
+          generate_release_notes: true
