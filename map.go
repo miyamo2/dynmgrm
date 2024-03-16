@@ -1,4 +1,4 @@
-package types
+package dynamgorm
 
 // Map is a DynamoDB map type.
 //
@@ -21,11 +21,11 @@ func (m *Map) Scan(value interface{}) error {
 		return ErrFailedToCast
 	}
 	*m = mv
-	return m.ResolveNestedDocument()
+	return resolveCollectionsNestedInMap(m)
 }
 
-// ResolveNestedDocument resolves nested document type attribute.
-func (m *Map) ResolveNestedDocument() error {
+// resolveCollectionsNestedInMap resolves nested document type attribute.
+func resolveCollectionsNestedInMap(m *Map) error {
 	for k, v := range *m {
 		if v, ok := v.(map[string]interface{}); ok {
 			im := Map{}
@@ -37,25 +37,29 @@ func (m *Map) ResolveNestedDocument() error {
 			(*m)[k] = im
 			continue
 		}
-		if s := newSets[int](); s.IsCompatible(v) {
+		if isCompatible[int](v) {
+			s := newSets[int]()
 			if err := s.Scan(v); err == nil {
 				(*m)[k] = s
 				continue
 			}
 		}
-		if s := newSets[float64](); s.IsCompatible(v) {
+		if isCompatible[float64](v) {
+			s := newSets[float64]()
 			if err := s.Scan(v); err == nil {
 				(*m)[k] = s
 				continue
 			}
 		}
-		if s := newSets[string](); s.IsCompatible(v) {
+		if isCompatible[string](v) {
+			s := newSets[string]()
 			if err := s.Scan(v); err == nil {
 				(*m)[k] = s
 				continue
 			}
 		}
-		if s := newSets[[]byte](); s.IsCompatible(v) {
+		if isCompatible[[]byte](v) {
+			s := newSets[[]byte]()
 			if err := s.Scan(v); err == nil {
 				(*m)[k] = s
 				continue

@@ -1,4 +1,4 @@
-package types
+package dynamgorm
 
 import (
 	"errors"
@@ -142,7 +142,7 @@ func scanAsBinarySets(s *Sets[[]byte], value interface{}) error {
 	return nil
 }
 
-func (s Sets[T]) IsCompatible(value interface{}) (compatible bool) {
+func isCompatible[T SetsSupportable](value interface{}) (compatible bool) {
 	sValue, ok := value.([]interface{})
 	if !ok {
 		return

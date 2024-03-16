@@ -1,4 +1,4 @@
-package types
+package dynamgorm
 
 import (
 	"errors"
@@ -118,7 +118,7 @@ func TestMap_ResolveNestedCollections(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			err := tt.sut.ResolveNestedDocument()
+			err := resolveCollectionsNestedInMap(&tt.sut)
 			if !errors.Is(err, tt.want) {
 				t.Errorf("ResolveNestedDocument() error = %v, want %v", err, tt.want)
 				return

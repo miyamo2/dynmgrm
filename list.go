@@ -1,4 +1,4 @@
-package types
+package dynamgorm
 
 import (
 	"errors"
@@ -25,11 +25,11 @@ func (l *List) Scan(value interface{}) error {
 		return errors.Join(ErrFailedToCast, fmt.Errorf("incompatible %T and %T", l, value))
 	}
 	*l = sv
-	return l.ResolveNestedDocument()
+	return resolveCollectionsNestedInList(l)
 }
 
-// ResolveNestedDocument resolves nested document type attribute.
-func (l *List) ResolveNestedDocument() error {
+// resolveCollectionsNestedInList resolves nested collection type attribute.
+func resolveCollectionsNestedInList(l *List) error {
 	for i, v := range *l {
 		if v, ok := v.(map[string]interface{}); ok {
 			m := Map{}
@@ -41,25 +41,29 @@ func (l *List) ResolveNestedDocument() error {
 			(*l)[i] = m
 			continue
 		}
-		if s := newSets[int](); s.IsCompatible(v) {
+		if isCompatible[int](v) {
+			s := newSets[int]()
 			if err := s.Scan(v); err == nil {
 				(*l)[i] = s
 				continue
 			}
 		}
-		if s := newSets[float64](); s.IsCompatible(v) {
+		if isCompatible[float64](v) {
+			s := newSets[float64]()
 			if err := s.Scan(v); err == nil {
 				(*l)[i] = s
 				continue
 			}
 		}
-		if s := newSets[string](); s.IsCompatible(v) {
+		if isCompatible[string](v) {
+			s := newSets[string]()
 			if err := s.Scan(v); err == nil {
 				(*l)[i] = s
 				continue
 			}
 		}
-		if s := newSets[[]byte](); s.IsCompatible(v) {
+		if isCompatible[[]byte](v) {
+			s := newSets[[]byte]()
 			if err := s.Scan(v); err == nil {
 				(*l)[i] = s
 				continue
