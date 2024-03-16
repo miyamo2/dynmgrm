@@ -17,31 +17,31 @@ func (s mockDialector) Name() string {
 	return ""
 }
 
-func (s mockDialector) Initialize(db *gorm.DB) error {
+func (s mockDialector) Initialize(_ *gorm.DB) error {
 	return nil
 }
 
-func (s mockDialector) Migrator(db *gorm.DB) gorm.Migrator {
+func (s mockDialector) Migrator(_ *gorm.DB) gorm.Migrator {
 	return nil
 }
 
-func (s mockDialector) DataTypeOf(field *schema.Field) string {
+func (s mockDialector) DataTypeOf(_ *schema.Field) string {
 	return ""
 }
 
-func (s mockDialector) DefaultValueOf(field *schema.Field) clause.Expression {
+func (s mockDialector) DefaultValueOf(_ *schema.Field) clause.Expression {
 	return nil
 }
 
-func (s mockDialector) BindVarTo(writer clause.Writer, stmt *gorm.Statement, v interface{}) {
-	writer.WriteByte('?')
+func (s mockDialector) BindVarTo(writer clause.Writer, _ *gorm.Statement, _ interface{}) {
+	_ = writer.WriteByte('?')
 }
 
 func (s mockDialector) QuoteTo(writer clause.Writer, s2 string) {
-	writer.WriteString(fmt.Sprintf(`"%s"`, s2))
+	_, _ = writer.WriteString(fmt.Sprintf(`"%s"`, s2))
 }
 
-func (s mockDialector) Explain(sql string, vars ...interface{}) string {
+func (s mockDialector) Explain(_ string, _ ...interface{}) string {
 	return ""
 }
 
@@ -49,23 +49,19 @@ var _ clause.Builder = (*mockBuilder)(nil)
 
 type mockBuilder struct{}
 
-func (m mockBuilder) WriteByte(b byte) error {
+func (m mockBuilder) WriteByte(_ byte) error {
 	return nil
 }
 
-func (m mockBuilder) WriteString(s string) (int, error) {
+func (m mockBuilder) WriteString(_ string) (int, error) {
 	return 0, nil
 }
 
-func (m mockBuilder) WriteQuoted(field interface{}) {
-	return
-}
+func (m mockBuilder) WriteQuoted(_ interface{}) {}
 
-func (m mockBuilder) AddVar(writer clause.Writer, i ...interface{}) {
-	return
-}
+func (m mockBuilder) AddVar(_ clause.Writer, _ ...interface{}) {}
 
-func (m mockBuilder) AddError(err error) error {
+func (m mockBuilder) AddError(_ error) error {
 	return nil
 }
 
