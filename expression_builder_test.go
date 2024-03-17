@@ -140,7 +140,6 @@ func TestValuesClause(t *testing.T) {
 					},
 				},
 			}
-			// Call the function we are testing
 			buildValuesClause(tt.args, sut)
 
 			acutalSQL := sut.SQL.String()
@@ -249,6 +248,78 @@ func Test_toClauseBuilder(t *testing.T) {
 				c.Expression = tt.xpOverride
 			}
 			toClauseBuilder(xpBuilder)(c, tt.builder)
+		})
+	}
+}
+
+func TestBuildSetClause(t *testing.T) {
+	type test struct {
+		set          clause.Set
+		expectedSQL  string
+		expectedVars []interface{}
+	}
+	tests := map[string]test{
+		"happy-path/single-assignment": {
+			set: clause.Set{
+				{Column: clause.Column{Name: "column1"}, Value: "value1"},
+			},
+			expectedSQL:  "SET column1=?",
+			expectedVars: []interface{}{"value1"},
+		},
+		"happy-path/multiple-assignments": {
+			set: clause.Set{
+				{Column: clause.Column{Name: "column1"}, Value: "value1"},
+				{Column: clause.Column{Name: "column2"}, Value: "value2"},
+			},
+			expectedSQL:  "SET column1=? SET column2=?",
+			expectedVars: []interface{}{"value1", "value2"},
+		},
+		"happy-path/with-sets": {
+			set: clause.Set{
+				{Column: clause.Column{Name: "column1"}, Value: Sets[string]{"value1", "value2"}},
+			},
+			expectedSQL:  "SET column1=?",
+			expectedVars: []interface{}{Sets[string]{"value1", "value2"}},
+		},
+		"happy-path/with-map": {
+			set: clause.Set{
+				{Column: clause.Column{Name: "column1"}, Value: Map{"key1": "value1"}},
+			},
+			expectedSQL:  "SET column1=?",
+			expectedVars: []interface{}{Map{"key1": "value1"}},
+		},
+		"happy-path/with-list": {
+			set: clause.Set{
+				{Column: clause.Column{Name: "column1"}, Value: List{"value1", "value2"}},
+			},
+			expectedSQL:  "SET column1=?",
+			expectedVars: []interface{}{List{"value1", "value2"}},
+		},
+		"unhappy-path/empty-set": {
+			set:          clause.Set{},
+			expectedSQL:  "",
+			expectedVars: nil,
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			sut := &gorm.Statement{
+				DB: &gorm.DB{
+					Config: &gorm.Config{
+						Dialector: &mockDialector{},
+					},
+				},
+			}
+			buildSetClause(tt.set, sut)
+
+			acutalSQL := sut.SQL.String()
+			if diff := cmp.Diff(acutalSQL, tt.expectedSQL); diff != "" {
+				t.Errorf("SQL mismatch (-want +got):\n%s", diff)
+			}
+			acutalVars := sut.Vars
+			if diff := cmp.Diff(acutalVars, tt.expectedVars); diff != "" {
+				t.Errorf("Vars mismatch (-want +got):\n%s", diff)
+			}
 		})
 	}
 }
