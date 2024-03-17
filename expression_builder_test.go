@@ -3,6 +3,8 @@ package dynamgorm
 import (
 	"fmt"
 	"github.com/google/go-cmp/cmp"
+	"github.com/miyamo2/dynamgorm/internal/mocks"
+	"go.uber.org/mock/gomock"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
@@ -45,124 +47,85 @@ func (s mockDialector) Explain(_ string, _ ...interface{}) string {
 	return ""
 }
 
-var _ clause.Builder = (*mockBuilder)(nil)
-
-type mockBuilder struct{}
-
-func (m mockBuilder) WriteByte(_ byte) error {
-	return nil
-}
-
-func (m mockBuilder) WriteString(_ string) (int, error) {
-	return 0, nil
-}
-
-func (m mockBuilder) WriteQuoted(_ interface{}) {}
-
-func (m mockBuilder) AddVar(_ clause.Writer, _ ...interface{}) {}
-
-func (m mockBuilder) AddError(_ error) error {
-	return nil
-}
-
 func TestValuesClause(t *testing.T) {
 	type test struct {
-		args         clause.Clause
+		args         clause.Values
 		expectedSQL  string
 		expectedVars []interface{}
 	}
 	tests := map[string]test{
 		"happy-path/single-column": {
-			args: clause.Clause{
-				Expression: clause.Values{
-					Columns: []clause.Column{{
-						Name: "column1",
-					}},
-					Values: [][]interface{}{{"value1"}},
-				},
+			args: clause.Values{
+				Columns: []clause.Column{{
+					Name: "column1",
+				}},
+				Values: [][]interface{}{{"value1"}},
 			},
 			expectedSQL:  "VALUE {'column1' : ?}",
 			expectedVars: []interface{}{"value1"},
 		},
 		"happy-path/multiple-columns": {
-			args: clause.Clause{
-				Expression: clause.Values{
-					Columns: []clause.Column{
-						{
-							Name: "column1",
-						},
-						{
-							Name: "column2",
-						},
+			args: clause.Values{
+				Columns: []clause.Column{
+					{
+						Name: "column1",
 					},
-					Values: [][]interface{}{
-						{"value1", "value2"},
+					{
+						Name: "column2",
 					},
+				},
+				Values: [][]interface{}{
+					{"value1", "value2"},
 				},
 			},
 			expectedSQL:  "VALUE {'column1' : ?, 'column2' : ?}",
 			expectedVars: []interface{}{"value1", "value2"},
 		},
 		"happy-path/with-sets": {
-			args: clause.Clause{
-				Expression: clause.Values{
-					Columns: []clause.Column{
-						{
-							Name: "column1",
-						},
+			args: clause.Values{
+				Columns: []clause.Column{
+					{
+						Name: "column1",
 					},
-					Values: [][]interface{}{
-						{Sets[string]{"value1", "value2"}},
-					},
+				},
+				Values: [][]interface{}{
+					{Sets[string]{"value1", "value2"}},
 				},
 			},
 			expectedSQL:  "VALUE {'column1' : ?}",
 			expectedVars: []interface{}{Sets[string]{"value1", "value2"}},
 		},
 		"happy-path/with-map": {
-			args: clause.Clause{
-				Expression: clause.Values{
-					Columns: []clause.Column{
-						{
-							Name: "column1",
-						},
+			args: clause.Values{
+				Columns: []clause.Column{
+					{
+						Name: "column1",
 					},
-					Values: [][]interface{}{
-						{Map{"key1": "value1"}},
-					},
+				},
+				Values: [][]interface{}{
+					{Map{"key1": "value1"}},
 				},
 			},
 			expectedSQL:  "VALUE {'column1' : ?}",
 			expectedVars: []interface{}{Map{"key1": "value1"}},
 		},
 		"happy-path/with-list": {
-			args: clause.Clause{
-				Expression: clause.Values{
-					Columns: []clause.Column{
-						{
-							Name: "column1",
-						},
+			args: clause.Values{
+				Columns: []clause.Column{
+					{
+						Name: "column1",
 					},
-					Values: [][]interface{}{
-						{List{"value1", "value2"}},
-					},
+				},
+				Values: [][]interface{}{
+					{List{"value1", "value2"}},
 				},
 			},
 			expectedSQL:  "VALUE {'column1' : ?}",
 			expectedVars: []interface{}{List{"value1", "value2"}},
 		},
 		"unhappy-path/empty-columns": {
-			args: clause.Clause{
-				Expression: clause.Values{
-					Columns: []clause.Column{},
-				},
-			},
-			expectedSQL:  "",
-			expectedVars: nil,
-		},
-		"unhappy-path/expression-is-not-values-type": {
-			args: clause.Clause{
-				Expression: clause.Clause{},
+			args: clause.Values{
+				Columns: []clause.Column{},
 			},
 			expectedSQL:  "",
 			expectedVars: nil,
@@ -194,24 +157,17 @@ func TestValuesClause(t *testing.T) {
 
 func Test_bindVarIfCollectionType(t *testing.T) {
 	type args struct {
-		builder clause.Builder
-		value   interface{}
+		stmt  *gorm.Statement
+		value interface{}
 	}
 	type test struct {
 		args args
 		want bool
 	}
 	tests := map[string]test{
-		"unhappy-path/not-gorm-statement": {
-			args: args{
-				builder: &mockBuilder{},
-				value:   Map{},
-			},
-			want: false,
-		},
 		"happy-path/not-collection-type": {
 			args: args{
-				builder: &gorm.Statement{
+				stmt: &gorm.Statement{
 					DB: &gorm.DB{
 						Config: &gorm.Config{
 							Dialector: &mockDialector{},
@@ -226,9 +182,73 @@ func Test_bindVarIfCollectionType(t *testing.T) {
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			if gotBound := bindVarIfCollectionType(tt.args.builder, tt.args.value); gotBound != tt.want {
+			if gotBound := bindVarIfCollectionType(tt.args.stmt, tt.args.value); gotBound != tt.want {
 				t.Errorf("bindVarIfCollectionType() = %v, want %v", gotBound, tt.want)
 			}
+		})
+	}
+}
+
+type mockExpressionProp struct {
+	callCount int
+}
+
+type setupMockExpressionOptions func(*mockExpressionProp)
+
+func setupMockExpressionWithCallCount(count int) setupMockExpressionOptions {
+	return func(prop *mockExpressionProp) {
+		prop.callCount = count
+	}
+}
+
+func setupMockExpression(t *testing.T, xp *mocks.MockExpression, options ...setupMockExpressionOptions) *mocks.MockExpression {
+	t.Helper()
+	prop := mockExpressionProp{}
+	for _, opt := range options {
+		opt(&prop)
+	}
+	xp.EXPECT().Build(gomock.Any()).Times(prop.callCount)
+	return xp
+}
+
+func Test_toClauseBuilder(t *testing.T) {
+	type test struct {
+		builder       clause.Builder
+		xpOverride    clause.Expression
+		mockXpOptions []setupMockExpressionOptions
+	}
+	xpBuilder := func(c *mocks.MockExpression, stmt *gorm.Statement) {
+		c.Build(stmt)
+	}
+	tests := map[string]test{
+		"happy-path": {
+			builder: &gorm.Statement{},
+			mockXpOptions: []setupMockExpressionOptions{
+				setupMockExpressionWithCallCount(1),
+			},
+		},
+		"unhappy-path/not-statement": {
+			builder: &mocks.MockBuilder{},
+		},
+		"unhappy-path/expression-not-matching": {
+			builder:    &gorm.Statement{},
+			xpOverride: clause.Values{},
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			xp := mocks.NewMockExpression(ctrl)
+			setupMockExpression(t, xp, tt.mockXpOptions...)
+			c := clause.Clause{
+				Expression: xp,
+			}
+			if tt.xpOverride != nil {
+				c.Expression = tt.xpOverride
+			}
+			toClauseBuilder(xpBuilder)(c, tt.builder)
 		})
 	}
 }
