@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"slices"
 )
 
 // expressionBuilder is a function that builds a clause.Expression
@@ -83,7 +84,12 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 	if len(set) <= 0 {
 		return
 	}
+	prfl := stmt.Schema.PrimaryFieldDBNames
 	for idx, assignment := range set {
+		asgcol := assignment.Column.Name
+		if slices.Contains[[]string](prfl, asgcol) {
+			continue
+		}
 		if idx > 0 {
 			stmt.WriteByte(' ')
 		}

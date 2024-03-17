@@ -295,6 +295,14 @@ func TestBuildSetClause(t *testing.T) {
 			expectedSQL:  "SET column1=?",
 			expectedVars: []interface{}{List{"value1", "value2"}},
 		},
+		"happy-path/contains-primary-key": {
+			set: clause.Set{
+				{Column: clause.Column{Name: "column1"}, Value: "value1"},
+				{Column: clause.Column{Name: "pk"}, Value: "value2"},
+			},
+			expectedSQL:  "SET column1=?",
+			expectedVars: []interface{}{"value1"},
+		},
 		"unhappy-path/empty-set": {
 			set:          clause.Set{},
 			expectedSQL:  "",
@@ -308,6 +316,9 @@ func TestBuildSetClause(t *testing.T) {
 					Config: &gorm.Config{
 						Dialector: &mockDialector{},
 					},
+				},
+				Schema: &schema.Schema{
+					PrimaryFieldDBNames: []string{"pk"},
 				},
 			}
 			buildSetClause(tt.set, sut)
