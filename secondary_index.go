@@ -11,6 +11,7 @@ import (
 var _ clause.Expression = (*secondaryIndexExpression)(nil)
 var _ gorm.StatementModifier = (*secondaryIndexExpression)(nil)
 
+// SecondaryIndexOption is a functional option for secondaryIndexExpression
 type SecondaryIndexOption func(*secondaryIndexExpression)
 
 // SecondaryIndexOf is the table with the index to be used.
@@ -40,6 +41,7 @@ type secondaryIndexExpression struct {
 	indexName string
 }
 
+// ModifyStatement modifies the gorm.Statement to use the secondary index
 func (s secondaryIndexExpression) ModifyStatement(stmt *gorm.Statement) {
 	m := s.model
 	if m != nil {
