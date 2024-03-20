@@ -304,7 +304,7 @@ func TestSets_GormDataType(t *testing.T) {
 	}
 }
 
-func TestSets_IsCompatible_String(t *testing.T) {
+func TestSets_IsCompatibleWithSets_String(t *testing.T) {
 	type testCase struct {
 		sut  Sets[string]
 		args interface{}
@@ -342,15 +342,15 @@ func TestSets_IsCompatible_String(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := isCompatible[string](tt.args)
+			got := isCompatibleWithSets[string](tt.args)
 			if got != tt.want {
-				t.Errorf("isCompatible() = %v, want %v", got, tt.want)
+				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestSets_IsCompatible_Int(t *testing.T) {
+func TestSets_IsCompatibleWithSets_Int(t *testing.T) {
 	type testCase struct {
 		sut  Sets[int]
 		args interface{}
@@ -388,15 +388,15 @@ func TestSets_IsCompatible_Int(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := isCompatible[int](tt.args)
+			got := isCompatibleWithSets[int](tt.args)
 			if got != tt.want {
-				t.Errorf("isCompatible() = %v, want %v", got, tt.want)
+				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestSets_IsCompatible_Float64(t *testing.T) {
+func TestSets_IsCompatibleWithSets_Float64(t *testing.T) {
 	type testCase struct {
 		sut  Sets[float64]
 		args interface{}
@@ -434,15 +434,15 @@ func TestSets_IsCompatible_Float64(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := isCompatible[float64](tt.args)
+			got := isCompatibleWithSets[float64](tt.args)
 			if got != tt.want {
-				t.Errorf("isCompatible() = %v, want %v", got, tt.want)
+				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestSets_IsCompatible_Binary(t *testing.T) {
+func TestSets_IsCompatibleWithSets_Binary(t *testing.T) {
 	type testCase struct {
 		sut  Sets[[]byte]
 		args interface{}
@@ -480,9 +480,9 @@ func TestSets_IsCompatible_Binary(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := isCompatible[[]byte](tt.args)
+			got := isCompatibleWithSets[[]byte](tt.args)
 			if got != tt.want {
-				t.Errorf("isCompatible() = %v, want %v", got, tt.want)
+				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
 			}
 		})
 	}
