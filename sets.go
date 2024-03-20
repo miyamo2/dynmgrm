@@ -142,7 +142,7 @@ func scanAsBinarySets(s *Sets[[]byte], value interface{}) error {
 	return nil
 }
 
-func isCompatible[T SetsSupportable](value interface{}) (compatible bool) {
+func isCompatibleWithSets[T SetsSupportable](value interface{}) (compatible bool) {
 	sValue, ok := value.([]interface{})
 	if !ok {
 		return
