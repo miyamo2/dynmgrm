@@ -1,4 +1,4 @@
-package dynamgorm
+package dynmgrm
 
 // Map is a DynamoDB map type.
 //

@@ -1,2 +1,2 @@
-# dynamgorm
+# dynmgrm
 GORM dynamodb driver

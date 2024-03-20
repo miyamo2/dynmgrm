@@ -1,4 +1,4 @@
-module github.com/miyamo2/dynamgorm
+module github.com/miyamo2/dynmgrm
 
 go 1.21
 

@@ -1,4 +1,4 @@
-package dynamgorm
+package dynmgrm
 
 import (
 	"github.com/google/go-cmp/cmp"
