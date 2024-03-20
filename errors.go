@@ -1,4 +1,4 @@
-package dynamgorm
+package dynmgrm
 
 import "errors"
 

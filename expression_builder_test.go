@@ -1,9 +1,9 @@
-package dynamgorm
+package dynmgrm
 
 import (
 	"fmt"
 	"github.com/google/go-cmp/cmp"
-	"github.com/miyamo2/dynamgorm/internal/mocks"
+	"github.com/miyamo2/dynmgrm/internal/mocks"
 	"go.uber.org/mock/gomock"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
