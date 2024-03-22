@@ -6,7 +6,7 @@ require (
 	github.com/btnguyen2k/godynamo v1.2.1
 	github.com/google/go-cmp v0.6.0
 	go.uber.org/mock v0.4.0
-	gorm.io/gorm v1.25.7
+	gorm.io/gorm v1.25.8
 )
 
 require (
