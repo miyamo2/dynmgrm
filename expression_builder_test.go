@@ -2,6 +2,7 @@ package dynmgrm
 
 import (
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/google/go-cmp/cmp"
 	"github.com/miyamo2/dynmgrm/internal/mocks"
 	"go.uber.org/mock/gomock"
@@ -93,7 +94,7 @@ func TestValuesClause(t *testing.T) {
 				},
 			},
 			expectedSQL:  "VALUE {'column1' : ?}",
-			expectedVars: []interface{}{Sets[string]{"value1", "value2"}},
+			expectedVars: []interface{}{types.AttributeValueMemberSS{Value: []string{"value1", "value2"}}},
 		},
 		"happy-path/with-map": {
 			args: clause.Values{
@@ -106,8 +107,11 @@ func TestValuesClause(t *testing.T) {
 					{Map{"key1": "value1"}},
 				},
 			},
-			expectedSQL:  "VALUE {'column1' : ?}",
-			expectedVars: []interface{}{Map{"key1": "value1"}},
+			expectedSQL: "VALUE {'column1' : ?}",
+			expectedVars: []interface{}{
+				types.AttributeValueMemberM{
+					Value: map[string]types.AttributeValue{"key1": &types.AttributeValueMemberS{Value: "value1"}}},
+			},
 		},
 		"happy-path/with-list": {
 			args: clause.Values{
@@ -120,8 +124,15 @@ func TestValuesClause(t *testing.T) {
 					{List{"value1", "value2"}},
 				},
 			},
-			expectedSQL:  "VALUE {'column1' : ?}",
-			expectedVars: []interface{}{List{"value1", "value2"}},
+			expectedSQL: "VALUE {'column1' : ?}",
+			expectedVars: []interface{}{
+				types.AttributeValueMemberL{
+					Value: []types.AttributeValue{
+						&types.AttributeValueMemberS{Value: "value1"},
+						&types.AttributeValueMemberS{Value: "value2"},
+					},
+				},
+			},
 		},
 		"unhappy-path/empty-columns": {
 			args: clause.Values{
@@ -131,6 +142,14 @@ func TestValuesClause(t *testing.T) {
 			expectedVars: nil,
 		},
 	}
+
+	opts := []cmp.Option{
+		cmp.AllowUnexported(types.AttributeValueMemberS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberSS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberL{}),
+		cmp.AllowUnexported(types.AttributeValueMemberM{}),
+	}
+
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			sut := &gorm.Statement{
@@ -143,46 +162,12 @@ func TestValuesClause(t *testing.T) {
 			buildValuesClause(tt.args, sut)
 
 			acutalSQL := sut.SQL.String()
-			if diff := cmp.Diff(acutalSQL, tt.expectedSQL); diff != "" {
+			if diff := cmp.Diff(tt.expectedSQL, acutalSQL); diff != "" {
 				t.Errorf("SQL mismatch (-want +got):\n%s", diff)
 			}
 			acutalVars := sut.Vars
-			if diff := cmp.Diff(acutalVars, tt.expectedVars); diff != "" {
+			if diff := cmp.Diff(tt.expectedVars, acutalVars, opts...); diff != "" {
 				t.Errorf("Vars mismatch (-want +got):\n%s", diff)
-			}
-		})
-	}
-}
-
-func Test_bindVarIfCollectionType(t *testing.T) {
-	type args struct {
-		stmt  *gorm.Statement
-		value interface{}
-	}
-	type test struct {
-		args args
-		want bool
-	}
-	tests := map[string]test{
-		"happy-path/not-collection-type": {
-			args: args{
-				stmt: &gorm.Statement{
-					DB: &gorm.DB{
-						Config: &gorm.Config{
-							Dialector: &mockDialector{},
-						},
-					},
-				},
-				value: "not-collection-type",
-			},
-			want: false,
-		},
-	}
-
-	for name, tt := range tests {
-		t.Run(name, func(t *testing.T) {
-			if gotBound := bindVarIfCollectionType(tt.args.stmt, tt.args.value); gotBound != tt.want {
-				t.Errorf("bindVarIfCollectionType() = %v, want %v", gotBound, tt.want)
 			}
 		})
 	}
@@ -279,21 +264,30 @@ func TestBuildSetClause(t *testing.T) {
 				{Column: clause.Column{Name: "column1"}, Value: Sets[string]{"value1", "value2"}},
 			},
 			expectedSQL:  "SET column1=?",
-			expectedVars: []interface{}{Sets[string]{"value1", "value2"}},
+			expectedVars: []interface{}{types.AttributeValueMemberSS{Value: []string{"value1", "value2"}}},
 		},
 		"happy-path/with-map": {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: Map{"key1": "value1"}},
 			},
-			expectedSQL:  "SET column1=?",
-			expectedVars: []interface{}{Map{"key1": "value1"}},
+			expectedSQL: "SET column1=?",
+			expectedVars: []interface{}{
+				types.AttributeValueMemberM{
+					Value: map[string]types.AttributeValue{"key1": &types.AttributeValueMemberS{Value: "value1"}}}},
 		},
 		"happy-path/with-list": {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: List{"value1", "value2"}},
 			},
-			expectedSQL:  "SET column1=?",
-			expectedVars: []interface{}{List{"value1", "value2"}},
+			expectedSQL: "SET column1=?",
+			expectedVars: []interface{}{
+				types.AttributeValueMemberL{
+					Value: []types.AttributeValue{
+						&types.AttributeValueMemberS{Value: "value1"},
+						&types.AttributeValueMemberS{Value: "value2"},
+					},
+				},
+			},
 		},
 		"happy-path/contains-primary-key": {
 			set: clause.Set{
@@ -309,6 +303,13 @@ func TestBuildSetClause(t *testing.T) {
 			expectedVars: nil,
 		},
 	}
+	opts := []cmp.Option{
+		cmp.AllowUnexported(types.AttributeValueMemberS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberSS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberL{}),
+		cmp.AllowUnexported(types.AttributeValueMemberM{}),
+	}
+
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			sut := &gorm.Statement{
@@ -324,11 +325,11 @@ func TestBuildSetClause(t *testing.T) {
 			buildSetClause(tt.set, sut)
 
 			acutalSQL := sut.SQL.String()
-			if diff := cmp.Diff(acutalSQL, tt.expectedSQL); diff != "" {
+			if diff := cmp.Diff(tt.expectedSQL, acutalSQL); diff != "" {
 				t.Errorf("SQL mismatch (-want +got):\n%s", diff)
 			}
 			acutalVars := sut.Vars
-			if diff := cmp.Diff(acutalVars, tt.expectedVars); diff != "" {
+			if diff := cmp.Diff(tt.expectedVars, acutalVars, opts...); diff != "" {
 				t.Errorf("Vars mismatch (-want +got):\n%s", diff)
 			}
 		})

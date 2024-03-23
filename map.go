@@ -1,12 +1,22 @@
 package dynmgrm
 
+import (
+	"context"
+
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
+)
+
+var _ gorm.Valuer = (*Map)(nil)
+
 // Map is a DynamoDB map type.
 //
 // See: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html
 type Map map[string]interface{}
 
 // GormDataType returns the data type for Gorm.
-func (m *Map) GormDataType() string {
+func (m Map) GormDataType() string {
 	return "dgmap"
 }
 
@@ -22,6 +32,19 @@ func (m *Map) Scan(value interface{}) error {
 	}
 	*m = mv
 	return resolveCollectionsNestedInMap(m)
+}
+
+func (m Map) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
+	if err := resolveCollectionsNestedInMap(&m); err != nil {
+		_ = db.AddError(err)
+		return clause.Expr{}
+	}
+	av, err := toDocumentAttributeValue[*types.AttributeValueMemberM](m)
+	if err != nil {
+		_ = db.AddError(err)
+		return clause.Expr{}
+	}
+	return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
 }
 
 // resolveCollectionsNestedInMap resolves nested document type attribute.

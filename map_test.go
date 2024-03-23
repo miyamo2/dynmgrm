@@ -1,8 +1,12 @@
 package dynmgrm
 
 import (
+	"context"
 	"errors"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/google/go-cmp/cmp"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"testing"
 )
 
@@ -100,19 +104,19 @@ func TestMap_ResolveNestedCollections(t *testing.T) {
 			expectedState: Map{"a": List{1, "b"}},
 		},
 		"happy-path/nested-int-sets": {
-			sut:           Map{"a": []interface{}{int(1), int(2), int(3)}},
+			sut:           Map{"a": []float64{1, 2, 3}},
 			expectedState: Map{"a": Sets[int]{1, 2, 3}},
 		},
 		"happy-path/nested-float-sets": {
-			sut:           Map{"a": []interface{}{float64(1.1), float64(2.1), float64(3.1)}},
+			sut:           Map{"a": []float64{1.1, 2.1, 3.1}},
 			expectedState: Map{"a": Sets[float64]{1.1, 2.1, 3.1}},
 		},
 		"happy-path/nested-string-sets": {
-			sut:           Map{"a": []interface{}{string("1"), string("2"), string("3")}},
+			sut:           Map{"a": []string{"1", "2", "3"}},
 			expectedState: Map{"a": Sets[string]{"1", "2", "3"}},
 		},
 		"happy-path/nested-binary-sets": {
-			sut:           Map{"a": []interface{}{[]byte("1"), []byte("2"), []byte("3")}},
+			sut:           Map{"a": [][]byte{[]byte("1"), []byte("2"), []byte("3")}},
 			expectedState: Map{"a": Sets[[]byte]{[]byte("1"), []byte("2"), []byte("3")}},
 		},
 	}
@@ -127,6 +131,53 @@ func TestMap_ResolveNestedCollections(t *testing.T) {
 			if diff := cmp.Diff(tt.expectedState, tt.sut); diff != "" {
 				t.Errorf("ResolveNestedDocument() mismatch (-want +got):\n%s", diff)
 				return
+			}
+		})
+	}
+}
+
+func TestMap_GormValue(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		db  *gorm.DB
+	}
+	type test struct {
+		sut           Map
+		args          args
+		want          clause.Expr
+		expectDBError error
+	}
+	tests := map[string]test{
+		"happy-path": {
+			sut: Map{"a": 1},
+			args: args{
+				ctx: context.Background(),
+				db:  &gorm.DB{},
+			},
+			want: clause.Expr{
+				SQL: "?",
+				Vars: []interface{}{
+					types.AttributeValueMemberM{Value: map[string]types.AttributeValue{
+						"a": &types.AttributeValueMemberN{Value: "1"},
+					}},
+				}},
+		},
+	}
+	opts := []cmp.Option{
+		cmp.AllowUnexported(types.AttributeValueMemberS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberSS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberN{}),
+		cmp.AllowUnexported(types.AttributeValueMemberNS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberB{}),
+		cmp.AllowUnexported(types.AttributeValueMemberBS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberL{}),
+		cmp.AllowUnexported(types.AttributeValueMemberM{}),
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.GormValue(tt.args.ctx, tt.args.db)
+			if diff := cmp.Diff(tt.want, got, opts...); diff != "" {
+				t.Errorf("GormValue() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}

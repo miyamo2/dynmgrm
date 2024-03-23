@@ -1,22 +1,29 @@
 package dynmgrm
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"math"
+
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 var (
-	ErrValueIsIncompatibleOfInterfaceSlice = errors.New("value is incompatible of interface slice")
-	ErrValueIsIncompatibleOfIntSlice       = errors.New("value is incompatible of int slice")
-	ErrValueIsIncompatibleOfFloat64Slice   = errors.New("value is incompatible of float64 slice")
-	ErrValueIsIncompatibleOfBinarySlice    = errors.New("value is incompatible of []byte slice")
+	ErrValueIsIncompatibleOfStringSlice  = errors.New("value is incompatible of string slice")
+	ErrValueIsIncompatibleOfIntSlice     = errors.New("value is incompatible of int slice")
+	ErrValueIsIncompatibleOfFloat64Slice = errors.New("value is incompatible of float64 slice")
+	ErrValueIsIncompatibleOfBinarySlice  = errors.New("value is incompatible of []byte slice")
 )
 
 // SetsSupportable are the types that support the Set
 type SetsSupportable interface {
 	string | []byte | int | float64
 }
+
+var _ gorm.Valuer = (*Sets[string])(nil)
 
 // Sets is a set of values.
 //
@@ -54,169 +61,159 @@ func (s *Sets[T]) Scan(value interface{}) error {
 	}
 }
 
+func (s Sets[T]) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
+	switch s := (interface{})(s).(type) {
+	case Sets[int]:
+		av, err := numericSetsToAttributeValue(s)
+		if err != nil {
+			_ = db.AddError(err)
+			break
+		}
+		return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
+	case Sets[float64]:
+		av, err := numericSetsToAttributeValue(s)
+		if err != nil {
+			_ = db.AddError(err)
+			break
+		}
+		return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
+	case Sets[string]:
+		av, err := stringSetsToAttributeValue(s)
+		if err != nil {
+			_ = db.AddError(err)
+			break
+		}
+		return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
+	case Sets[[]byte]:
+		av, err := binarySetsToAttributeValue(s)
+		if err != nil {
+			_ = db.AddError(err)
+			break
+		}
+		return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
+	}
+	return clause.Expr{}
+}
+
+func numericSetsToAttributeValue[T Sets[int] | Sets[float64]](s T) (*types.AttributeValueMemberNS, error) {
+	return toDocumentAttributeValue[*types.AttributeValueMemberNS](s)
+}
+
+func stringSetsToAttributeValue(s Sets[string]) (*types.AttributeValueMemberSS, error) {
+	return toDocumentAttributeValue[*types.AttributeValueMemberSS](s)
+}
+
+func binarySetsToAttributeValue(s Sets[[]byte]) (*types.AttributeValueMemberBS, error) {
+	return toDocumentAttributeValue[*types.AttributeValueMemberBS](s)
+}
+
 // scanAsIntSets scans the value as Sets[int]
 func scanAsIntSets(s *Sets[int], value interface{}) error {
-	sv, ok := value.([]interface{})
+	sv, ok := value.([]float64)
 	if !ok {
 		*s = nil
-		return ErrValueIsIncompatibleOfInterfaceSlice
+		return ErrValueIsIncompatibleOfIntSlice
 	}
 	for _, v := range sv {
-		cv, ok := v.(int)
-		if !ok {
-			switch v := v.(type) {
-			case float32:
-				cv = int(v)
-				ok = true
-			case float64:
-				cv = int(v)
-				ok = true
-			}
-		}
-		if !ok {
+		if math.Floor(v) != v {
 			*s = nil
 			return ErrValueIsIncompatibleOfIntSlice
 		}
-		*s = append(*s, cv)
+		*s = append(*s, int(v))
 	}
 	return nil
 }
 
 // scanAsFloat64Sets scans the value as Sets[float64]
 func scanAsFloat64Sets(s *Sets[float64], value interface{}) error {
-	sv, ok := value.([]interface{})
+	sv, ok := value.([]float64)
 	if !ok {
 		*s = nil
-		return ErrValueIsIncompatibleOfInterfaceSlice
+		return ErrValueIsIncompatibleOfFloat64Slice
 	}
 	for _, v := range sv {
-		cv, ok := v.(float64)
-		if !ok {
-			switch v := v.(type) {
-			case int:
-				cv = float64(v)
-				ok = true
-			}
-		}
-		if !ok {
-			*s = nil
-			return ErrValueIsIncompatibleOfFloat64Slice
-		}
-		*s = append(*s, cv)
+		*s = append(*s, v)
 	}
 	return nil
 }
 
 // scanAsStringSets scans the value as Sets[string]
 func scanAsStringSets(s *Sets[string], value interface{}) error {
-	sv, ok := value.([]interface{})
+	sv, ok := value.([]string)
 	if !ok {
 		*s = nil
-		return ErrValueIsIncompatibleOfInterfaceSlice
+		return ErrValueIsIncompatibleOfStringSlice
 	}
 	for _, v := range sv {
-		cv, ok := v.(string)
-		if !ok {
-			cv = fmt.Sprintf("%v", v)
-		}
-		*s = append(*s, cv)
+		*s = append(*s, v)
 	}
 	return nil
 }
 
 // scanAsBinarySets scans the value as Sets[[]byte]
 func scanAsBinarySets(s *Sets[[]byte], value interface{}) error {
-	sv, ok := value.([]interface{})
+	sv, ok := value.([][]byte)
 	if !ok {
 		*s = nil
-		return ErrValueIsIncompatibleOfInterfaceSlice
+		return ErrValueIsIncompatibleOfBinarySlice
 	}
 	for _, v := range sv {
-		cv, ok := v.([]byte)
-		if !ok {
-			*s = nil
-			return ErrValueIsIncompatibleOfBinarySlice
-		}
-		*s = append(*s, cv)
+		*s = append(*s, v)
 	}
 	return nil
 }
 
 func isCompatibleWithSets[T SetsSupportable](value interface{}) (compatible bool) {
-	sValue, ok := value.([]interface{})
-	if !ok {
-		return
-	}
 	var t T
 	switch (interface{})(t).(type) {
 	case string:
-		compatible = isStringSetsCompatible(sValue)
+		compatible = isStringSetsCompatible(value)
 	case int:
-		compatible = isIntSetsCompatible(sValue)
+		compatible = isIntSetsCompatible(value)
 	case float64:
-		compatible = isFloat64SetsCompatible(sValue)
+		compatible = isFloat64SetsCompatible(value)
 	case []byte:
-		compatible = isBinarySetsCompatible(sValue)
+		compatible = isBinarySetsCompatible(value)
 	}
 	return
 }
 
-func isIntSetsCompatible(value []interface{}) (compatible bool) {
-	for _, v := range value {
-		if _, ok := v.(int); ok {
-			compatible = true
-			continue
-		}
-		switch v := v.(type) {
-		case float64:
+func isIntSetsCompatible(value interface{}) (compatible bool) {
+	if _, ok := value.([]int); ok {
+		compatible = true
+		return
+	}
+	if value, ok := value.([]float64); ok {
+		compatible = true
+		for _, v := range value {
 			if math.Floor(v) == v {
 				compatible = true
 				continue
 			}
 			compatible = false
 			return
-		default:
-			compatible = false
-			return
 		}
 	}
 	return
 }
 
-func isStringSetsCompatible(value []interface{}) (compatible bool) {
-	for _, v := range value {
-		if _, ok := v.(string); ok {
-			compatible = true
-			continue
-		}
-		compatible = false
-		break
+func isStringSetsCompatible(value interface{}) (compatible bool) {
+	if _, ok := value.([]string); ok {
+		compatible = true
 	}
 	return
 }
 
-func isFloat64SetsCompatible(value []interface{}) (compatible bool) {
-	for _, v := range value {
-		switch v.(type) {
-		case float64:
-			compatible = true
-			continue
-		default:
-			compatible = false
-			return
-		}
+func isFloat64SetsCompatible(value interface{}) (compatible bool) {
+	if _, ok := value.([]float64); ok {
+		compatible = true
 	}
 	return
 }
 
-func isBinarySetsCompatible(value []interface{}) (compatible bool) {
-	for _, v := range value {
-		if _, ok := v.([]byte); ok {
-			compatible = true
-			continue
-		}
-		compatible = false
-		return
+func isBinarySetsCompatible(value interface{}) (compatible bool) {
+	if _, ok := value.([][]byte); ok {
+		compatible = true
 	}
 	return
 }
