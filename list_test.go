@@ -1,7 +1,11 @@
 package dynmgrm
 
 import (
+	"context"
 	"errors"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -121,6 +125,54 @@ func TestList_ResolveNestedCollections(t *testing.T) {
 			if diff := cmp.Diff(tt.expectedState, tt.sut); diff != "" {
 				t.Errorf("ResolveNestedDocument() mismatch (-want +got):\n%s", diff)
 				return
+			}
+		})
+	}
+}
+
+func TestList_GormValue(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		db  *gorm.DB
+	}
+	type test struct {
+		sut           List
+		args          args
+		want          clause.Expr
+		expectDBError error
+	}
+	tests := map[string]test{
+		"happy-path": {
+			sut: List{1},
+			args: args{
+				ctx: context.Background(),
+				db:  &gorm.DB{},
+			},
+			want: clause.Expr{
+				SQL: "?",
+				Vars: []interface{}{
+					types.AttributeValueMemberL{
+						Value: []types.AttributeValue{
+							&types.AttributeValueMemberN{Value: "1"},
+						}},
+				}},
+		},
+	}
+	opts := []cmp.Option{
+		cmp.AllowUnexported(types.AttributeValueMemberS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberSS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberN{}),
+		cmp.AllowUnexported(types.AttributeValueMemberNS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberB{}),
+		cmp.AllowUnexported(types.AttributeValueMemberBS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberL{}),
+		cmp.AllowUnexported(types.AttributeValueMemberM{}),
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.GormValue(tt.args.ctx, tt.args.db)
+			if diff := cmp.Diff(tt.want, got, opts...); diff != "" {
+				t.Errorf("GormValue() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}

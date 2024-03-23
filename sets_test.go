@@ -1,8 +1,12 @@
 package dynmgrm
 
 import (
+	"context"
 	"errors"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/google/go-cmp/cmp"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"testing"
 )
 
@@ -469,6 +473,186 @@ func TestSets_IsCompatibleWithSets_Binary(t *testing.T) {
 			got := isCompatibleWithSets[[]byte](tt.args)
 			if got != tt.want {
 				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSets_GormValue_String(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		db  *gorm.DB
+	}
+	type test struct {
+		sut           Sets[string]
+		args          args
+		want          clause.Expr
+		expectDBError error
+	}
+	tests := map[string]test{
+		"happy-path": {
+			sut: Sets[string]{"1"},
+			args: args{
+				ctx: context.Background(),
+				db:  &gorm.DB{},
+			},
+			want: clause.Expr{
+				SQL: "?",
+				Vars: []interface{}{
+					types.AttributeValueMemberSS{Value: []string{"1"}},
+				}},
+		},
+	}
+	opts := []cmp.Option{
+		cmp.AllowUnexported(types.AttributeValueMemberS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberSS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberN{}),
+		cmp.AllowUnexported(types.AttributeValueMemberNS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberB{}),
+		cmp.AllowUnexported(types.AttributeValueMemberBS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberL{}),
+		cmp.AllowUnexported(types.AttributeValueMemberM{}),
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.GormValue(tt.args.ctx, tt.args.db)
+			if diff := cmp.Diff(tt.want, got, opts...); diff != "" {
+				t.Errorf("GormValue() mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
+
+func TestSets_GormValue_Int(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		db  *gorm.DB
+	}
+	type test struct {
+		sut           Sets[int]
+		args          args
+		want          clause.Expr
+		expectDBError error
+	}
+	tests := map[string]test{
+		"happy-path": {
+			sut: Sets[int]{1},
+			args: args{
+				ctx: context.Background(),
+				db:  &gorm.DB{},
+			},
+			want: clause.Expr{
+				SQL: "?",
+				Vars: []interface{}{
+					types.AttributeValueMemberNS{Value: []string{"1"}},
+				}},
+		},
+	}
+	opts := []cmp.Option{
+		cmp.AllowUnexported(types.AttributeValueMemberS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberSS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberN{}),
+		cmp.AllowUnexported(types.AttributeValueMemberNS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberB{}),
+		cmp.AllowUnexported(types.AttributeValueMemberBS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberL{}),
+		cmp.AllowUnexported(types.AttributeValueMemberM{}),
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.GormValue(tt.args.ctx, tt.args.db)
+			if diff := cmp.Diff(tt.want, got, opts...); diff != "" {
+				t.Errorf("GormValue() mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
+
+func TestSets_GormValue_Float64(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		db  *gorm.DB
+	}
+	type test struct {
+		sut           Sets[float64]
+		args          args
+		want          clause.Expr
+		expectDBError error
+	}
+	tests := map[string]test{
+		"happy-path": {
+			sut: Sets[float64]{1.1},
+			args: args{
+				ctx: context.Background(),
+				db:  &gorm.DB{},
+			},
+			want: clause.Expr{
+				SQL: "?",
+				Vars: []interface{}{
+					types.AttributeValueMemberNS{Value: []string{"1.1"}},
+				}},
+		},
+	}
+	opts := []cmp.Option{
+		cmp.AllowUnexported(types.AttributeValueMemberS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberSS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberN{}),
+		cmp.AllowUnexported(types.AttributeValueMemberNS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberB{}),
+		cmp.AllowUnexported(types.AttributeValueMemberBS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberL{}),
+		cmp.AllowUnexported(types.AttributeValueMemberM{}),
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.GormValue(tt.args.ctx, tt.args.db)
+			if diff := cmp.Diff(tt.want, got, opts...); diff != "" {
+				t.Errorf("GormValue() mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
+
+func TestSets_GormValue_Binary(t *testing.T) {
+	type args struct {
+		ctx context.Context
+		db  *gorm.DB
+	}
+	type test struct {
+		sut           Sets[[]byte]
+		args          args
+		want          clause.Expr
+		expectDBError error
+	}
+	tests := map[string]test{
+		"happy-path": {
+			sut: Sets[[]byte]{[]byte("A")},
+			args: args{
+				ctx: context.Background(),
+				db:  &gorm.DB{},
+			},
+			want: clause.Expr{
+				SQL: "?",
+				Vars: []interface{}{
+					types.AttributeValueMemberBS{Value: [][]byte{[]byte("A")}},
+				}},
+		},
+	}
+	opts := []cmp.Option{
+		cmp.AllowUnexported(types.AttributeValueMemberS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberSS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberN{}),
+		cmp.AllowUnexported(types.AttributeValueMemberNS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberB{}),
+		cmp.AllowUnexported(types.AttributeValueMemberBS{}),
+		cmp.AllowUnexported(types.AttributeValueMemberL{}),
+		cmp.AllowUnexported(types.AttributeValueMemberM{}),
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := tt.sut.GormValue(tt.args.ctx, tt.args.db)
+			if diff := cmp.Diff(tt.want, got, opts...); diff != "" {
+				t.Errorf("GormValue() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
