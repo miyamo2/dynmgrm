@@ -94,19 +94,19 @@ func TestList_ResolveNestedCollections(t *testing.T) {
 			expectedState: List{List{1, "b"}},
 		},
 		"happy-path/nested-int-sets": {
-			sut:           List{[]interface{}{int(1), 2, int(3)}},
+			sut:           List{[]float64{1, 2, 3}},
 			expectedState: List{Sets[int]{1, 2, 3}},
 		},
 		"happy-path/nested-float-sets": {
-			sut:           List{[]interface{}{float64(1.1), 2.1, float64(3.1)}},
+			sut:           List{[]float64{1.1, 2.1, 3.1}},
 			expectedState: List{Sets[float64]{1.1, 2.1, 3.1}},
 		},
 		"happy-path/nested-string-sets": {
-			sut:           List{[]interface{}{string("1"), string("2"), string("3")}},
+			sut:           List{[]string{"1", "2", "3"}},
 			expectedState: List{Sets[string]{"1", "2", "3"}},
 		},
 		"happy-path/nested-binary-sets": {
-			sut:           List{[]interface{}{[]byte("1"), []byte("2"), []byte("3")}},
+			sut:           List{[][]byte{[]byte("1"), []byte("2"), []byte("3")}},
 			expectedState: List{Sets[[]byte]{[]byte("1"), []byte("2"), []byte("3")}},
 		},
 	}

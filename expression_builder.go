@@ -42,41 +42,9 @@ func buildValuesClause(values clause.Values, stmt *gorm.Statement) {
 		}
 		stmt.WriteString(fmt.Sprintf(`'%s'`, column.Name))
 		stmt.WriteString(" : ")
-		v := items[i]
-		if bindVarIfCollectionType(stmt, v) {
-			continue
-		}
 		stmt.AddVar(stmt, items[i])
 	}
 	stmt.WriteByte('}')
-}
-
-// bindVarIfCollectionType binds a variable if it is a collection type
-func bindVarIfCollectionType(stmt *gorm.Statement, value interface{}) (bound bool) {
-	switch value := (value).(type) {
-	case Sets[string],
-		Sets[[]byte],
-		Sets[int],
-		Sets[float64]:
-		stmt.Vars = append(stmt.Vars, value)
-		stmt.DB.Dialector.BindVarTo(stmt, stmt, value)
-		bound = true
-	case Map:
-		if err := resolveCollectionsNestedInMap(&value); err != nil {
-			break
-		}
-		stmt.Vars = append(stmt.Vars, value)
-		stmt.DB.Dialector.BindVarTo(stmt, stmt, value)
-		bound = true
-	case List:
-		if err := resolveCollectionsNestedInList(&value); err != nil {
-			break
-		}
-		stmt.Vars = append(stmt.Vars, value)
-		stmt.DB.Dialector.BindVarTo(stmt, stmt, value)
-		bound = true
-	}
-	return
 }
 
 // buildSetClause builds SET clause
@@ -97,9 +65,6 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 		stmt.WriteString(assignment.Column.Name)
 		stmt.WriteByte('=')
 		asgv := assignment.Value
-		if bindVarIfCollectionType(stmt, asgv) {
-			continue
-		}
 		stmt.AddVar(stmt, asgv)
 	}
 }

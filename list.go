@@ -1,9 +1,16 @@
 package dynmgrm
 
 import (
+	"context"
 	"errors"
 	"fmt"
+
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
+
+var _ gorm.Valuer = (*List)(nil)
 
 // List is a DynamoDB list type.
 //
@@ -26,6 +33,19 @@ func (l *List) Scan(value interface{}) error {
 	}
 	*l = sv
 	return resolveCollectionsNestedInList(l)
+}
+
+func (l List) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
+	if err := resolveCollectionsNestedInList(&l); err != nil {
+		_ = db.AddError(err)
+		return clause.Expr{}
+	}
+	av, err := toDocumentAttributeValue[*types.AttributeValueMemberL](l)
+	if err != nil {
+		_ = db.AddError(err)
+		return clause.Expr{}
+	}
+	return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
 }
 
 // resolveCollectionsNestedInList resolves nested collection type attribute.
