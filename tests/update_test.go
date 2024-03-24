@@ -112,7 +112,7 @@ func Test_Update_With_Save(t *testing.T) {
 	}
 }
 
-func Test_Update_With_Updates_Clause(t *testing.T) {
+func Test_Update_With_Updates(t *testing.T) {
 	db := getGormDB(t)
 	dataPreparation(t, testDataForSelect, testTableName)
 	defer dataCleanup(t, testDataForSelect, testTableName)
