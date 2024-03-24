@@ -62,7 +62,7 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 			stmt.WriteByte(' ')
 		}
 		stmt.WriteString("SET ")
-		stmt.WriteString(assignment.Column.Name)
+		stmt.WriteQuoted(assignment.Column.Name)
 		stmt.WriteByte('=')
 		asgv := assignment.Value
 		stmt.AddVar(stmt, asgv)
