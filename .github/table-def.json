@@ -4,12 +4,24 @@
     {
       "AttributeName": "pk",
       "KeyType": "HASH"
+    },
+    {
+      "AttributeName": "sk",
+      "KeyType": "RANGE"
     }
   ],
   "AttributeDefinitions": [
     {
+      "AttributeName": "pk",
+      "AttributeType": "S"
+    },
+    {
       "AttributeName": "sk",
       "AttributeType": "N"
+    },
+    {
+      "AttributeName": "some_string",
+      "AttributeType": "S"
     }
   ],
   "ProvisionedThroughput": {
