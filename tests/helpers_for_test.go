@@ -33,24 +33,11 @@ type TestTable struct {
 	Any            string
 }
 
-type TestTablePKSomeStringIndex struct {
-	PK             string `gorm:"primaryKey"`
-	SomeString     string `gorm:"primaryKey"`
-	SK             int
-	SomeInt        int
-	SomeFloat      float64
-	SomeBool       bool
-	SomeBinary     []byte
-	SomeList       dynmgrm.List
-	SomeMap        dynmgrm.Map
-	SomeStringSets dynmgrm.Sets[string]
-	SomeIntSets    dynmgrm.Sets[int]
-	SomeFloatSets  dynmgrm.Sets[float64]
-	SomeBinarySets dynmgrm.Sets[[]byte]
-	Any            string
-}
-
-var dynamoDBClient dynamodbiface.DynamoDBAPI
+var (
+	endpoint       string
+	region         string
+	dynamoDBClient dynamodbiface.DynamoDBAPI
+)
 
 var setsCmpOpts = []cmp.Option{
 	cmpopts.SortSlices(func(i, j int) bool {
@@ -84,17 +71,22 @@ func init() {
 	// for local testing
 	_ = godotenv.Load("./.env")
 
-	dynamoDBClient = dynamodb.New(session.New())
+	endpoint = os.Getenv("DYNAMODB_ENDPOINT")
+	region = os.Getenv("AWS_DEFAULT_REGION")
+	if region == "" {
+		region = os.Getenv("AWS_REGION")
+	}
+	conf := &aws.Config{Region: &region}
+	if endpoint != "" {
+		conf.Endpoint = &endpoint
+	}
+	dynamoDBClient = dynamodb.New(session.New(), conf)
 }
 
 func getGormDB(t *testing.T) *gorm.DB {
 	t.Helper()
-	region := os.Getenv("AWS_DEFAULT_REGION")
-	endpoint := os.Getenv("DYNAMODB_ENDPOINT")
 	opts := make([]dynmgrm.DialectorOption, 0, 2)
-	if region != "" {
-		opts = append(opts, dynmgrm.WithRegion(region))
-	}
+	opts = append(opts, dynmgrm.WithRegion(region))
 	if endpoint != "" {
 		opts = append(opts, dynmgrm.WithEndpoint(endpoint))
 	}
