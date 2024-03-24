@@ -134,6 +134,29 @@ func TestValuesClause(t *testing.T) {
 				},
 			},
 		},
+		"happy-path/with-zero-value": {
+			args: clause.Values{
+				Columns: []clause.Column{
+					{
+						Name: "pk",
+					},
+					{
+						Name: "column1",
+					},
+					{
+						Name: "column2",
+					},
+					{
+						Name: "column3",
+					},
+				},
+				Values: [][]interface{}{
+					{0, "value1", "", nil},
+				},
+			},
+			expectedSQL:  "VALUE {'pk' : ?, 'column1' : ?}",
+			expectedVars: []interface{}{0, "value1"},
+		},
 		"unhappy-path/empty-columns": {
 			args: clause.Values{
 				Columns: []clause.Column{},
@@ -157,6 +180,9 @@ func TestValuesClause(t *testing.T) {
 					Config: &gorm.Config{
 						Dialector: &mockDialector{},
 					},
+				},
+				Schema: &schema.Schema{
+					PrimaryFieldDBNames: []string{"pk"},
 				},
 			}
 			buildValuesClause(tt.args, sut)

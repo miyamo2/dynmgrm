@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"reflect"
 	"slices"
 )
 
@@ -36,13 +37,18 @@ func buildValuesClause(values clause.Values, stmt *gorm.Statement) {
 
 	stmt.WriteString("VALUE ")
 	stmt.WriteByte('{')
+	prfl := stmt.Schema.PrimaryFieldDBNames
 	for i, column := range columns {
+		v := items[i]
+		if isZeroValue(v) && !slices.Contains[[]string](prfl, column.Name) {
+			continue
+		}
 		if i > 0 {
 			stmt.WriteString(", ")
 		}
 		stmt.WriteString(fmt.Sprintf(`'%s'`, column.Name))
 		stmt.WriteString(" : ")
-		stmt.AddVar(stmt, items[i])
+		stmt.AddVar(stmt, v)
 	}
 	stmt.WriteByte('}')
 }
@@ -67,4 +73,11 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 		asgv := assignment.Value
 		stmt.AddVar(stmt, asgv)
 	}
+}
+
+func isZeroValue(v interface{}) bool {
+	if v == nil {
+		return true
+	}
+	return reflect.ValueOf(v).IsZero()
 }
