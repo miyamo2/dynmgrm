@@ -73,6 +73,14 @@ jobs:
           fail_ci_if_error: false
           verbose: true
 
+      - name: Update CHANGELOG
+        id: changelog
+        uses: requarks/changelog-action@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ github.ref_name }}
+          excludeTypes: "chore,Chore,[Chore],docs,Docs,[Docs]"
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
