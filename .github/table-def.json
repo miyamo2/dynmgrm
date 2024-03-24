@@ -1,5 +1,5 @@
 {
-  "TableName": "users-table",
+  "TableName": "test_tables",
   "KeySchema": [
     {
       "AttributeName": "pk",
