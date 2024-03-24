@@ -316,3 +316,155 @@ func Test_Update_With_Update_Clause(t *testing.T) {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
+
+func Test_Update_With_Tx_Commit(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForSelect, testTableName)
+	defer dataCleanup(t, testDataForSelect, testTableName)
+
+	expect := map[string]*dynamodb.AttributeValue{
+		"pk": {
+			S: aws.String("Partition1"),
+		},
+		"sk": {
+			N: aws.String("1"),
+		},
+		"some_string": {
+			S: aws.String("UPDATED"),
+		},
+		"some_int": {
+			N: aws.String("5"),
+		},
+		"some_float": {
+			N: aws.String("5.5"),
+		},
+		"some_bool": {
+			BOOL: aws.Bool(false),
+		},
+		"some_binary": {
+			B: []byte("XYZ"),
+		},
+		"some_list": {
+			L: []*dynamodb.AttributeValue{
+				{
+					S: aws.String("UPDATED"),
+				},
+				{
+					N: aws.String("5"),
+				},
+				{
+					N: aws.String("5.5"),
+				},
+				{
+					BOOL: aws.Bool(false),
+				},
+				{
+					B: []byte("XYZ"),
+				},
+			},
+		},
+		"some_map": {
+			M: map[string]*dynamodb.AttributeValue{
+				"some_string": {
+					S: aws.String("UPDATED"),
+				},
+				"some_number": {
+					N: aws.String("5.5"),
+				},
+				"some_bool": {
+					BOOL: aws.Bool(false),
+				},
+				"some_binary": {
+					B: []byte("XYZ"),
+				},
+			},
+		},
+		"some_string_sets": {
+			SS: []*string{aws.String("UPDATED")},
+		},
+		"some_int_sets": {
+			NS: []*string{aws.String("5"), aws.String("10")},
+		},
+		"some_float_sets": {
+			NS: []*string{aws.String("5.5"), aws.String("11")},
+		},
+		"some_binary_sets": {
+			BS: [][]byte{[]byte("XYZ"), []byte("ABC")},
+		},
+		"any": {
+			S: aws.String("UPDATED"),
+		},
+	}
+
+	tx := db.Begin()
+	tx.Model(
+		&TestTable{
+			PK: "Partition1",
+			SK: 1,
+		}).Updates(
+		map[string]interface{}{
+			"some_string": "UPDATED",
+			"some_int":    5,
+			"some_float":  5.5,
+			"some_bool":   false,
+			"some_binary": []byte("XYZ"),
+			"some_list":   dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+			"some_map": dynmgrm.Map{
+				"some_string": "UPDATED",
+				"some_number": 5.5,
+				"some_bool":   false,
+				"some_binary": []byte("XYZ")},
+			"some_string_sets": dynmgrm.Sets[string]{"UPDATED"},
+			"some_int_sets":    dynmgrm.Sets[int]{5, 10},
+			"some_float_sets":  dynmgrm.Sets[float64]{5.5, 11.0},
+			"some_binary_sets": dynmgrm.Sets[[]byte]{[]byte("XYZ"), []byte("ABC")},
+			"any":              "UPDATED",
+		})
+	tx.Commit()
+
+	result := getData(t, testTableName, "Partition1", 1)
+
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+		t.Errorf("Mismatch (-want +got):\n%s", diff)
+	}
+}
+
+func Test_Update_With_Tx_Rollback(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForSelect, testTableName)
+	defer dataCleanup(t, testDataForSelect, testTableName)
+
+	expect := testDataForSelect[0]
+
+	tx := db.Begin()
+	tx.Model(
+		&TestTable{
+			PK: "Partition1",
+			SK: 1,
+		}).Updates(
+		map[string]interface{}{
+			"some_string": "UPDATED",
+			"some_int":    5,
+			"some_float":  5.5,
+			"some_bool":   false,
+			"some_binary": []byte("XYZ"),
+			"some_list":   dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+			"some_map": dynmgrm.Map{
+				"some_string": "UPDATED",
+				"some_number": 5.5,
+				"some_bool":   false,
+				"some_binary": []byte("XYZ")},
+			"some_string_sets": dynmgrm.Sets[string]{"UPDATED"},
+			"some_int_sets":    dynmgrm.Sets[int]{5, 10},
+			"some_float_sets":  dynmgrm.Sets[float64]{5.5, 11.0},
+			"some_binary_sets": dynmgrm.Sets[[]byte]{[]byte("XYZ"), []byte("ABC")},
+			"any":              "UPDATED",
+		})
+	tx.Rollback()
+
+	result := getData(t, testTableName, "Partition1", 1)
+
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+		t.Errorf("Mismatch (-want +got):\n%s", diff)
+	}
+}
