@@ -134,6 +134,29 @@ func TestValuesClause(t *testing.T) {
 				},
 			},
 		},
+		"happy-path/with-zero-value": {
+			args: clause.Values{
+				Columns: []clause.Column{
+					{
+						Name: "pk",
+					},
+					{
+						Name: "column1",
+					},
+					{
+						Name: "column2",
+					},
+					{
+						Name: "column3",
+					},
+				},
+				Values: [][]interface{}{
+					{0, "value1", "", nil},
+				},
+			},
+			expectedSQL:  "VALUE {'pk' : ?, 'column1' : ?}",
+			expectedVars: []interface{}{0, "value1"},
+		},
 		"unhappy-path/empty-columns": {
 			args: clause.Values{
 				Columns: []clause.Column{},
@@ -157,6 +180,9 @@ func TestValuesClause(t *testing.T) {
 					Config: &gorm.Config{
 						Dialector: &mockDialector{},
 					},
+				},
+				Schema: &schema.Schema{
+					PrimaryFieldDBNames: []string{"pk"},
 				},
 			}
 			buildValuesClause(tt.args, sut)
@@ -248,7 +274,7 @@ func TestBuildSetClause(t *testing.T) {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: "value1"},
 			},
-			expectedSQL:  "SET column1=?",
+			expectedSQL:  `SET "column1"=?`,
 			expectedVars: []interface{}{"value1"},
 		},
 		"happy-path/multiple-assignments": {
@@ -256,21 +282,21 @@ func TestBuildSetClause(t *testing.T) {
 				{Column: clause.Column{Name: "column1"}, Value: "value1"},
 				{Column: clause.Column{Name: "column2"}, Value: "value2"},
 			},
-			expectedSQL:  "SET column1=? SET column2=?",
+			expectedSQL:  `SET "column1"=? SET "column2"=?`,
 			expectedVars: []interface{}{"value1", "value2"},
 		},
 		"happy-path/with-sets": {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: Sets[string]{"value1", "value2"}},
 			},
-			expectedSQL:  "SET column1=?",
+			expectedSQL:  `SET "column1"=?`,
 			expectedVars: []interface{}{types.AttributeValueMemberSS{Value: []string{"value1", "value2"}}},
 		},
 		"happy-path/with-map": {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: Map{"key1": "value1"}},
 			},
-			expectedSQL: "SET column1=?",
+			expectedSQL: `SET "column1"=?`,
 			expectedVars: []interface{}{
 				types.AttributeValueMemberM{
 					Value: map[string]types.AttributeValue{"key1": &types.AttributeValueMemberS{Value: "value1"}}}},
@@ -279,7 +305,7 @@ func TestBuildSetClause(t *testing.T) {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: List{"value1", "value2"}},
 			},
-			expectedSQL: "SET column1=?",
+			expectedSQL: `SET "column1"=?`,
 			expectedVars: []interface{}{
 				types.AttributeValueMemberL{
 					Value: []types.AttributeValue{
@@ -294,7 +320,7 @@ func TestBuildSetClause(t *testing.T) {
 				{Column: clause.Column{Name: "column1"}, Value: "value1"},
 				{Column: clause.Column{Name: "pk"}, Value: "value2"},
 			},
-			expectedSQL:  "SET column1=?",
+			expectedSQL:  `SET "column1"=?`,
 			expectedVars: []interface{}{"value1"},
 		},
 		"unhappy-path/empty-set": {

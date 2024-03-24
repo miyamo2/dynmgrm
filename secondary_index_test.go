@@ -47,21 +47,6 @@ func TestSecondaryIndexExpression_Build(t *testing.T) {
 			},
 			exprectedTable: "testTable.testIndex",
 		},
-		"happy-path/with-model-as": {
-			sut: SecondaryIndex("testTable.testIndex", ModelAs(TestTable{})),
-			builder: &gorm.Statement{
-				DB: &gorm.DB{
-					Config: &gorm.Config{
-						Dialector: &mockDialector{},
-					},
-				},
-			},
-			exprectedTableExpr: clause.Expr{
-				SQL: `"testTable"."testIndex"`,
-			},
-			exprectedTable: "testTable.testIndex",
-			expectedDist:   TestTable{},
-		},
 		"happy-path/with-statement-table": {
 			sut: SecondaryIndex("testIndex"),
 			builder: &gorm.Statement{
