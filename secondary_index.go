@@ -26,28 +26,15 @@ func SecondaryIndexOf[T string | clause.Table](table T) SecondaryIndexOption {
 	}
 }
 
-// ModelAs is the model to be used for the index.
-func ModelAs(dest interface{}) SecondaryIndexOption {
-	return func(s *secondaryIndexExpression) {
-		s.model = dest
-	}
-}
-
 // secondaryIndexExpression is a clause.Expression that represents a secondary index
 type secondaryIndexExpression struct {
 	table     clause.Table
-	model     interface{}
 	tableName string
 	indexName string
 }
 
 // ModifyStatement modifies the gorm.Statement to use the secondary index
 func (s secondaryIndexExpression) ModifyStatement(stmt *gorm.Statement) {
-	m := s.model
-	if m != nil {
-		stmt.Dest = m
-	}
-
 	tn := s.tableName
 	if tn == "" {
 		tn = s.table.Name
