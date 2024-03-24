@@ -19,6 +19,16 @@ jobs:
     strategy:
       matrix:
         goversion: [ ">=1.21.0"]
+    env:
+        AWS_ACCESS_KEY_ID: DUMMY_AWS_ACCESS_KEY_ID
+        AWS_SECRET_ACCESS_KEY: DUMMY_AWS_SECRET_ACCESS_KEY
+        AWS_DEFAULT_REGION: ap-northeast-1
+        DYNAMODB_ENDPOINT: http://localhost:8000
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports:
+          - 8000:8000
 
     steps:
       - uses: actions/checkout@v4
@@ -55,6 +65,17 @@ jobs:
         run: |
           staticcheck ./... | reviewdog -f=staticcheck -reporter=github-pr-check -level warning
 
-      - name: Go Test
+      - name: UnitTest
         run: |
+          go test ./... -v
+
+      - name: Create Table
+        working-directory: ./.github
+        run: |
+          aws dynamodb create-table --cli-input-json file://table-def.json --endpoint-url ${{ env.DYNAMODB_ENDPOINT }}
+
+      - name: IntegrationTest
+        working-directory: ./tests
+        run: |
+          go mod tidy
           go test ./... -v

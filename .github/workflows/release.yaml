@@ -10,6 +10,16 @@ permissions: write-all
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: DUMMY_AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: DUMMY_AWS_SECRET_ACCESS_KEY
+      AWS_DEFAULT_REGION: ap-northeast-1
+      DYNAMODB_ENDPOINT: http://localhost:8000
+    services:
+      dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports:
+          - 8000:8000
 
     steps:
       - uses: actions/checkout@v4
@@ -31,16 +41,35 @@ jobs:
           go generate ./...
           git diff --exit-code
 
-      - name: Go Test
+      - name: Unit Test
         run: |
           TARGET=$(go list ./... | grep -v "mock")
           go test $TARGET -v -coverpkg=$TARGET -coverprofile=coverage.out
 
-      - name: Upload coverage to Codecov
+      - name: Upload unit test coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.out
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Create Table
+        working-directory: ./.github
+        run: |
+          aws dynamodb create-table --cli-input-json file://table-def.json --endpoint-url ${{ env.DYNAMODB_ENDPOINT }}
+
+      - name: Integration Test
+        working-directory: ./tests
+        run: |
+          go mod tidy
+          go test -v -coverpkg=${{ format('github.com/{0}', github.repository) }} -coverprofile=coverage.out
+
+      - name: Upload integration test coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tests/coverage.out
           fail_ci_if_error: false
           verbose: true
 
