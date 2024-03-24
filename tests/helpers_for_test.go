@@ -89,8 +89,12 @@ func init() {
 
 func getGormDB(t *testing.T) *gorm.DB {
 	t.Helper()
+	region := os.Getenv("AWS_DEFAULT_REGION")
 	endpoint := os.Getenv("DYNAMODB_ENDPOINT")
-	opts := make([]dynmgrm.DialectorOption, 0, 1)
+	opts := make([]dynmgrm.DialectorOption, 0, 2)
+	if region != "" {
+		opts = append(opts, dynmgrm.WithRegion(region))
+	}
 	if endpoint != "" {
 		opts = append(opts, dynmgrm.WithEndpoint(endpoint))
 	}
