@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/miyamo2/dynmgrm"
 	"gorm.io/gorm"
+	"os"
 	"sort"
 	"testing"
 )
@@ -63,6 +64,16 @@ var setsCmpOpts = []cmp.Option{
 		sort.Strings(ss)
 		return ss[0] == j
 	}),
+	cmpopts.SortSlices(func(i, j []byte) bool {
+		return string(i) < string(j)
+	}),
+	cmpopts.SortSlices(func(i, j *string) bool {
+		iv := *i
+		jv := *j
+		ss := []string{iv, jv}
+		sort.Strings(ss)
+		return ss[0] == jv
+	}),
 }
 
 var avCmpOpts = []cmp.Option{
@@ -78,7 +89,12 @@ func init() {
 
 func getGormDB(t *testing.T) *gorm.DB {
 	t.Helper()
-	d := dynmgrm.New()
+	endpoint := os.Getenv("DYNAMODB_ENDPOINT")
+	opts := make([]dynmgrm.DialectorOption, 0, 1)
+	if endpoint != "" {
+		opts = append(opts, dynmgrm.WithEndpoint(endpoint))
+	}
+	d := dynmgrm.New(opts...)
 	db, err := gorm.Open(
 		d,
 		&gorm.Config{
@@ -153,4 +169,19 @@ func scanData(t *testing.T, tableName string) []map[string]*dynamodb.AttributeVa
 		t.Fatalf("failed to scan: %s", err)
 	}
 	return result.Items
+}
+
+func deleteData(t *testing.T, tableName string, pk string, sk int) {
+	t.Helper()
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"pk": {S: aws.String(pk)},
+			"sk": {N: aws.String(fmt.Sprint(sk))},
+		},
+		TableName: aws.String(tableName),
+	}
+	_, err := dynamoDBClient.DeleteItem(input)
+	if err != nil {
+		t.Fatalf("failed to delete item: %s", err)
+	}
 }
