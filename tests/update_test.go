@@ -86,7 +86,6 @@ func Test_Update_With_Save(t *testing.T) {
 			S: aws.String("UPDATED"),
 		},
 	}
-	defer dataCleanup(t, testDataForSelect, testTableName)
 
 	db.Save(TestTable{
 		PK:             "Partition1",

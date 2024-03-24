@@ -67,7 +67,7 @@ func Test_Delete_With_Tx_Commit(t *testing.T) {
 func Test_Delete_With_Tx_Rollback(t *testing.T) {
 	db := getGormDB(t)
 	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect[1:], testTableName)
+	defer dataCleanup(t, testDataForSelect, testTableName)
 
 	data := TestTable{
 		PK: "Partition1",
