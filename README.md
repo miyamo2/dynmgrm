@@ -63,16 +63,16 @@ Supports the following GORM features:
 <summary>Condition</summary>
 
 - [x] `Where`
-- [ ] `Not`
-- [ ] `Or`
+- [x] `Not`
+- [x] `Or`
 
 </details>
 
 <details>
-<summary>Commons</summary>
+<summary>Table/Model</summary>
 
 - [x] `Table`
-- [ ] `Model`
+- [x] `Model` ※ Combination with Secondary Index are not supported.
 
 </details>
 
