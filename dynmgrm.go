@@ -1,3 +1,4 @@
+//go:generate mockgen -destination=internal/mocks/mock_dynmgrm.go -package=mocks -source=./dynmgrm.go
 package dynmgrm
 
 import (
@@ -65,11 +66,17 @@ type DBOpener interface {
 	Apply() (*sql.DB, error)
 }
 
+type CallbacksRegisterer interface {
+	Register(db *gorm.DB, config *callbacks.Config)
+}
+
 // Dialector gorm dialector for DynamoDB
 type Dialector struct {
 	conn gorm.ConnPool
 	// dbOpener is used for testing
 	dbOpener DBOpener
+	// callbacksRegisterer is used for testing
+	callbacksRegisterer CallbacksRegisterer
 }
 
 // DialectorOption is the option for the DynamoDB dialector.
@@ -121,14 +128,21 @@ func WithConnection(conn gorm.ConnPool) func(*config) {
 //
 // e.g. "region=ap-northeast-1;AkId=<YOUR_ACCESS_KEY_ID>;SecretKey=<YOUR_SECRET_KEY>"
 func Open(dsn string) gorm.Dialector {
-	return &Dialector{dbOpener: dbOpener{dsn: dsn, driverName: DriverName}}
+	return &Dialector{
+		dbOpener:            dbOpener{dsn: dsn, driverName: DriverName},
+		callbacksRegisterer: &callbacksRegisterer{},
+	}
 }
 
 // New returns a new DynamoDB dialector based on the region, access key ID, secret key and options.
 func New(option ...DialectorOption) gorm.Dialector {
 	conf := config{}
 	buildConfig(&conf, option...)
-	return &Dialector{conn: conf.conn, dbOpener: dbOpener{dsn: parseConnectionString(conf), driverName: DriverName}}
+	return &Dialector{
+		conn:                conf.conn,
+		dbOpener:            dbOpener{dsn: parseConnectionString(conf), driverName: DriverName},
+		callbacksRegisterer: &callbacksRegisterer{},
+	}
 }
 
 func buildConfig(conf *config, option ...DialectorOption) {
@@ -180,12 +194,14 @@ func (dialector Dialector) Initialize(db *gorm.DB) (err error) {
 		}
 		db.ConnPool = conn
 	}
-	callbacks.RegisterDefaultCallbacks(db, &callbacks.Config{
-		CreateClauses: createClauses,
-		QueryClauses:  queryClauses,
-		UpdateClauses: updateClauses,
-		DeleteClauses: deleteClauses,
-	})
+	dialector.callbacksRegisterer.Register(
+		db,
+		&callbacks.Config{
+			CreateClauses: createClauses,
+			QueryClauses:  queryClauses,
+			UpdateClauses: updateClauses,
+			DeleteClauses: deleteClauses,
+		})
 
 	for k, v := range clauseBuilders {
 		db.ClauseBuilders[k] = v
