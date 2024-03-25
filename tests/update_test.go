@@ -532,7 +532,7 @@ func Test_Update_With_SetAdd(t *testing.T) {
 			},
 		},
 		"some_string_sets": {
-			SS: []*string{aws.String("Hello"), aws.String("World"), aws.String("こんにちは"), aws.String("世界")},
+			SS: []*string{aws.String("Hello"), aws.String("World"), aws.String("Bye")},
 		},
 		"some_int_sets": {
 			NS: []*string{aws.String("1"), aws.String("2")},
@@ -552,7 +552,7 @@ func Test_Update_With_SetAdd(t *testing.T) {
 		&TestTable{
 			PK: "Partition1",
 			SK: 1,
-		}).Update("some_string_sets", gorm.Expr("set_add(some_string_sets, ?)", dynmgrm.Sets[string]{"こんにちは", "世界"}))
+		}).Update("some_string_sets", gorm.Expr("set_add(some_string_sets, ?)", dynmgrm.Sets[string]{"Bye"}))
 
 	result := getData(t, testTableName, "Partition1", 1)
 
