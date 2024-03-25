@@ -1079,3 +1079,95 @@ func Test_Select_With_Parentheses(t *testing.T) {
 		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
 	}
 }
+
+func Test_Select_With_Not(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForSelect, testTableName)
+	defer dataCleanup(t, testDataForSelect, testTableName)
+
+	expected := []TestTable{
+		{
+			PK:         "Partition1",
+			SK:         1,
+			SomeString: "Hello",
+			SomeInt:    1,
+			SomeFloat:  1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+			SomeList: dynmgrm.List{
+				"Hello",
+				float64(1),
+				1.1,
+				true,
+				[]byte("ABC"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "Hello",
+				"some_number": 1.1,
+				"some_bool":   true,
+				"some_binary": []byte("ABC"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
+			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
+			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:            "any",
+		},
+		{
+			PK:         "Partition2",
+			SK:         1,
+			SomeString: "Hello",
+			SomeInt:    1,
+			SomeFloat:  1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+			SomeList: dynmgrm.List{
+				"Hello",
+				float64(1),
+				1.1,
+				true,
+				[]byte("ABC"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "Hello",
+				"some_number": 1.1,
+				"some_bool":   true,
+				"some_binary": []byte("ABC"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
+			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
+			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:            "any",
+		},
+		{
+			PK:         "Partition3",
+			SK:         1,
+			SomeString: "Hello",
+			SomeInt:    1,
+			SomeFloat:  1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+		},
+	}
+
+	var result []TestTable
+	err := db.Table("test_tables").Where(`NOT some_string=?`, "こんにちは").Scan(&result).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+		t.Errorf("WithParentheses mismatch (-want +got):\n%s", diff)
+	}
+
+	var resultWithNotMethod []TestTable
+	err = db.Table("test_tables").Not(`some_string=?`, "こんにちは").Scan(&resultWithNotMethod).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, resultWithNotMethod, setsCmpOpts...); diff != "" {
+		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
+	}
+}
