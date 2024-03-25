@@ -1,6 +1,10 @@
 package dynmgrm
 
 import (
+	"database/sql"
+	"errors"
+	"github.com/miyamo2/dynmgrm/internal/mocks"
+	"go.uber.org/mock/gomock"
 	"strings"
 	"testing"
 
@@ -393,6 +397,72 @@ func TestDialector_DataTypeOf(t *testing.T) {
 			got := dialector.DataTypeOf(tt.args.field)
 			if diff := cmp.Diff(tt.want, got); diff != "" {
 				t.Errorf("DataTypeOf() mismatch (-want +got): \n%v", diff)
+			}
+		})
+	}
+}
+
+func TestDialector_Initialize(t *testing.T) {
+	type test struct {
+		want                     error
+		conn                     gorm.ConnPool
+		setupDBOpener            func(*mocks.MockDBOpener)
+		setupCallbacksRegisterer func(*mocks.MockCallbacksRegisterer)
+	}
+	errApply := errors.New("apply error")
+	tests := map[string]test{
+		"happy_path": {
+			setupDBOpener: func(do *mocks.MockDBOpener) {
+				do.EXPECT().Apply().Times(1).Return(&sql.DB{}, nil)
+			},
+			setupCallbacksRegisterer: func(registerer *mocks.MockCallbacksRegisterer) {
+				registerer.EXPECT().Register(gomock.Any(), gomock.Any()).Times(1)
+			},
+		},
+		"happy_path/with-conn": {
+			conn: &sql.DB{},
+			setupDBOpener: func(do *mocks.MockDBOpener) {
+				do.EXPECT().Apply().Times(0)
+			},
+			setupCallbacksRegisterer: func(registerer *mocks.MockCallbacksRegisterer) {
+				registerer.EXPECT().Register(gomock.Any(), gomock.Any()).Times(1)
+			},
+		},
+		"unhappy_path/apply-error": {
+			setupDBOpener: func(do *mocks.MockDBOpener) {
+				do.EXPECT().Apply().Times(1).Return(nil, errApply)
+			},
+			setupCallbacksRegisterer: func(registerer *mocks.MockCallbacksRegisterer) {
+				registerer.EXPECT().Register(gomock.Any(), gomock.Any()).Times(0)
+			},
+			want: errApply,
+		},
+	}
+
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			do := mocks.NewMockDBOpener(ctrl)
+			if setup := tt.setupDBOpener; setup != nil {
+				setup(do)
+			}
+			cr := mocks.NewMockCallbacksRegisterer(ctrl)
+			if setup := tt.setupCallbacksRegisterer; setup != nil {
+				setup(cr)
+			}
+			dialector := Dialector{
+				dbOpener:            do,
+				callbacksRegisterer: cr,
+			}
+			if conn := tt.conn; conn != nil {
+				dialector.conn = conn
+			}
+			if err := dialector.Initialize(&gorm.DB{
+				Config: &gorm.Config{
+					ClauseBuilders: make(map[string]clause.ClauseBuilder),
+				},
+			}); !errors.Is(tt.want, err) {
+				t.Errorf("Initialize() error = %v, wantErr %v", err, tt.want)
 			}
 		})
 	}

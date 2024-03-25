@@ -964,3 +964,329 @@ func Test_Select_With_AttributeType(t *testing.T) {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
+
+func Test_Select_With_Parentheses(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForSelect, testTableName)
+	defer dataCleanup(t, testDataForSelect, testTableName)
+
+	expected := []TestTable{
+		{
+			PK:         "Partition1",
+			SK:         1,
+			SomeString: "Hello",
+			SomeInt:    1,
+			SomeFloat:  1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+			SomeList: dynmgrm.List{
+				"Hello",
+				float64(1),
+				1.1,
+				true,
+				[]byte("ABC"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "Hello",
+				"some_number": 1.1,
+				"some_bool":   true,
+				"some_binary": []byte("ABC"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
+			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
+			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:            "any",
+		},
+		{
+			PK:         "Partition1",
+			SK:         2,
+			SomeString: "こんにちは",
+			SomeInt:    2,
+			SomeFloat:  2.2,
+			SomeBool:   false,
+			SomeBinary: []byte("GHI"),
+			SomeList: dynmgrm.List{
+				"こんにちは",
+				float64(2),
+				2.2,
+				false,
+				[]byte("GHI"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "こんにちは",
+				"some_number": 2.2,
+				"some_bool":   false,
+				"some_binary": []byte("GHI"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
+			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
+			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:            "0",
+		},
+		{
+			PK:         "Partition2",
+			SK:         2,
+			SomeString: "こんにちは",
+			SomeInt:    2,
+			SomeFloat:  2.2,
+			SomeBool:   false,
+			SomeBinary: []byte("GHI"),
+			SomeList: dynmgrm.List{
+				"こんにちは",
+				float64(2),
+				2.2,
+				false,
+				[]byte("GHI"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "こんにちは",
+				"some_number": 2.2,
+				"some_bool":   false,
+				"some_binary": []byte("GHI"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
+			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
+			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:            "0",
+		},
+	}
+
+	var result []TestTable
+	err := db.Table("test_tables").Where(`(pk=? OR some_string=?) AND ( some_list IS NOT MISSING )`, "Partition1", "こんにちは").Scan(&result).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+		t.Errorf("WithParentheses mismatch (-want +got):\n%s", diff)
+	}
+
+	var resultWithGroupCondition []TestTable
+	err = db.Table("test_tables").
+		Where(
+			db.Where(`pk=?`, "Partition1").Or(`some_string=?`, "こんにちは")).
+		Where(
+			db.Where(`some_list IS NOT MISSING`)).
+		Scan(&resultWithGroupCondition).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, resultWithGroupCondition, setsCmpOpts...); diff != "" {
+		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
+	}
+}
+
+func Test_Select_With_Not(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForSelect, testTableName)
+	defer dataCleanup(t, testDataForSelect, testTableName)
+
+	expected := []TestTable{
+		{
+			PK:         "Partition1",
+			SK:         1,
+			SomeString: "Hello",
+			SomeInt:    1,
+			SomeFloat:  1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+			SomeList: dynmgrm.List{
+				"Hello",
+				float64(1),
+				1.1,
+				true,
+				[]byte("ABC"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "Hello",
+				"some_number": 1.1,
+				"some_bool":   true,
+				"some_binary": []byte("ABC"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
+			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
+			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:            "any",
+		},
+		{
+			PK:         "Partition2",
+			SK:         1,
+			SomeString: "Hello",
+			SomeInt:    1,
+			SomeFloat:  1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+			SomeList: dynmgrm.List{
+				"Hello",
+				float64(1),
+				1.1,
+				true,
+				[]byte("ABC"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "Hello",
+				"some_number": 1.1,
+				"some_bool":   true,
+				"some_binary": []byte("ABC"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
+			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
+			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:            "any",
+		},
+		{
+			PK:         "Partition3",
+			SK:         1,
+			SomeString: "Hello",
+			SomeInt:    1,
+			SomeFloat:  1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+		},
+	}
+
+	var result []TestTable
+	err := db.Table("test_tables").Where(`NOT some_string=?`, "こんにちは").Scan(&result).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+		t.Errorf("WithParentheses mismatch (-want +got):\n%s", diff)
+	}
+
+	var resultWithNotMethod []TestTable
+	err = db.Table("test_tables").Not(`some_string=?`, "こんにちは").Scan(&resultWithNotMethod).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, resultWithNotMethod, setsCmpOpts...); diff != "" {
+		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
+	}
+}
+
+func Test_Select_With_Or(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForSelect, testTableName)
+	defer dataCleanup(t, testDataForSelect, testTableName)
+
+	expected := []TestTable{
+		{
+			PK:         "Partition1",
+			SK:         1,
+			SomeString: "Hello",
+			SomeInt:    1,
+			SomeFloat:  1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+			SomeList: dynmgrm.List{
+				"Hello",
+				float64(1),
+				1.1,
+				true,
+				[]byte("ABC"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "Hello",
+				"some_number": 1.1,
+				"some_bool":   true,
+				"some_binary": []byte("ABC"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
+			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
+			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:            "any",
+		},
+		{
+			PK:         "Partition1",
+			SK:         2,
+			SomeString: "こんにちは",
+			SomeInt:    2,
+			SomeFloat:  2.2,
+			SomeBool:   false,
+			SomeBinary: []byte("GHI"),
+			SomeList: dynmgrm.List{
+				"こんにちは",
+				float64(2),
+				2.2,
+				false,
+				[]byte("GHI"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "こんにちは",
+				"some_number": 2.2,
+				"some_bool":   false,
+				"some_binary": []byte("GHI"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
+			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
+			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:            "0",
+		},
+		{
+			PK:         "Partition2",
+			SK:         2,
+			SomeString: "こんにちは",
+			SomeInt:    2,
+			SomeFloat:  2.2,
+			SomeBool:   false,
+			SomeBinary: []byte("GHI"),
+			SomeList: dynmgrm.List{
+				"こんにちは",
+				float64(2),
+				2.2,
+				false,
+				[]byte("GHI"),
+			},
+			SomeMap: dynmgrm.Map{
+				"some_string": "こんにちは",
+				"some_number": 2.2,
+				"some_bool":   false,
+				"some_binary": []byte("GHI"),
+			},
+			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
+			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
+			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
+			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:            "0",
+		},
+		{
+			PK:         "Partition3",
+			SK:         2,
+			SomeString: "こんにちは",
+			SomeInt:    2,
+			SomeFloat:  2.2,
+			SomeBool:   false,
+			SomeBinary: []byte("GHI"),
+		},
+	}
+
+	var result []TestTable
+	err := db.Table("test_tables").Where(`pk=? OR some_string=?`, "Partition1", "こんにちは").Scan(&result).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+		t.Errorf("WithParentheses mismatch (-want +got):\n%s", diff)
+	}
+
+	var resultWithOrMethod []TestTable
+	err = db.Table("test_tables").Where(`pk=?`, "Partition1").Or(`some_string=?`, "こんにちは").Scan(&resultWithOrMethod).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, resultWithOrMethod, setsCmpOpts...); diff != "" {
+		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
+	}
+}
