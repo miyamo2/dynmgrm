@@ -99,19 +99,19 @@ func TestList_ResolveNestedCollections(t *testing.T) {
 		},
 		"happy-path/nested-int-sets": {
 			sut:           List{[]float64{1, 2, 3}},
-			expectedState: List{Sets[int]{1, 2, 3}},
+			expectedState: List{Set[int]{1, 2, 3}},
 		},
 		"happy-path/nested-float-sets": {
 			sut:           List{[]float64{1.1, 2.1, 3.1}},
-			expectedState: List{Sets[float64]{1.1, 2.1, 3.1}},
+			expectedState: List{Set[float64]{1.1, 2.1, 3.1}},
 		},
 		"happy-path/nested-string-sets": {
 			sut:           List{[]string{"1", "2", "3"}},
-			expectedState: List{Sets[string]{"1", "2", "3"}},
+			expectedState: List{Set[string]{"1", "2", "3"}},
 		},
 		"happy-path/nested-binary-sets": {
 			sut:           List{[][]byte{[]byte("1"), []byte("2"), []byte("3")}},
-			expectedState: List{Sets[[]byte]{[]byte("1"), []byte("2"), []byte("3")}},
+			expectedState: List{Set[[]byte]{[]byte("1"), []byte("2"), []byte("3")}},
 		},
 	}
 	for name, tt := range tests {

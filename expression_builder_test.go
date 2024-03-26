@@ -90,7 +90,7 @@ func TestValuesClause(t *testing.T) {
 					},
 				},
 				Values: [][]interface{}{
-					{Sets[string]{"value1", "value2"}},
+					{Set[string]{"value1", "value2"}},
 				},
 			},
 			expectedSQL:  "VALUE {'column1' : ?}",
@@ -287,7 +287,7 @@ func TestBuildSetClause(t *testing.T) {
 		},
 		"happy-path/with-sets": {
 			set: clause.Set{
-				{Column: clause.Column{Name: "column1"}, Value: Sets[string]{"value1", "value2"}},
+				{Column: clause.Column{Name: "column1"}, Value: Set[string]{"value1", "value2"}},
 			},
 			expectedSQL:  `SET "column1"=?`,
 			expectedVars: []interface{}{types.AttributeValueMemberSS{Value: []string{"value1", "value2"}}},

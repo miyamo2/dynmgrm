@@ -18,25 +18,25 @@ var (
 	ErrValueIsIncompatibleOfBinarySlice  = errors.New("value is incompatible of []byte slice")
 )
 
-// SetsSupportable are the types that support the Set
-type SetsSupportable interface {
+// SetSupportable are the types that support the Set
+type SetSupportable interface {
 	string | []byte | int | float64
 }
 
-var _ gorm.Valuer = (*Sets[string])(nil)
+var _ gorm.Valuer = (*Set[string])(nil)
 
-// Sets is a set of values.
+// Set is a DynamoDB set type.
 //
 // See: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html
-type Sets[T SetsSupportable] []T
+type Set[T SetSupportable] []T
 
 // GormDataType returns the data type for Gorm.
-func (s *Sets[T]) GormDataType() string {
+func (s *Set[T]) GormDataType() string {
 	return "dgsets"
 }
 
 // Scan implements the sql.Scanner#Scan
-func (s *Sets[T]) Scan(value interface{}) error {
+func (s *Set[T]) Scan(value interface{}) error {
 	if len(*s) != 0 {
 		return ErrCollectionAlreadyContainsItem
 	}
@@ -47,45 +47,45 @@ func (s *Sets[T]) Scan(value interface{}) error {
 	var t T
 	switch (interface{})(t).(type) {
 	case int:
-		return scanAsIntSets((interface{})(s).(*Sets[int]), value)
+		return scanAsIntSet((interface{})(s).(*Set[int]), value)
 	case float64:
-		return scanAsFloat64Sets((interface{})(s).(*Sets[float64]), value)
+		return scanAsFloat64Set((interface{})(s).(*Set[float64]), value)
 	case string:
-		return scanAsStringSets((interface{})(s).(*Sets[string]), value)
+		return scanAsStringSet((interface{})(s).(*Set[string]), value)
 	case []byte:
-		return scanAsBinarySets((interface{})(s).(*Sets[[]byte]), value)
+		return scanAsBinarySet((interface{})(s).(*Set[[]byte]), value)
 	default:
 		// never happens (now).
 		return fmt.Errorf(
-			"unsupported type %T. Sets supports only the following types: string, []byte, int, float32, float64", t)
+			"unsupported type %T. Set supports only the following types: string, []byte, int, float32, float64", t)
 	}
 }
 
-func (s Sets[T]) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
+func (s Set[T]) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
 	switch s := (interface{})(s).(type) {
-	case Sets[int]:
-		av, err := numericSetsToAttributeValue(s)
+	case Set[int]:
+		av, err := numericSetToAttributeValue(s)
 		if err != nil {
 			_ = db.AddError(err)
 			break
 		}
 		return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
-	case Sets[float64]:
-		av, err := numericSetsToAttributeValue(s)
+	case Set[float64]:
+		av, err := numericSetToAttributeValue(s)
 		if err != nil {
 			_ = db.AddError(err)
 			break
 		}
 		return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
-	case Sets[string]:
-		av, err := stringSetsToAttributeValue(s)
+	case Set[string]:
+		av, err := stringSetToAttributeValue(s)
 		if err != nil {
 			_ = db.AddError(err)
 			break
 		}
 		return clause.Expr{SQL: "?", Vars: []interface{}{*av}}
-	case Sets[[]byte]:
-		av, err := binarySetsToAttributeValue(s)
+	case Set[[]byte]:
+		av, err := binarySetToAttributeValue(s)
 		if err != nil {
 			_ = db.AddError(err)
 			break
@@ -95,20 +95,20 @@ func (s Sets[T]) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
 	return clause.Expr{}
 }
 
-func numericSetsToAttributeValue[T Sets[int] | Sets[float64]](s T) (*types.AttributeValueMemberNS, error) {
+func numericSetToAttributeValue[T Set[int] | Set[float64]](s T) (*types.AttributeValueMemberNS, error) {
 	return toDocumentAttributeValue[*types.AttributeValueMemberNS](s)
 }
 
-func stringSetsToAttributeValue(s Sets[string]) (*types.AttributeValueMemberSS, error) {
+func stringSetToAttributeValue(s Set[string]) (*types.AttributeValueMemberSS, error) {
 	return toDocumentAttributeValue[*types.AttributeValueMemberSS](s)
 }
 
-func binarySetsToAttributeValue(s Sets[[]byte]) (*types.AttributeValueMemberBS, error) {
+func binarySetToAttributeValue(s Set[[]byte]) (*types.AttributeValueMemberBS, error) {
 	return toDocumentAttributeValue[*types.AttributeValueMemberBS](s)
 }
 
-// scanAsIntSets scans the value as Sets[int]
-func scanAsIntSets(s *Sets[int], value interface{}) error {
+// scanAsIntSet scans the value as Set[int]
+func scanAsIntSet(s *Set[int], value interface{}) error {
 	sv, ok := value.([]float64)
 	if !ok {
 		*s = nil
@@ -124,8 +124,8 @@ func scanAsIntSets(s *Sets[int], value interface{}) error {
 	return nil
 }
 
-// scanAsFloat64Sets scans the value as Sets[float64]
-func scanAsFloat64Sets(s *Sets[float64], value interface{}) error {
+// scanAsFloat64Set scans the value as Set[float64]
+func scanAsFloat64Set(s *Set[float64], value interface{}) error {
 	sv, ok := value.([]float64)
 	if !ok {
 		*s = nil
@@ -137,8 +137,8 @@ func scanAsFloat64Sets(s *Sets[float64], value interface{}) error {
 	return nil
 }
 
-// scanAsStringSets scans the value as Sets[string]
-func scanAsStringSets(s *Sets[string], value interface{}) error {
+// scanAsStringSet scans the value as Set[string]
+func scanAsStringSet(s *Set[string], value interface{}) error {
 	sv, ok := value.([]string)
 	if !ok {
 		*s = nil
@@ -150,8 +150,8 @@ func scanAsStringSets(s *Sets[string], value interface{}) error {
 	return nil
 }
 
-// scanAsBinarySets scans the value as Sets[[]byte]
-func scanAsBinarySets(s *Sets[[]byte], value interface{}) error {
+// scanAsBinarySet scans the value as Set[[]byte]
+func scanAsBinarySet(s *Set[[]byte], value interface{}) error {
 	sv, ok := value.([][]byte)
 	if !ok {
 		*s = nil
@@ -163,22 +163,22 @@ func scanAsBinarySets(s *Sets[[]byte], value interface{}) error {
 	return nil
 }
 
-func isCompatibleWithSets[T SetsSupportable](value interface{}) (compatible bool) {
+func isCompatibleWithSet[T SetSupportable](value interface{}) (compatible bool) {
 	var t T
 	switch (interface{})(t).(type) {
 	case string:
-		compatible = isStringSetsCompatible(value)
+		compatible = isStringSetCompatible(value)
 	case int:
-		compatible = isIntSetsCompatible(value)
+		compatible = isIntSetCompatible(value)
 	case float64:
-		compatible = isFloat64SetsCompatible(value)
+		compatible = isFloat64SetCompatible(value)
 	case []byte:
-		compatible = isBinarySetsCompatible(value)
+		compatible = isBinarySetCompatible(value)
 	}
 	return
 }
 
-func isIntSetsCompatible(value interface{}) (compatible bool) {
+func isIntSetCompatible(value interface{}) (compatible bool) {
 	if _, ok := value.([]int); ok {
 		compatible = true
 		return
@@ -197,27 +197,27 @@ func isIntSetsCompatible(value interface{}) (compatible bool) {
 	return
 }
 
-func isStringSetsCompatible(value interface{}) (compatible bool) {
+func isStringSetCompatible(value interface{}) (compatible bool) {
 	if _, ok := value.([]string); ok {
 		compatible = true
 	}
 	return
 }
 
-func isFloat64SetsCompatible(value interface{}) (compatible bool) {
+func isFloat64SetCompatible(value interface{}) (compatible bool) {
 	if _, ok := value.([]float64); ok {
 		compatible = true
 	}
 	return
 }
 
-func isBinarySetsCompatible(value interface{}) (compatible bool) {
+func isBinarySetCompatible(value interface{}) (compatible bool) {
 	if _, ok := value.([][]byte); ok {
 		compatible = true
 	}
 	return
 }
 
-func newSets[T SetsSupportable]() Sets[T] {
-	return Sets[T]{}
+func newSet[T SetSupportable]() Set[T] {
+	return Set[T]{}
 }

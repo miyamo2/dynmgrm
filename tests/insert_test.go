@@ -13,14 +13,14 @@ func Test_Insert_With_Create(t *testing.T) {
 	db := getGormDB(t)
 
 	data := TestTable{
-		PK:             "Partition4",
-		SK:             1,
-		SomeMap:        dynmgrm.Map{"key": "value"},
-		SomeList:       dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Sets[string]{"a", "b", "c"}},
-		SomeStringSets: dynmgrm.Sets[string]{"a", "b", "c"},
-		SomeIntSets:    dynmgrm.Sets[int]{1, 2, 3},
-		SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2, 3.3},
-		SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+		PK:            "Partition4",
+		SK:            1,
+		SomeMap:       dynmgrm.Map{"key": "value"},
+		SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
+		SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
+		SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
+		SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
+		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 	}
 	defer deleteData(t, testTableName, data.PK, data.SK)
 
@@ -41,14 +41,14 @@ func Test_Insert_With_Create(t *testing.T) {
 					{SS: aws.StringSlice([]string{"a", "b", "c"})},
 				},
 			},
-			"some_string_sets": &dynamodb.AttributeValue{SS: aws.StringSlice([]string{"a", "b", "c"})},
-			"some_int_sets":    &dynamodb.AttributeValue{NS: aws.StringSlice([]string{"1", "2", "3"})},
-			"some_float_sets":  &dynamodb.AttributeValue{NS: aws.StringSlice([]string{"1.1", "2.2", "3.3"})},
-			"some_binary_sets": &dynamodb.AttributeValue{BS: [][]byte{[]byte("a"), []byte("b"), []byte("c")}},
+			"some_string_set": &dynamodb.AttributeValue{SS: aws.StringSlice([]string{"a", "b", "c"})},
+			"some_int_set":    &dynamodb.AttributeValue{NS: aws.StringSlice([]string{"1", "2", "3"})},
+			"some_float_set":  &dynamodb.AttributeValue{NS: aws.StringSlice([]string{"1.1", "2.2", "3.3"})},
+			"some_binary_set": &dynamodb.AttributeValue{BS: [][]byte{[]byte("a"), []byte("b"), []byte("c")}},
 		},
 	}
 	actual := scanData(t, testTableName)
-	if diff := cmp.Diff(expect, actual, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expect, actual, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-got +want)\n%s", diff)
 	}
 }
@@ -57,14 +57,14 @@ func Test_Insert_With_Tx_Commit(t *testing.T) {
 	db := getGormDB(t)
 
 	data := TestTable{
-		PK:             "Partition4",
-		SK:             1,
-		SomeMap:        dynmgrm.Map{"key": "value"},
-		SomeList:       dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Sets[string]{"a", "b", "c"}},
-		SomeStringSets: dynmgrm.Sets[string]{"a", "b", "c"},
-		SomeIntSets:    dynmgrm.Sets[int]{1, 2, 3},
-		SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2, 3.3},
-		SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+		PK:            "Partition4",
+		SK:            1,
+		SomeMap:       dynmgrm.Map{"key": "value"},
+		SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
+		SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
+		SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
+		SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
+		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 	}
 	defer deleteData(t, testTableName, data.PK, data.SK)
 
@@ -87,14 +87,14 @@ func Test_Insert_With_Tx_Commit(t *testing.T) {
 					{SS: aws.StringSlice([]string{"a", "b", "c"})},
 				},
 			},
-			"some_string_sets": &dynamodb.AttributeValue{SS: aws.StringSlice([]string{"a", "b", "c"})},
-			"some_int_sets":    &dynamodb.AttributeValue{NS: aws.StringSlice([]string{"1", "2", "3"})},
-			"some_float_sets":  &dynamodb.AttributeValue{NS: aws.StringSlice([]string{"1.1", "2.2", "3.3"})},
-			"some_binary_sets": &dynamodb.AttributeValue{BS: [][]byte{[]byte("a"), []byte("b"), []byte("c")}},
+			"some_string_set": &dynamodb.AttributeValue{SS: aws.StringSlice([]string{"a", "b", "c"})},
+			"some_int_set":    &dynamodb.AttributeValue{NS: aws.StringSlice([]string{"1", "2", "3"})},
+			"some_float_set":  &dynamodb.AttributeValue{NS: aws.StringSlice([]string{"1.1", "2.2", "3.3"})},
+			"some_binary_set": &dynamodb.AttributeValue{BS: [][]byte{[]byte("a"), []byte("b"), []byte("c")}},
 		},
 	}
 	actual := scanData(t, testTableName)
-	if diff := cmp.Diff(expect, actual, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expect, actual, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-got +want)\n%s", diff)
 	}
 }
@@ -103,14 +103,14 @@ func Test_Insert_With_Tx_Rollback(t *testing.T) {
 	db := getGormDB(t)
 
 	data := TestTable{
-		PK:             "Partition4",
-		SK:             1,
-		SomeMap:        dynmgrm.Map{"key": "value"},
-		SomeList:       dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Sets[string]{"a", "b", "c"}},
-		SomeStringSets: dynmgrm.Sets[string]{"a", "b", "c"},
-		SomeIntSets:    dynmgrm.Sets[int]{1, 2, 3},
-		SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2, 3.3},
-		SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+		PK:            "Partition4",
+		SK:            1,
+		SomeMap:       dynmgrm.Map{"key": "value"},
+		SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
+		SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
+		SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
+		SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
+		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 	}
 	defer deleteData(t, testTableName, data.PK, data.SK)
 
@@ -120,7 +120,7 @@ func Test_Insert_With_Tx_Rollback(t *testing.T) {
 
 	expect := make([]map[string]*dynamodb.AttributeValue, 0)
 	actual := scanData(t, testTableName)
-	if diff := cmp.Diff(expect, actual, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expect, actual, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-got +want)\n%s", diff)
 	}
 }

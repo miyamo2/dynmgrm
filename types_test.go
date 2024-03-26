@@ -23,7 +23,7 @@ func Test_toAttibuteValue(t *testing.T) {
 	tests := map[string]test{
 		"happy-path/string-sets": {
 			args: args{
-				value: Sets[string]{"a", "b", "c"},
+				value: Set[string]{"a", "b", "c"},
 			},
 			want: want{
 				av:  &types.AttributeValueMemberSS{Value: []string{"a", "b", "c"}},
@@ -32,7 +32,7 @@ func Test_toAttibuteValue(t *testing.T) {
 		},
 		"happy-path/int-sets": {
 			args: args{
-				value: Sets[int]{1, 2, 3},
+				value: Set[int]{1, 2, 3},
 			},
 			want: want{
 				av:  &types.AttributeValueMemberNS{Value: []string{"1", "2", "3"}},
@@ -41,7 +41,7 @@ func Test_toAttibuteValue(t *testing.T) {
 		},
 		"happy-path/float-sets": {
 			args: args{
-				value: Sets[float64]{1.1, 2.2, 3.3},
+				value: Set[float64]{1.1, 2.2, 3.3},
 			},
 			want: want{
 				av:  &types.AttributeValueMemberNS{Value: []string{"1.1", "2.2", "3.3"}},
@@ -50,7 +50,7 @@ func Test_toAttibuteValue(t *testing.T) {
 		},
 		"happy-path/byte-sets": {
 			args: args{
-				value: Sets[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+				value: Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 			},
 			want: want{
 				av:  &types.AttributeValueMemberBS{Value: [][]byte{[]byte("a"), []byte("b"), []byte("c")}},
@@ -110,7 +110,7 @@ func Test_toAttibuteValue(t *testing.T) {
 	}
 }
 
-func Test_toDocumentAttributeValue_StringSets(t *testing.T) {
+func Test_toDocumentAttributeValue_StringSet(t *testing.T) {
 	type args struct {
 		value interface{}
 	}
@@ -126,7 +126,7 @@ func Test_toDocumentAttributeValue_StringSets(t *testing.T) {
 	tests := map[string]test{
 		"happy-path/string-sets": {
 			args: args{
-				value: Sets[string]{"a", "b", "c"},
+				value: Set[string]{"a", "b", "c"},
 			},
 			want: want{
 				av:  &types.AttributeValueMemberSS{Value: []string{"a", "b", "c"}},
@@ -135,7 +135,7 @@ func Test_toDocumentAttributeValue_StringSets(t *testing.T) {
 		},
 		"unhappy-path/int-sets": {
 			args: args{
-				value: Sets[int]{1, 2, 3},
+				value: Set[int]{1, 2, 3},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberSS)(nil),
@@ -144,7 +144,7 @@ func Test_toDocumentAttributeValue_StringSets(t *testing.T) {
 		},
 		"unhappy-path/float-sets": {
 			args: args{
-				value: Sets[float64]{1.1, 2.2, 3.3},
+				value: Set[float64]{1.1, 2.2, 3.3},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberSS)(nil),
@@ -153,7 +153,7 @@ func Test_toDocumentAttributeValue_StringSets(t *testing.T) {
 		},
 		"unhappy-path/byte-sets": {
 			args: args{
-				value: Sets[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+				value: Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberSS)(nil),
@@ -202,7 +202,7 @@ func Test_toDocumentAttributeValue_StringSets(t *testing.T) {
 	}
 }
 
-func Test_toDocumentAttributeValue_NumberSets(t *testing.T) {
+func Test_toDocumentAttributeValue_NumberSet(t *testing.T) {
 	type args struct {
 		value interface{}
 	}
@@ -218,7 +218,7 @@ func Test_toDocumentAttributeValue_NumberSets(t *testing.T) {
 	tests := map[string]test{
 		"unhappy-path/int-sets": {
 			args: args{
-				value: Sets[int]{1, 2, 3},
+				value: Set[int]{1, 2, 3},
 			},
 			want: want{
 				av:  &types.AttributeValueMemberNS{Value: []string{"1", "2", "3"}},
@@ -227,7 +227,7 @@ func Test_toDocumentAttributeValue_NumberSets(t *testing.T) {
 		},
 		"happy-path/float-sets": {
 			args: args{
-				value: Sets[float64]{1.1, 2.2, 3.3},
+				value: Set[float64]{1.1, 2.2, 3.3},
 			},
 			want: want{
 				av:  &types.AttributeValueMemberNS{Value: []string{"1.1", "2.2", "3.3"}},
@@ -236,7 +236,7 @@ func Test_toDocumentAttributeValue_NumberSets(t *testing.T) {
 		},
 		"happy-path/string-sets": {
 			args: args{
-				value: Sets[string]{"a", "b", "c"},
+				value: Set[string]{"a", "b", "c"},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberNS)(nil),
@@ -245,7 +245,7 @@ func Test_toDocumentAttributeValue_NumberSets(t *testing.T) {
 		},
 		"unhappy-path/byte-sets": {
 			args: args{
-				value: Sets[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+				value: Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberNS)(nil),
@@ -294,7 +294,7 @@ func Test_toDocumentAttributeValue_NumberSets(t *testing.T) {
 	}
 }
 
-func Test_toDocumentAttributeValue_BinarySets(t *testing.T) {
+func Test_toDocumentAttributeValue_BinarySet(t *testing.T) {
 	type args struct {
 		value interface{}
 	}
@@ -310,7 +310,7 @@ func Test_toDocumentAttributeValue_BinarySets(t *testing.T) {
 	tests := map[string]test{
 		"happy-path/binary-sets": {
 			args: args{
-				value: Sets[[]byte]{[]byte("1"), []byte("2"), []byte("3")},
+				value: Set[[]byte]{[]byte("1"), []byte("2"), []byte("3")},
 			},
 			want: want{
 				av:  &types.AttributeValueMemberBS{Value: [][]byte{[]byte("1"), []byte("2"), []byte("3")}},
@@ -319,7 +319,7 @@ func Test_toDocumentAttributeValue_BinarySets(t *testing.T) {
 		},
 		"unhappy-path/int-sets": {
 			args: args{
-				value: Sets[int]{1, 2, 3},
+				value: Set[int]{1, 2, 3},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberBS)(nil),
@@ -328,7 +328,7 @@ func Test_toDocumentAttributeValue_BinarySets(t *testing.T) {
 		},
 		"unhappy-path/float-sets": {
 			args: args{
-				value: Sets[float64]{1.0, 2.0, 3.0},
+				value: Set[float64]{1.0, 2.0, 3.0},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberBS)(nil),
@@ -337,7 +337,7 @@ func Test_toDocumentAttributeValue_BinarySets(t *testing.T) {
 		},
 		"happy-path/string-sets": {
 			args: args{
-				value: Sets[string]{"a", "b", "c"},
+				value: Set[string]{"a", "b", "c"},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberBS)(nil),
@@ -417,7 +417,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 		},
 		"happy-path/binary-sets": {
 			args: args{
-				value: Sets[[]byte]{[]byte("1"), []byte("2"), []byte("3")},
+				value: Set[[]byte]{[]byte("1"), []byte("2"), []byte("3")},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
@@ -426,7 +426,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 		},
 		"unhappy-path/int-sets": {
 			args: args{
-				value: Sets[int]{1, 2, 3},
+				value: Set[int]{1, 2, 3},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
@@ -435,7 +435,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 		},
 		"unhappy-path/float-sets": {
 			args: args{
-				value: Sets[float64]{1.0, 2.0, 3.0},
+				value: Set[float64]{1.0, 2.0, 3.0},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
@@ -444,7 +444,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 		},
 		"happy-path/string-sets": {
 			args: args{
-				value: Sets[string]{"a", "b", "c"},
+				value: Set[string]{"a", "b", "c"},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
@@ -524,7 +524,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 		},
 		"happy-path/binary-sets": {
 			args: args{
-				value: Sets[[]byte]{[]byte("1"), []byte("2"), []byte("3")},
+				value: Set[[]byte]{[]byte("1"), []byte("2"), []byte("3")},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
@@ -533,7 +533,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 		},
 		"unhappy-path/int-sets": {
 			args: args{
-				value: Sets[int]{1, 2, 3},
+				value: Set[int]{1, 2, 3},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
@@ -542,7 +542,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 		},
 		"unhappy-path/float-sets": {
 			args: args{
-				value: Sets[float64]{1.0, 2.0, 3.0},
+				value: Set[float64]{1.0, 2.0, 3.0},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
@@ -551,7 +551,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 		},
 		"happy-path/string-sets": {
 			args: args{
-				value: Sets[string]{"a", "b", "c"},
+				value: Set[string]{"a", "b", "c"},
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
