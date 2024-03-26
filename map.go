@@ -60,29 +60,29 @@ func resolveCollectionsNestedInMap(m *Map) error {
 			(*m)[k] = im
 			continue
 		}
-		if isCompatibleWithSets[int](v) {
-			s := newSets[int]()
+		if isCompatibleWithSet[int](v) {
+			s := newSet[int]()
 			if err := s.Scan(v); err == nil {
 				(*m)[k] = s
 				continue
 			}
 		}
-		if isCompatibleWithSets[float64](v) {
-			s := newSets[float64]()
+		if isCompatibleWithSet[float64](v) {
+			s := newSet[float64]()
 			if err := s.Scan(v); err == nil {
 				(*m)[k] = s
 				continue
 			}
 		}
-		if isCompatibleWithSets[string](v) {
-			s := newSets[string]()
+		if isCompatibleWithSet[string](v) {
+			s := newSet[string]()
 			if err := s.Scan(v); err == nil {
 				(*m)[k] = s
 				continue
 			}
 		}
-		if isCompatibleWithSets[[]byte](v) {
-			s := newSets[[]byte]()
+		if isCompatibleWithSet[[]byte](v) {
+			s := newSet[[]byte]()
 			if err := s.Scan(v); err == nil {
 				(*m)[k] = s
 				continue

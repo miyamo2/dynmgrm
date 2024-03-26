@@ -67,16 +67,16 @@ var testDataForSelect = []map[string]*dynamodb.AttributeValue{
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("Hello"), aws.String("World")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("1"), aws.String("2")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("1.1"), aws.String("2.2")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("ABC"), []byte("DEF")},
 		},
 		"any": {
@@ -140,16 +140,16 @@ var testDataForSelect = []map[string]*dynamodb.AttributeValue{
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("こんにちは"), aws.String("世界")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("2"), aws.String("4")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("2.2"), aws.String("4.4")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("GHI"), []byte("JKL")},
 		},
 		"any": {
@@ -213,16 +213,16 @@ var testDataForSelect = []map[string]*dynamodb.AttributeValue{
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("Hello"), aws.String("World")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("1"), aws.String("2")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("1.1"), aws.String("2.2")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("ABC"), []byte("DEF")},
 		},
 		"any": {
@@ -286,16 +286,16 @@ var testDataForSelect = []map[string]*dynamodb.AttributeValue{
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("こんにちは"), aws.String("世界")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("2"), aws.String("4")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("2.2"), aws.String("4.4")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("GHI"), []byte("JKL")},
 		},
 		"any": {

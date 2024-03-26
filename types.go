@@ -31,21 +31,21 @@ func toAttibuteValue(value interface{}) (types.AttributeValue, error) {
 			avm[k] = av
 		}
 		return &types.AttributeValueMemberM{Value: avm}, nil
-	case Sets[string]:
+	case Set[string]:
 		return &types.AttributeValueMemberSS{Value: value}, nil
-	case Sets[int]:
+	case Set[int]:
 		ss := make([]string, 0, len(value))
 		for _, v := range value {
 			ss = append(ss, fmt.Sprintf("%v", v))
 		}
 		return &types.AttributeValueMemberNS{Value: ss}, nil
-	case Sets[float64]:
+	case Set[float64]:
 		ss := make([]string, 0, len(value))
 		for _, v := range value {
 			ss = append(ss, fmt.Sprintf("%v", v))
 		}
 		return &types.AttributeValueMemberNS{Value: ss}, nil
-	case Sets[[]byte]:
+	case Set[[]byte]:
 		return &types.AttributeValueMemberBS{Value: value}, nil
 	default:
 		return attributevalue.Marshal(value)

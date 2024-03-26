@@ -34,8 +34,6 @@ const (
 	DataTypeNumber DataType = "number"
 	// DataTypeBinary is the data type for binary.
 	DataTypeBinary DataType = "binary"
-	// DataTypeBool is the data type for bool.
-	DataTypeBool DataType = "bool"
 )
 
 var (
@@ -83,6 +81,8 @@ type Dialector struct {
 type DialectorOption func(*config)
 
 // WithRegion sets the region for the DynamoDB connection.
+//
+// Default: https://github.com/btnguyen2k/godynamo?tab=readme-ov-file#data-source-name-dsn-format-for-aws-dynamodb
 func WithRegion(region string) func(*config) {
 	return func(config *config) {
 		config.region = region
@@ -90,6 +90,8 @@ func WithRegion(region string) func(*config) {
 }
 
 // WithAccessKeyID sets the access key ID for the DynamoDB connection.
+//
+// Default: https://github.com/btnguyen2k/godynamo?tab=readme-ov-file#data-source-name-dsn-format-for-aws-dynamodb
 func WithAccessKeyID(accessKeyId string) func(*config) {
 	return func(config *config) {
 		config.akId = accessKeyId
@@ -97,6 +99,8 @@ func WithAccessKeyID(accessKeyId string) func(*config) {
 }
 
 // WithSecretKey sets the secret key for the DynamoDB connection.
+//
+// Default: https://github.com/btnguyen2k/godynamo?tab=readme-ov-file#data-source-name-dsn-format-for-aws-dynamodb
 func WithSecretKey(secretKey string) func(*config) {
 	return func(config *config) {
 		config.secret = secretKey
@@ -110,14 +114,16 @@ func WithEndpoint(endpoint string) func(*config) {
 	}
 }
 
-// WithTimeout sets the timeout for the DynamoDB connection.
+// WithTimeout sets the timeout milliseconds for the DynamoDB connection.
+//
+// Default: https://github.com/btnguyen2k/godynamo?tab=readme-ov-file#data-source-name-dsn-format-for-aws-dynamodb
 func WithTimeout(timeout int) func(*config) {
 	return func(config *config) {
 		config.timeout = timeout
 	}
 }
 
-// WithConnection sets the connection for the DynamoDB.
+// WithConnection sets the exist connection for the DynamoDB.
 func WithConnection(conn gorm.ConnPool) func(*config) {
 	return func(config *config) {
 		config.conn = conn
@@ -134,7 +140,7 @@ func Open(dsn string) gorm.Dialector {
 	}
 }
 
-// New returns a new DynamoDB dialector based on the region, access key ID, secret key and options.
+// New returns a new DynamoDB dialector with options.
 func New(option ...DialectorOption) gorm.Dialector {
 	conf := config{}
 	buildConfig(&conf, option...)

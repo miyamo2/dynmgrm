@@ -10,18 +10,18 @@ import (
 	"testing"
 )
 
-func TestSets_Scan(t *testing.T) {
+func TestSet_Scan(t *testing.T) {
 	type testCase struct {
-		sut           Sets[string]
+		sut           Set[string]
 		args          interface{}
 		want          error
-		expectedState Sets[string]
+		expectedState Set[string]
 	}
 	tests := map[string]testCase{
 		"unhappy-path/already-contains-item": {
-			sut:           Sets[string]{"value"},
+			sut:           Set[string]{"value"},
 			args:          []interface{}{"test"},
-			expectedState: Sets[string]{"value"},
+			expectedState: Set[string]{"value"},
 			want:          ErrCollectionAlreadyContainsItem,
 		},
 	}
@@ -40,36 +40,36 @@ func TestSets_Scan(t *testing.T) {
 	}
 }
 
-func TestSets_Scan_String(t *testing.T) {
+func TestSet_Scan_String(t *testing.T) {
 	type testCase struct {
-		sut           Sets[string]
+		sut           Set[string]
 		args          interface{}
 		want          error
-		expectedState Sets[string]
+		expectedState Set[string]
 	}
 	tests := map[string]testCase{
 		"happy-path/single-value": {
-			sut:           newSets[string](),
+			sut:           newSet[string](),
 			args:          []string{"test"},
-			expectedState: Sets[string]{"test"},
+			expectedState: Set[string]{"test"},
 		},
 		"happy-path/multiple-values": {
-			sut:           newSets[string](),
+			sut:           newSet[string](),
 			args:          []string{"test1", "test2"},
-			expectedState: Sets[string]{"test1", "test2"},
+			expectedState: Set[string]{"test1", "test2"},
 		},
 		"happy-path/numeric-value": {
-			sut:           newSets[string](),
+			sut:           newSet[string](),
 			args:          []string{"1.1", "1.2"},
-			expectedState: Sets[string]{"1.1", "1.2"},
+			expectedState: Set[string]{"1.1", "1.2"},
 		},
 		"happy-path/null": {
-			sut:           newSets[string](),
+			sut:           newSet[string](),
 			args:          nil,
 			expectedState: nil,
 		},
 		"unhappy-path/not-slice": {
-			sut:           newSets[string](),
+			sut:           newSet[string](),
 			args:          "test",
 			want:          ErrValueIsIncompatibleOfStringSlice,
 			expectedState: nil,
@@ -91,48 +91,48 @@ func TestSets_Scan_String(t *testing.T) {
 	}
 }
 
-func TestSets_Scan_Int(t *testing.T) {
+func TestSet_Scan_Int(t *testing.T) {
 	type testCase struct {
-		sut           Sets[int]
+		sut           Set[int]
 		args          interface{}
 		want          error
-		expectedState Sets[int]
+		expectedState Set[int]
 	}
 	tests := map[string]testCase{
 		"happy-path/single-value": {
-			sut:           newSets[int](),
+			sut:           newSet[int](),
 			args:          []float64{1},
-			expectedState: Sets[int]{1},
+			expectedState: Set[int]{1},
 		},
 		"happy-path/multiple-values": {
-			sut:           newSets[int](),
+			sut:           newSet[int](),
 			args:          []float64{1, 2},
-			expectedState: Sets[int]{1, 2},
+			expectedState: Set[int]{1, 2},
 		},
 		"happy-path/float-value": {
-			sut:           newSets[int](),
+			sut:           newSet[int](),
 			args:          []float64{1.0, 2.0},
-			expectedState: Sets[int]{1, 2},
+			expectedState: Set[int]{1, 2},
 		},
 		"happy-path/null": {
-			sut:           newSets[int](),
+			sut:           newSet[int](),
 			args:          nil,
 			expectedState: nil,
 		},
 		"unhappy-path/not-slice": {
-			sut:           newSets[int](),
+			sut:           newSet[int](),
 			args:          1,
 			want:          ErrValueIsIncompatibleOfIntSlice,
 			expectedState: nil,
 		},
 		"unhappy-path/string-slice": {
-			sut:           newSets[int](),
+			sut:           newSet[int](),
 			args:          []string{"A"},
 			want:          ErrValueIsIncompatibleOfIntSlice,
 			expectedState: nil,
 		},
 		"unhappy-path/float-value": {
-			sut:           newSets[int](),
+			sut:           newSet[int](),
 			args:          []float64{1.1, 2.1},
 			want:          ErrValueIsIncompatibleOfIntSlice,
 			expectedState: nil,
@@ -154,46 +154,46 @@ func TestSets_Scan_Int(t *testing.T) {
 	}
 }
 
-func TestSets_Scan_Float64(t *testing.T) {
+func TestSet_Scan_Float64(t *testing.T) {
 	type testCase struct {
-		sut           Sets[float64]
+		sut           Set[float64]
 		args          interface{}
 		want          error
-		expectedState Sets[float64]
+		expectedState Set[float64]
 	}
 	tests := map[string]testCase{
 		"happy-path/single-value": {
-			sut:           newSets[float64](),
+			sut:           newSet[float64](),
 			args:          []float64{1.1},
-			expectedState: Sets[float64]{1.1},
+			expectedState: Set[float64]{1.1},
 		},
 		"happy-path/multiple-values": {
-			sut:           newSets[float64](),
+			sut:           newSet[float64](),
 			args:          []float64{1.1, 1.2},
-			expectedState: Sets[float64]{1.1, 1.2},
+			expectedState: Set[float64]{1.1, 1.2},
 		},
 		"happy-path/int-value": {
-			sut:           newSets[float64](),
+			sut:           newSet[float64](),
 			args:          []float64{1, 2},
-			expectedState: Sets[float64]{1, 2},
+			expectedState: Set[float64]{1, 2},
 		},
 		"happy-path/int-and-float64": {
-			sut:           newSets[float64](),
+			sut:           newSet[float64](),
 			args:          []float64{1, 1.2},
-			expectedState: Sets[float64]{1, 1.2},
+			expectedState: Set[float64]{1, 1.2},
 		},
 		"happy-path/null": {
-			sut:           newSets[float64](),
+			sut:           newSet[float64](),
 			args:          nil,
 			expectedState: nil,
 		},
 		"unhappy-path/not-slice": {
-			sut:  newSets[float64](),
+			sut:  newSet[float64](),
 			args: 1,
 			want: ErrValueIsIncompatibleOfFloat64Slice,
 		},
 		"unhappy-path/not-compatible-slice": {
-			sut:  newSets[float64](),
+			sut:  newSet[float64](),
 			args: []string{"A"},
 			want: ErrValueIsIncompatibleOfFloat64Slice,
 		},
@@ -213,47 +213,47 @@ func TestSets_Scan_Float64(t *testing.T) {
 	}
 }
 
-func TestSets_Scan_Binary(t *testing.T) {
+func TestSet_Scan_Binary(t *testing.T) {
 	type testCase struct {
-		sut           Sets[[]byte]
+		sut           Set[[]byte]
 		args          interface{}
 		want          error
-		expectedState Sets[[]byte]
+		expectedState Set[[]byte]
 	}
 	tests := map[string]testCase{
 		"happy-path/single-value": {
-			sut:           newSets[[]byte](),
+			sut:           newSet[[]byte](),
 			args:          [][]byte{{116, 101, 115, 116, 49}},
-			expectedState: Sets[[]byte]{[]byte{116, 101, 115, 116, 49}},
+			expectedState: Set[[]byte]{[]byte{116, 101, 115, 116, 49}},
 		},
 		"happy-path/multiple-value": {
-			sut: newSets[[]byte](),
+			sut: newSet[[]byte](),
 			args: [][]byte{
 				{116, 101, 115, 116, 49},
 				{116, 101, 115, 116, 50},
 			},
-			expectedState: Sets[[]byte]{
+			expectedState: Set[[]byte]{
 				[]byte{116, 101, 115, 116, 49},
 				[]byte{116, 101, 115, 116, 50},
 			},
 		},
 		"happy-path/null": {
-			sut:           newSets[[]byte](),
+			sut:           newSet[[]byte](),
 			args:          nil,
 			expectedState: nil,
 		},
 		"unhappy-path/not-slice": {
-			sut:  newSets[[]byte](),
+			sut:  newSet[[]byte](),
 			args: 1,
 			want: ErrValueIsIncompatibleOfBinarySlice,
 		},
 		"unhappy-path/not-compatible-slice": {
-			sut:  newSets[[]byte](),
+			sut:  newSet[[]byte](),
 			args: []interface{}{1},
 			want: ErrValueIsIncompatibleOfBinarySlice,
 		},
 		"unhappy-path/string-value": {
-			sut:           newSets[[]byte](),
+			sut:           newSet[[]byte](),
 			args:          []interface{}{"test"},
 			expectedState: nil,
 			want:          ErrValueIsIncompatibleOfBinarySlice,
@@ -274,14 +274,14 @@ func TestSets_Scan_Binary(t *testing.T) {
 	}
 }
 
-func TestSets_GormDataType(t *testing.T) {
+func TestSet_GormDataType(t *testing.T) {
 	type testCase struct {
-		sut  Sets[string]
+		sut  Set[string]
 		want string
 	}
 	tests := map[string]testCase{
 		"happy-path": {
-			sut:  newSets[string](),
+			sut:  newSet[string](),
 			want: "dgsets",
 		},
 	}
@@ -294,9 +294,9 @@ func TestSets_GormDataType(t *testing.T) {
 	}
 }
 
-func TestSets_IsCompatibleWithSets_String(t *testing.T) {
+func TestSet_IsCompatibleWithSet_String(t *testing.T) {
 	type testCase struct {
-		sut  Sets[string]
+		sut  Set[string]
 		args interface{}
 		want bool
 	}
@@ -332,17 +332,17 @@ func TestSets_IsCompatibleWithSets_String(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := isCompatibleWithSets[string](tt.args)
+			got := isCompatibleWithSet[string](tt.args)
 			if got != tt.want {
-				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
+				t.Errorf("isCompatibleWithSet() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestSets_IsCompatibleWithSets_Int(t *testing.T) {
+func TestSet_IsCompatibleWithSet_Int(t *testing.T) {
 	type testCase struct {
-		sut  Sets[int]
+		sut  Set[int]
 		args interface{}
 		want bool
 	}
@@ -378,17 +378,17 @@ func TestSets_IsCompatibleWithSets_Int(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := isCompatibleWithSets[int](tt.args)
+			got := isCompatibleWithSet[int](tt.args)
 			if got != tt.want {
-				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
+				t.Errorf("isCompatibleWithSet() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestSets_IsCompatibleWithSets_Float64(t *testing.T) {
+func TestSet_IsCompatibleWithSet_Float64(t *testing.T) {
 	type testCase struct {
-		sut  Sets[float64]
+		sut  Set[float64]
 		args interface{}
 		want bool
 	}
@@ -424,17 +424,17 @@ func TestSets_IsCompatibleWithSets_Float64(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := isCompatibleWithSets[float64](tt.args)
+			got := isCompatibleWithSet[float64](tt.args)
 			if got != tt.want {
-				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
+				t.Errorf("isCompatibleWithSet() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestSets_IsCompatibleWithSets_Binary(t *testing.T) {
+func TestSet_IsCompatibleWithSet_Binary(t *testing.T) {
 	type testCase struct {
-		sut  Sets[[]byte]
+		sut  Set[[]byte]
 		args interface{}
 		want bool
 	}
@@ -470,28 +470,28 @@ func TestSets_IsCompatibleWithSets_Binary(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := isCompatibleWithSets[[]byte](tt.args)
+			got := isCompatibleWithSet[[]byte](tt.args)
 			if got != tt.want {
-				t.Errorf("isCompatibleWithSets() = %v, want %v", got, tt.want)
+				t.Errorf("isCompatibleWithSet() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestSets_GormValue_String(t *testing.T) {
+func TestSet_GormValue_String(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           Sets[string]
+		sut           Set[string]
 		args          args
 		want          clause.Expr
 		expectDBError error
 	}
 	tests := map[string]test{
 		"happy-path": {
-			sut: Sets[string]{"1"},
+			sut: Set[string]{"1"},
 			args: args{
 				ctx: context.Background(),
 				db:  &gorm.DB{},
@@ -523,20 +523,20 @@ func TestSets_GormValue_String(t *testing.T) {
 	}
 }
 
-func TestSets_GormValue_Int(t *testing.T) {
+func TestSet_GormValue_Int(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           Sets[int]
+		sut           Set[int]
 		args          args
 		want          clause.Expr
 		expectDBError error
 	}
 	tests := map[string]test{
 		"happy-path": {
-			sut: Sets[int]{1},
+			sut: Set[int]{1},
 			args: args{
 				ctx: context.Background(),
 				db:  &gorm.DB{},
@@ -568,20 +568,20 @@ func TestSets_GormValue_Int(t *testing.T) {
 	}
 }
 
-func TestSets_GormValue_Float64(t *testing.T) {
+func TestSet_GormValue_Float64(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           Sets[float64]
+		sut           Set[float64]
 		args          args
 		want          clause.Expr
 		expectDBError error
 	}
 	tests := map[string]test{
 		"happy-path": {
-			sut: Sets[float64]{1.1},
+			sut: Set[float64]{1.1},
 			args: args{
 				ctx: context.Background(),
 				db:  &gorm.DB{},
@@ -613,20 +613,20 @@ func TestSets_GormValue_Float64(t *testing.T) {
 	}
 }
 
-func TestSets_GormValue_Binary(t *testing.T) {
+func TestSet_GormValue_Binary(t *testing.T) {
 	type args struct {
 		ctx context.Context
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           Sets[[]byte]
+		sut           Set[[]byte]
 		args          args
 		want          clause.Expr
 		expectDBError error
 	}
 	tests := map[string]test{
 		"happy-path": {
-			sut: Sets[[]byte]{[]byte("A")},
+			sut: Set[[]byte]{[]byte("A")},
 			args: args{
 				ctx: context.Background(),
 				db:  &gorm.DB{},
