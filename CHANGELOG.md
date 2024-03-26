@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 - 2024-03-26
+
+♻️ Few Refactor to make it testable
+
+📝 Added `GormValue` explain to List, Map, Set
+
 ## 0.1.1 - 2024-03-26
 
 ## 0.1.0 - 2024-03-26
