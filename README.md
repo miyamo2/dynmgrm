@@ -85,7 +85,7 @@ Supports the following GORM features:
   - [x] `Begin`
   - [x] `Commit`
   - [x] `Rollback`
-  - [ ] `Transaction`
+  - [x] `Transaction`
 
 ※ Supports only Insert, Update, and Delete.
 
