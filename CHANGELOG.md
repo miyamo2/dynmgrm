@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 - 2024-03-26
+
+✨ New Features
+
+- Add Support following GORM features
+    - `DB.Transaction`
+
 ## 0.1.2 - 2024-03-26
 
 ♻️ Few Refactor to make it testable
