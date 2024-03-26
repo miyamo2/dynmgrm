@@ -26,7 +26,7 @@ Supports the following PartiQL operations:
     - [x] With `set_delete` function
   - [ ] With `REMOVE` clause
 - [x] Delete
-- [ ] Create Table | Index
+- [ ] Create (Table | Index)
 
 Supports the following GORM features:
 
