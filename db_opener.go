@@ -18,5 +18,5 @@ func (o dbOpener) DriverName() string {
 }
 
 func (o dbOpener) Apply() (*sql.DB, error) {
-	return sql.Open(o.driverName, o.dsn)
+	return sql.Open(o.DriverName(), o.DSN())
 }
