@@ -21,6 +21,9 @@ Supports the following PartiQL operations:
 - [x] Insert
 - [x] Update
   - [x] With `SET` clause
+    - [x] With `list_append` function
+    - [x] With `set_add` function
+    - [x] With `set_delete` function
   - [ ] With `REMOVE` clause
 - [x] Delete
 - [ ] Create Table | Index
@@ -122,9 +125,9 @@ Custom Clause:
 
 - `SecondaryIndex`
 
-And Custom Data Types:
+Custom Data Types:
 
-- `Sets[string | int | float64 | []byte]`
+- `Set[string | int | float64 | []byte]`
 
 - `List`
 
@@ -134,13 +137,68 @@ And Custom Data Types:
 
 ### Installation
 
-```.sh
+```sh
 go get github.com/miyamo2/dynmgrm
 ```
 
 ### Usage
 
-```.go
+```go
+package main
+
+import (
+	"github.com/miyamo2/dynmgrm"
+	"gorm.io/gorm"
+)
+
+type Event struct {
+	Name  string `gorm:"primaryKey"`
+	Date  string `gorm:"primaryKey"`
+	Host  string
+	Guest dynmgrm.Set[string]
+}
+
+func main() {
+	db, err := gorm.Open(dynmgrm.New())
+	if err != nil {
+		panic(err)
+	}
+
+	var dynamoDBWorkshop Event
+	db.Table("events").Where(`name=? AND date=?`, "DynamoDB Workshop", "2024/3/25").Scan(&dynamoDBWorkshop)
+
+	dynamoDBWorkshop.Guest = append(dynamoDBWorkshop.Guest, "Alice")
+	db.Save(&dynamoDBWorkshop)
+
+	carolBirthday := Event{
+		Name:  "Carol's Birthday",
+		Date:  "2024/4/1",
+		Host:  "Charlie",
+		Guest: []string{"Alice", "Bob"},
+	}
+	db.Create(carolBirthday)
+
+	var daveSchedule []Event
+	db.Table("events").
+		Where(`date=? AND ( host=? OR CONTAINS("guest", ?) )`, "2024/4/1", "Dave", "Dave").
+		Scan(&daveSchedule)
+
+	tx := db.Begin()
+	for _, event := range daveSchedule {
+		if event.Host == "Dave" {
+			tx.Delete(&event)
+		} else {
+			tx.Model(&event).Update("guest", gorm.Expr("set_delete(guest, ?)", dynmgrm.Set[string]{"Dave"}))
+		}
+	}
+	tx.Model(&carolBirthday).Update("guest", gorm.Expr("set_add(guest, ?)", dynmgrm.Set[string]{"Dave"}))
+	tx.Commit()
+
+	var hostDateIndex []Event
+	db.Table("events").Clauses(
+		dynmgrm.SecondaryIndex("host-date-index"),
+	).Where(`host=?`, "Bob").Scan(&hostDateIndex)
+}
 ```
 
 ## Contributing
