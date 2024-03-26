@@ -652,3 +652,98 @@ func Test_Update_With_SetDelete(t *testing.T) {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
+
+func Test_Update_With_ListAppend(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForSelect, testTableName)
+	defer dataCleanup(t, testDataForSelect, testTableName)
+
+	expect := map[string]*dynamodb.AttributeValue{
+		"pk": {
+			S: aws.String("Partition1"),
+		},
+		"sk": {
+			N: aws.String("1"),
+		},
+		"some_string": {
+			S: aws.String("Hello"),
+		},
+		"some_int": {
+			N: aws.String("1"),
+		},
+		"some_float": {
+			N: aws.String("1.1"),
+		},
+		"some_bool": {
+			BOOL: aws.Bool(true),
+		},
+		"some_binary": {
+			B: []byte("ABC"),
+		},
+		"some_list": {
+			L: []*dynamodb.AttributeValue{
+				{
+					S: aws.String("Hello"),
+				},
+				{
+					N: aws.String("1"),
+				},
+				{
+					N: aws.String("1.1"),
+				},
+				{
+					BOOL: aws.Bool(true),
+				},
+				{
+					B: []byte("ABC"),
+				},
+				{
+					M: map[string]*dynamodb.AttributeValue{"append_item": {S: aws.String("Foo")}},
+				},
+			},
+		},
+		"some_map": {
+			M: map[string]*dynamodb.AttributeValue{
+				"some_string": {
+					S: aws.String("Hello"),
+				},
+				"some_number": {
+					N: aws.String("1.1"),
+				},
+				"some_bool": {
+					BOOL: aws.Bool(true),
+				},
+				"some_binary": {
+					B: []byte("ABC"),
+				},
+			},
+		},
+		"some_string_set": {
+			SS: []*string{aws.String("Hello"), aws.String("World")},
+		},
+		"some_int_set": {
+			NS: []*string{aws.String("1"), aws.String("2")},
+		},
+		"some_float_set": {
+			NS: []*string{aws.String("1.1"), aws.String("2.2")},
+		},
+		"some_binary_set": {
+			BS: [][]byte{[]byte("ABC"), []byte("DEF")},
+		},
+		"any": {
+			S: aws.String("any"),
+		},
+	}
+
+	db.Model(
+		&TestTable{
+			PK: "Partition1",
+			SK: 1,
+		}).Update("some_list", gorm.Expr("list_append(some_list, ?)", dynmgrm.List{dynmgrm.Map{"append_item": "Foo"}}))
+
+	result := getData(t, testTableName, "Partition1", 1)
+
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
+		t.Errorf("Mismatch (-want +got):\n%s", diff)
+	}
+}
