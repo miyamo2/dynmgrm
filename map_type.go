@@ -34,6 +34,7 @@ func (m *Map) Scan(value interface{}) error {
 	return resolveCollectionsNestedInMap(m)
 }
 
+// GormValue implements the gorm.Valuer interface.
 func (m Map) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
 	if err := resolveCollectionsNestedInMap(&m); err != nil {
 		_ = db.AddError(err)

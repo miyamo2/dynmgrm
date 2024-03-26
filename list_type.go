@@ -35,6 +35,7 @@ func (l *List) Scan(value interface{}) error {
 	return resolveCollectionsNestedInList(l)
 }
 
+// GormValue implements the gorm.Valuer interface.
 func (l List) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
 	if err := resolveCollectionsNestedInList(&l); err != nil {
 		_ = db.AddError(err)
