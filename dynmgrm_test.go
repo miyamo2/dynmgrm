@@ -349,7 +349,7 @@ func TestDialector_DataTypeOf(t *testing.T) {
 					DataType: schema.Bool,
 				},
 			},
-			want: DataTypeString.String(),
+			want: KeySchemaDataTypeString.String(),
 		},
 		"happy_path/uint": {
 			args: args{
@@ -357,7 +357,7 @@ func TestDialector_DataTypeOf(t *testing.T) {
 					DataType: schema.Uint,
 				},
 			},
-			want: DataTypeNumber.String(),
+			want: KeySchemaDataTypeNumber.String(),
 		},
 		"happy_path/int": {
 			args: args{
@@ -365,7 +365,7 @@ func TestDialector_DataTypeOf(t *testing.T) {
 					DataType: schema.Int,
 				},
 			},
-			want: DataTypeNumber.String(),
+			want: KeySchemaDataTypeNumber.String(),
 		},
 		"happy_path/float": {
 			args: args{
@@ -373,7 +373,7 @@ func TestDialector_DataTypeOf(t *testing.T) {
 					DataType: schema.Float,
 				},
 			},
-			want: DataTypeNumber.String(),
+			want: KeySchemaDataTypeNumber.String(),
 		},
 		"happy_path/string": {
 			args: args{
@@ -381,7 +381,7 @@ func TestDialector_DataTypeOf(t *testing.T) {
 					DataType: schema.String,
 				},
 			},
-			want: DataTypeString.String(),
+			want: KeySchemaDataTypeString.String(),
 		},
 		"happy_path/bytes": {
 			args: args{
@@ -389,7 +389,7 @@ func TestDialector_DataTypeOf(t *testing.T) {
 					DataType: schema.Bytes,
 				},
 			},
-			want: DataTypeBinary.String(),
+			want: KeySchemaDataTypeBinary.String(),
 		},
 		"happy_path/time": {
 			args: args{
@@ -397,7 +397,7 @@ func TestDialector_DataTypeOf(t *testing.T) {
 					DataType: schema.Time,
 				},
 			},
-			want: DataTypeString.String(),
+			want: KeySchemaDataTypeString.String(),
 		},
 		"happy_path/default": {
 			args: args{
@@ -405,7 +405,7 @@ func TestDialector_DataTypeOf(t *testing.T) {
 					DataType: schema.DataType("jsonb"),
 				},
 			},
-			want: DataTypeString.String(),
+			want: KeySchemaDataTypeString.String(),
 		},
 	}
 	for name, tt := range tests {

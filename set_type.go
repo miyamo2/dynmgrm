@@ -34,7 +34,9 @@ func (s *Set[T]) GormDataType() string {
 	return "dgsets"
 }
 
-// Scan implements the sql.Scanner#Scan
+// Scan implements the [sql.Scanner#Scan]
+//
+// [sql.Scanner#Scan]: https://golang.org/pkg/database/sql/#Scanner
 func (s *Set[T]) Scan(value interface{}) error {
 	if len(*s) != 0 {
 		return ErrCollectionAlreadyContainsItem
@@ -56,7 +58,9 @@ func (s *Set[T]) Scan(value interface{}) error {
 	return nil
 }
 
-// GormValue implements the gorm.Valuer interface.
+// GormValue implements the [gorm.Valuer] interface.
+//
+// [gorm.Valuer]: https://pkg.go.dev/gorm.io/gorm#Valuer
 func (s Set[T]) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
 	switch s := (interface{})(s).(type) {
 	case Set[int]:

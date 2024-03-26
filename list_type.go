@@ -22,7 +22,9 @@ func (l *List) GormDataType() string {
 	return "dglist"
 }
 
-// Scan implements the sql.Scanner#Scan
+// Scan implements the [sql.Scanner#Scan]
+//
+// [sql.Scanner#Scan]: https://golang.org/pkg/database/sql/#Scanner
 func (l *List) Scan(value interface{}) error {
 	if len(*l) != 0 {
 		return ErrCollectionAlreadyContainsItem
@@ -35,7 +37,9 @@ func (l *List) Scan(value interface{}) error {
 	return resolveCollectionsNestedInList(l)
 }
 
-// GormValue implements the gorm.Valuer interface.
+// GormValue implements the [gorm.Valuer] interface.
+//
+// [gorm.Valuer]: https://pkg.go.dev/gorm.io/gorm#Valuer
 func (l List) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
 	if err := resolveCollectionsNestedInList(&l); err != nil {
 		_ = db.AddError(err)

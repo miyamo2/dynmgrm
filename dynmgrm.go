@@ -17,23 +17,28 @@ import (
 // compatibility check
 var _ gorm.Dialector = (*Dialector)(nil)
 
-type DataType string
+// KeySchemaDataType is the data type for the DynamoDB key schema.
+type KeySchemaDataType string
 
-func (d DataType) String() string {
+// String returns the string representation of the KeySchemaDataType.
+func (d KeySchemaDataType) String() string {
 	return string(d)
 }
 
 const (
-	// DriverName is the default driver name for DynamoDB.
+	// DriverName is the driver name for DynamoDB.
 	DriverName = "godynamo"
 	DBName     = "dynamodb"
+)
 
-	// DataTypeString is the data type for string.
-	DataTypeString DataType = "string"
-	// DataTypeNumber is the data type for number.
-	DataTypeNumber DataType = "number"
-	// DataTypeBinary is the data type for binary.
-	DataTypeBinary DataType = "binary"
+// Define KeySchemaDataType
+const (
+	// KeySchemaDataTypeString is the data type for string.
+	KeySchemaDataTypeString KeySchemaDataType = "string"
+	// KeySchemaDataTypeNumber is the data type for number.
+	KeySchemaDataTypeNumber KeySchemaDataType = "number"
+	// KeySchemaDataTypeBinary is the data type for binary.
+	KeySchemaDataTypeBinary KeySchemaDataType = "binary"
 )
 
 var (
@@ -244,17 +249,17 @@ func (dialector Dialector) Explain(sql string, vars ...interface{}) string {
 func (dialector Dialector) DataTypeOf(field *schema.Field) string {
 	switch field.DataType {
 	case schema.Bool:
-		return DataTypeString.String()
+		return KeySchemaDataTypeString.String()
 	case schema.Int, schema.Uint, schema.Float:
-		return DataTypeNumber.String()
+		return KeySchemaDataTypeNumber.String()
 	case schema.String:
-		return DataTypeString.String()
+		return KeySchemaDataTypeString.String()
 	case schema.Time:
-		return DataTypeString.String()
+		return KeySchemaDataTypeString.String()
 	case schema.Bytes:
-		return DataTypeBinary.String()
+		return KeySchemaDataTypeBinary.String()
 	default:
-		return DataTypeString.String()
+		return KeySchemaDataTypeString.String()
 	}
 }
 
