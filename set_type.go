@@ -56,6 +56,7 @@ func (s *Set[T]) Scan(value interface{}) error {
 	return nil
 }
 
+// GormValue implements the gorm.Valuer interface.
 func (s Set[T]) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
 	switch s := (interface{})(s).(type) {
 	case Set[int]:
