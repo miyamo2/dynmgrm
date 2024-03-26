@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/miyamo2/dynmgrm/internal/mocks"
 	"go.uber.org/mock/gomock"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -20,7 +21,8 @@ func TestNew(t *testing.T) {
 	}
 
 	type want struct {
-		dsn string
+		dsn  string
+		conn gorm.ConnPool
 	}
 
 	type test struct {
@@ -87,6 +89,17 @@ func TestNew(t *testing.T) {
 				dsn: "timeout=1000",
 			},
 		},
+		"happy_path/with_connection": {
+			args: args{
+				option: []DialectorOption{
+					WithConnection(&sql.DB{}),
+				},
+			},
+			want: want{
+				dsn:  "",
+				conn: &sql.DB{},
+			},
+		},
 	}
 
 	for name, tt := range tests {
@@ -101,6 +114,10 @@ func TestNew(t *testing.T) {
 			}
 			if diff := cmp.Diff(tt.want.dsn, d.dbOpener.DSN()); diff != "" {
 				t.Errorf("DSN() mismatch (-want +got): \n%v", diff)
+			}
+
+			if !reflect.DeepEqual(tt.want.conn, d.conn) {
+				t.Errorf("conn expected: %v, actual: %v", tt.want.conn, d.conn)
 			}
 		})
 
