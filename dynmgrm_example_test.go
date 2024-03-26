@@ -9,7 +9,7 @@ type Event struct {
 	Name  string `gorm:"primaryKey"`
 	Date  string `gorm:"primaryKey"`
 	Host  string
-	Guest dynmgrm.Sets[string]
+	Guest dynmgrm.Set[string]
 }
 
 func Example() {
@@ -42,10 +42,10 @@ func Example() {
 		if event.Host == "Dave" {
 			tx.Delete(&event)
 		} else {
-			tx.Model(&event).Update("guest", gorm.Expr("set_delete(guest, ?)", dynmgrm.Sets[string]{"Dave"}))
+			tx.Model(&event).Update("guest", gorm.Expr("set_delete(guest, ?)", dynmgrm.Set[string]{"Dave"}))
 		}
 	}
-	tx.Model(&carolBirthday).Update("guest", gorm.Expr("set_add(guest, ?)", dynmgrm.Sets[string]{"Dave"}))
+	tx.Model(&carolBirthday).Update("guest", gorm.Expr("set_add(guest, ?)", dynmgrm.Set[string]{"Dave"}))
 	tx.Commit()
 
 	var hostDateIndex []Event

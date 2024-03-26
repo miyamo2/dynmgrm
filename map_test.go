@@ -105,19 +105,19 @@ func TestMap_ResolveNestedCollections(t *testing.T) {
 		},
 		"happy-path/nested-int-sets": {
 			sut:           Map{"a": []float64{1, 2, 3}},
-			expectedState: Map{"a": Sets[int]{1, 2, 3}},
+			expectedState: Map{"a": Set[int]{1, 2, 3}},
 		},
 		"happy-path/nested-float-sets": {
 			sut:           Map{"a": []float64{1.1, 2.1, 3.1}},
-			expectedState: Map{"a": Sets[float64]{1.1, 2.1, 3.1}},
+			expectedState: Map{"a": Set[float64]{1.1, 2.1, 3.1}},
 		},
 		"happy-path/nested-string-sets": {
 			sut:           Map{"a": []string{"1", "2", "3"}},
-			expectedState: Map{"a": Sets[string]{"1", "2", "3"}},
+			expectedState: Map{"a": Set[string]{"1", "2", "3"}},
 		},
 		"happy-path/nested-binary-sets": {
 			sut:           Map{"a": [][]byte{[]byte("1"), []byte("2"), []byte("3")}},
-			expectedState: Map{"a": Sets[[]byte]{[]byte("1"), []byte("2"), []byte("3")}},
+			expectedState: Map{"a": Set[[]byte]{[]byte("1"), []byte("2"), []byte("3")}},
 		},
 	}
 	for name, tt := range tests {

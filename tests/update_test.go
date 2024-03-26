@@ -71,16 +71,16 @@ func Test_Update_With_Save(t *testing.T) {
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("UPDATED")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("5"), aws.String("10")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("5.5"), aws.String("11")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("XYZ"), []byte("ABC")},
 		},
 		"any": {
@@ -89,25 +89,25 @@ func Test_Update_With_Save(t *testing.T) {
 	}
 
 	db.Save(TestTable{
-		PK:             "Partition1",
-		SK:             1,
-		SomeString:     "UPDATED",
-		SomeInt:        5,
-		SomeFloat:      5.5,
-		SomeBool:       false,
-		SomeBinary:     []byte("XYZ"),
-		SomeList:       dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
-		SomeMap:        dynmgrm.Map{"some_string": "UPDATED", "some_number": 5.5, "some_bool": false, "some_binary": []byte("XYZ")},
-		SomeStringSets: dynmgrm.Sets[string]{"UPDATED"},
-		SomeIntSets:    dynmgrm.Sets[int]{5, 10},
-		SomeFloatSets:  dynmgrm.Sets[float64]{5.5, 11.0},
-		SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("XYZ"), []byte("ABC")},
-		Any:            "UPDATED",
+		PK:            "Partition1",
+		SK:            1,
+		SomeString:    "UPDATED",
+		SomeInt:       5,
+		SomeFloat:     5.5,
+		SomeBool:      false,
+		SomeBinary:    []byte("XYZ"),
+		SomeList:      dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+		SomeMap:       dynmgrm.Map{"some_string": "UPDATED", "some_number": 5.5, "some_bool": false, "some_binary": []byte("XYZ")},
+		SomeStringSet: dynmgrm.Set[string]{"UPDATED"},
+		SomeIntSet:    dynmgrm.Set[int]{5, 10},
+		SomeFloatSet:  dynmgrm.Set[float64]{5.5, 11.0},
+		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+		Any:           "UPDATED",
 	})
 
 	result := getData(t, testTableName, "Partition1", 1)
 
-	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -174,16 +174,16 @@ func Test_Update_With_Updates(t *testing.T) {
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("UPDATED")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("5"), aws.String("10")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("5.5"), aws.String("11")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("XYZ"), []byte("ABC")},
 		},
 		"any": {
@@ -211,16 +211,16 @@ func Test_Update_With_Updates(t *testing.T) {
 				"some_number": 5.5,
 				"some_bool":   false,
 				"some_binary": []byte("XYZ")},
-			"some_string_sets": dynmgrm.Sets[string]{"UPDATED"},
-			"some_int_sets":    dynmgrm.Sets[int]{5, 10},
-			"some_float_sets":  dynmgrm.Sets[float64]{5.5, 11.0},
-			"some_binary_sets": dynmgrm.Sets[[]byte]{[]byte("XYZ"), []byte("ABC")},
-			"any":              "UPDATED",
+			"some_string_set": dynmgrm.Set[string]{"UPDATED"},
+			"some_int_set":    dynmgrm.Set[int]{5, 10},
+			"some_float_set":  dynmgrm.Set[float64]{5.5, 11.0},
+			"some_binary_set": dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+			"any":             "UPDATED",
 		})
 
 	result := getData(t, testTableName, "Partition1", 1)
 
-	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -287,16 +287,16 @@ func Test_Update_With_Update_Clause(t *testing.T) {
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("Hello"), aws.String("World")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("1"), aws.String("2")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("1.1"), aws.String("2.2")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("ABC"), []byte("DEF")},
 		},
 		"any": {
@@ -312,7 +312,7 @@ func Test_Update_With_Update_Clause(t *testing.T) {
 
 	result := getData(t, testTableName, "Partition1", 1)
 
-	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -379,16 +379,16 @@ func Test_Update_With_Tx_Commit(t *testing.T) {
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("UPDATED")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("5"), aws.String("10")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("5.5"), aws.String("11")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("XYZ"), []byte("ABC")},
 		},
 		"any": {
@@ -414,17 +414,17 @@ func Test_Update_With_Tx_Commit(t *testing.T) {
 				"some_number": 5.5,
 				"some_bool":   false,
 				"some_binary": []byte("XYZ")},
-			"some_string_sets": dynmgrm.Sets[string]{"UPDATED"},
-			"some_int_sets":    dynmgrm.Sets[int]{5, 10},
-			"some_float_sets":  dynmgrm.Sets[float64]{5.5, 11.0},
-			"some_binary_sets": dynmgrm.Sets[[]byte]{[]byte("XYZ"), []byte("ABC")},
-			"any":              "UPDATED",
+			"some_string_set": dynmgrm.Set[string]{"UPDATED"},
+			"some_int_set":    dynmgrm.Set[int]{5, 10},
+			"some_float_set":  dynmgrm.Set[float64]{5.5, 11.0},
+			"some_binary_set": dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+			"any":             "UPDATED",
 		})
 	tx.Commit()
 
 	result := getData(t, testTableName, "Partition1", 1)
 
-	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -454,17 +454,17 @@ func Test_Update_With_Tx_Rollback(t *testing.T) {
 				"some_number": 5.5,
 				"some_bool":   false,
 				"some_binary": []byte("XYZ")},
-			"some_string_sets": dynmgrm.Sets[string]{"UPDATED"},
-			"some_int_sets":    dynmgrm.Sets[int]{5, 10},
-			"some_float_sets":  dynmgrm.Sets[float64]{5.5, 11.0},
-			"some_binary_sets": dynmgrm.Sets[[]byte]{[]byte("XYZ"), []byte("ABC")},
-			"any":              "UPDATED",
+			"some_string_set": dynmgrm.Set[string]{"UPDATED"},
+			"some_int_set":    dynmgrm.Set[int]{5, 10},
+			"some_float_set":  dynmgrm.Set[float64]{5.5, 11.0},
+			"some_binary_set": dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+			"any":             "UPDATED",
 		})
 	tx.Rollback()
 
 	result := getData(t, testTableName, "Partition1", 1)
 
-	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -531,16 +531,16 @@ func Test_Update_With_SetAdd(t *testing.T) {
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("Hello"), aws.String("World"), aws.String("Bye")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("1"), aws.String("2")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("1.1"), aws.String("2.2")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("ABC"), []byte("DEF")},
 		},
 		"any": {
@@ -552,11 +552,11 @@ func Test_Update_With_SetAdd(t *testing.T) {
 		&TestTable{
 			PK: "Partition1",
 			SK: 1,
-		}).Update("some_string_sets", gorm.Expr("set_add(some_string_sets, ?)", dynmgrm.Sets[string]{"Bye"}))
+		}).Update("some_string_set", gorm.Expr("set_add(some_string_set, ?)", dynmgrm.Set[string]{"Bye"}))
 
 	result := getData(t, testTableName, "Partition1", 1)
 
-	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -623,16 +623,16 @@ func Test_Update_With_SetDelete(t *testing.T) {
 				},
 			},
 		},
-		"some_string_sets": {
+		"some_string_set": {
 			SS: []*string{aws.String("World")},
 		},
-		"some_int_sets": {
+		"some_int_set": {
 			NS: []*string{aws.String("1"), aws.String("2")},
 		},
-		"some_float_sets": {
+		"some_float_set": {
 			NS: []*string{aws.String("1.1"), aws.String("2.2")},
 		},
-		"some_binary_sets": {
+		"some_binary_set": {
 			BS: [][]byte{[]byte("ABC"), []byte("DEF")},
 		},
 		"any": {
@@ -644,11 +644,11 @@ func Test_Update_With_SetDelete(t *testing.T) {
 		&TestTable{
 			PK: "Partition1",
 			SK: 1,
-		}).Update("some_string_sets", gorm.Expr("set_delete(some_string_sets, ?)", dynmgrm.Sets[string]{"Hello"}))
+		}).Update("some_string_set", gorm.Expr("set_delete(some_string_set, ?)", dynmgrm.Set[string]{"Hello"}))
 
 	result := getData(t, testTableName, "Partition1", 1)
 
-	if diff := cmp.Diff(expect, result, append(avCmpOpts, setsCmpOpts...)...); diff != "" {
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }

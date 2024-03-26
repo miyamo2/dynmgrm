@@ -17,20 +17,20 @@ import (
 )
 
 type TestTable struct {
-	PK             string `gorm:"primaryKey"`
-	SK             int    `gorm:"primaryKey"`
-	SomeString     string
-	SomeInt        int
-	SomeFloat      float64
-	SomeBool       bool
-	SomeBinary     []byte
-	SomeList       dynmgrm.List
-	SomeMap        dynmgrm.Map
-	SomeStringSets dynmgrm.Sets[string]
-	SomeIntSets    dynmgrm.Sets[int]
-	SomeFloatSets  dynmgrm.Sets[float64]
-	SomeBinarySets dynmgrm.Sets[[]byte]
-	Any            string
+	PK            string `gorm:"primaryKey"`
+	SK            int    `gorm:"primaryKey"`
+	SomeString    string
+	SomeInt       int
+	SomeFloat     float64
+	SomeBool      bool
+	SomeBinary    []byte
+	SomeList      dynmgrm.List
+	SomeMap       dynmgrm.Map
+	SomeStringSet dynmgrm.Set[string]
+	SomeIntSet    dynmgrm.Set[int]
+	SomeFloatSet  dynmgrm.Set[float64]
+	SomeBinarySet dynmgrm.Set[[]byte]
+	Any           string
 }
 
 var (
@@ -39,7 +39,7 @@ var (
 	dynamoDBClient dynamodbiface.DynamoDBAPI
 )
 
-var setsCmpOpts = []cmp.Option{
+var setCmpOpts = []cmp.Option{
 	cmpopts.SortSlices(func(i, j int) bool {
 		return i < j
 	}),

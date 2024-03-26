@@ -34,11 +34,11 @@ func Test_Select_All(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition1",
@@ -61,11 +61,11 @@ func Test_Select_All(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 		{
 			PK:         "Partition2",
@@ -88,11 +88,11 @@ func Test_Select_All(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition2",
@@ -115,11 +115,11 @@ func Test_Select_All(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 		{
 			PK:         "Partition3",
@@ -147,7 +147,7 @@ func Test_Select_All(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -222,11 +222,11 @@ func Test_Select_With_PK(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition1",
@@ -249,11 +249,11 @@ func Test_Select_With_PK(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 	}
 
@@ -263,7 +263,7 @@ func Test_Select_With_PK(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -295,11 +295,11 @@ func Test_Select_With_PK_And_SK(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 	}
 
@@ -309,7 +309,7 @@ func Test_Select_With_PK_And_SK(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -341,11 +341,11 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 	}
 
@@ -357,7 +357,7 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, withTableClause, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, withTableClause, setCmpOpts...); diff != "" {
 		t.Errorf("withTableClause mismatch (-want +got):\n%s", diff)
 	}
 
@@ -371,7 +371,7 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, withSecondaryIdxOfString, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, withSecondaryIdxOfString, setCmpOpts...); diff != "" {
 		t.Errorf("with_secondary_idx_of_string mismatch (-want +got):\n%s", diff)
 	}
 
@@ -386,7 +386,7 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, withSecondaryIdxOfTableClause, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, withSecondaryIdxOfTableClause, setCmpOpts...); diff != "" {
 		t.Errorf("withSecondaryIdxOfTableClause mismatch (-want +got):\n%s", diff)
 	}
 
@@ -398,7 +398,7 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, withTableNameDotIndexName, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, withTableNameDotIndexName, setCmpOpts...); diff != "" {
 		t.Errorf("withTableNameDotIndexName mismatch (-want +got):\n%s", diff)
 	}
 
@@ -424,10 +424,10 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 	//		"some_bool":   false,
 	//		"some_binary": []byte("GHI"),
 	//	},
-	//	SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-	//	SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-	//	SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-	//	SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
+	//	SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+	//	SomeIntSet:    dynmgrm.Set[int]{2, 4},
+	//	SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+	//	SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
 	//}
 	//var withModel = TestTablePKSomeStringIndex{
 	//	PK:         "Partition1",
@@ -441,7 +441,7 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 	//	t.Errorf("unexpected error: %v", err)
 	//	err = nil
 	//}
-	//if diff := cmp.Diff(withModelExpect, withModel, setsCmpOpts...); diff != "" {
+	//if diff := cmp.Diff(withModelExpect, withModel, setCmpOpts...); diff != "" {
 	//	t.Errorf("withModelAs mismatch (-want +got):\n%s", diff)
 	//}
 }
@@ -473,11 +473,11 @@ func Test_Select_With_BeginWith(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition2",
@@ -500,11 +500,11 @@ func Test_Select_With_BeginWith(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition3",
@@ -523,7 +523,7 @@ func Test_Select_With_BeginWith(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -560,7 +560,7 @@ func Test_Select_With_IsMissing(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -592,11 +592,11 @@ func Test_Select_With_IsNotMissing(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition1",
@@ -619,11 +619,11 @@ func Test_Select_With_IsNotMissing(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 		{
 			PK:         "Partition2",
@@ -646,11 +646,11 @@ func Test_Select_With_IsNotMissing(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition2",
@@ -673,11 +673,11 @@ func Test_Select_With_IsNotMissing(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 	}
 
@@ -687,7 +687,7 @@ func Test_Select_With_IsNotMissing(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -719,11 +719,11 @@ func Test_Select_With_Contains(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 		{
 			PK:         "Partition2",
@@ -746,21 +746,21 @@ func Test_Select_With_Contains(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 	}
 
 	var result []TestTable
-	err := db.Table("test_tables").Where(`CONTAINS("some_string_sets", ?)`, "こんにちは").Scan(&result).Error
+	err := db.Table("test_tables").Where(`CONTAINS("some_string_set", ?)`, "こんにちは").Scan(&result).Error
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -792,11 +792,11 @@ func Test_Select_With_Size(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition1",
@@ -819,11 +819,11 @@ func Test_Select_With_Size(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 		{
 			PK:         "Partition2",
@@ -846,11 +846,11 @@ func Test_Select_With_Size(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition2",
@@ -873,21 +873,21 @@ func Test_Select_With_Size(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 	}
 
 	var result []TestTable
-	err := db.Table("test_tables").Where(`SIZE("some_string_sets") = ?`, 2).Scan(&result).Error
+	err := db.Table("test_tables").Where(`SIZE("some_string_set") = ?`, 2).Scan(&result).Error
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -919,11 +919,11 @@ func Test_Select_With_AttributeType(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition2",
@@ -946,11 +946,11 @@ func Test_Select_With_AttributeType(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 	}
 
@@ -960,7 +960,7 @@ func Test_Select_With_AttributeType(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -992,11 +992,11 @@ func Test_Select_With_Parentheses(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition1",
@@ -1019,11 +1019,11 @@ func Test_Select_With_Parentheses(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 		{
 			PK:         "Partition2",
@@ -1046,11 +1046,11 @@ func Test_Select_With_Parentheses(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 	}
 
@@ -1060,7 +1060,7 @@ func Test_Select_With_Parentheses(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("WithParentheses mismatch (-want +got):\n%s", diff)
 	}
 
@@ -1075,7 +1075,7 @@ func Test_Select_With_Parentheses(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, resultWithGroupCondition, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, resultWithGroupCondition, setCmpOpts...); diff != "" {
 		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -1107,11 +1107,11 @@ func Test_Select_With_Not(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition2",
@@ -1134,11 +1134,11 @@ func Test_Select_With_Not(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition3",
@@ -1157,7 +1157,7 @@ func Test_Select_With_Not(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("WithParentheses mismatch (-want +got):\n%s", diff)
 	}
 
@@ -1167,7 +1167,7 @@ func Test_Select_With_Not(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, resultWithNotMethod, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, resultWithNotMethod, setCmpOpts...); diff != "" {
 		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
 	}
 }
@@ -1199,11 +1199,11 @@ func Test_Select_With_Or(t *testing.T) {
 				"some_bool":   true,
 				"some_binary": []byte("ABC"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"Hello", "World"},
-			SomeIntSets:    dynmgrm.Sets[int]{1, 2},
-			SomeFloatSets:  dynmgrm.Sets[float64]{1.1, 2.2},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("ABC"), []byte("DEF")},
-			Any:            "any",
+			SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+			SomeIntSet:    dynmgrm.Set[int]{1, 2},
+			SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+			Any:           "any",
 		},
 		{
 			PK:         "Partition1",
@@ -1226,11 +1226,11 @@ func Test_Select_With_Or(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 		{
 			PK:         "Partition2",
@@ -1253,11 +1253,11 @@ func Test_Select_With_Or(t *testing.T) {
 				"some_bool":   false,
 				"some_binary": []byte("GHI"),
 			},
-			SomeStringSets: dynmgrm.Sets[string]{"こんにちは", "世界"},
-			SomeIntSets:    dynmgrm.Sets[int]{2, 4},
-			SomeFloatSets:  dynmgrm.Sets[float64]{2.2, 4.4},
-			SomeBinarySets: dynmgrm.Sets[[]byte]{[]byte("GHI"), []byte("JKL")},
-			Any:            "0",
+			SomeStringSet: dynmgrm.Set[string]{"こんにちは", "世界"},
+			SomeIntSet:    dynmgrm.Set[int]{2, 4},
+			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4},
+			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("GHI"), []byte("JKL")},
+			Any:           "0",
 		},
 		{
 			PK:         "Partition3",
@@ -1276,7 +1276,7 @@ func Test_Select_With_Or(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, result, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
 		t.Errorf("WithParentheses mismatch (-want +got):\n%s", diff)
 	}
 
@@ -1286,7 +1286,7 @@ func Test_Select_With_Or(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 		err = nil
 	}
-	if diff := cmp.Diff(expected, resultWithOrMethod, setsCmpOpts...); diff != "" {
+	if diff := cmp.Diff(expected, resultWithOrMethod, setCmpOpts...); diff != "" {
 		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
 	}
 }
