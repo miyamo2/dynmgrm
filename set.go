@@ -3,7 +3,6 @@ package dynmgrm
 import (
 	"context"
 	"errors"
-	"fmt"
 	"math"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
@@ -44,21 +43,17 @@ func (s *Set[T]) Scan(value interface{}) error {
 		*s = nil
 		return nil
 	}
-	var t T
-	switch (interface{})(t).(type) {
-	case int:
+	switch (interface{})(s).(type) {
+	case *Set[int]:
 		return scanAsIntSet((interface{})(s).(*Set[int]), value)
-	case float64:
+	case *Set[float64]:
 		return scanAsFloat64Set((interface{})(s).(*Set[float64]), value)
-	case string:
+	case *Set[string]:
 		return scanAsStringSet((interface{})(s).(*Set[string]), value)
-	case []byte:
+	case *Set[[]byte]:
 		return scanAsBinarySet((interface{})(s).(*Set[[]byte]), value)
-	default:
-		// never happens (now).
-		return fmt.Errorf(
-			"unsupported type %T. Set supports only the following types: string, []byte, int, float32, float64", t)
 	}
+	return nil
 }
 
 func (s Set[T]) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
