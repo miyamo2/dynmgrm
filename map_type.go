@@ -20,7 +20,9 @@ func (m Map) GormDataType() string {
 	return "dgmap"
 }
 
-// Scan implements the sql.Scanner#Scan
+// Scan implements the [sql.Scanner#Scan]
+//
+// [sql.Scanner#Scan]: https://golang.org/pkg/database/sql/#Scanner
 func (m *Map) Scan(value interface{}) error {
 	if len(*m) != 0 {
 		return ErrCollectionAlreadyContainsItem
@@ -34,7 +36,9 @@ func (m *Map) Scan(value interface{}) error {
 	return resolveCollectionsNestedInMap(m)
 }
 
-// GormValue implements the gorm.Valuer interface.
+// GormValue implements the [gorm.Valuer] interface.
+//
+// [gorm.Valuer]: https://pkg.go.dev/gorm.io/gorm#Valuer
 func (m Map) GormValue(_ context.Context, db *gorm.DB) clause.Expr {
 	if err := resolveCollectionsNestedInMap(&m); err != nil {
 		_ = db.AddError(err)
