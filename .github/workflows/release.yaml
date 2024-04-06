@@ -2,8 +2,8 @@ name: release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [main]
+    paths: ["CHANGELOG.md"]
 
 permissions: write-all
 
@@ -73,8 +73,28 @@ jobs:
           fail_ci_if_error: false
           verbose: true
 
+      - name: Extract Version
+        id: versioning
+        run: |
+          VERSION="v$(sed -n 's/##\s\([0-9.]*\)\s.*/\1/p' CHANGELOG.md | head -1)"
+          echo ::set-output name=version::$VERSION
+
+      - name: Extract changes from prev version
+        run: |
+          git fetch --prune --unshallow
+          PRETAG=$(git describe --tags --abbrev=0)
+          git diff $PRETAG..${{ github.sha }} -- CHANGELOG.md | grep -E '^\+' | grep -v '+++' | sed -e 's/^\+//g' | sed -e 's/##\s[0-9.]*\s.*//g' | sed -e '/^$/d'> diff-changelog.txt
+
+      - name: Push Tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v5.2
+        with:
+          custom_tag: ${{ steps.versioning.outputs.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{  github.ref_name }}
+          tag_name: ${{ steps.versioning.outputs.version }}
           generate_release_notes: true
+          body_path: diff-changelog.txt
