@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 - 2024-04-06
+
+💥 Breaking Change
+
+- Renamed `DataType` to `KeySchemaDataType`
+
+⬆️ Upgrading dependencies
+
+- `github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue` from `1.13.12` to `1.13.13`
+
+- `gorm.io/gorm` from `1.25.8` to `1.25.9`
+
+📝 Fixed references to external libraries in godoc.
+
+  
 ## 0.2.0 - 2024-03-26
 
 ✨ New Features
