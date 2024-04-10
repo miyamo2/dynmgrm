@@ -1,6 +1,6 @@
 # dynmgrm - GORM DynamoDB Driver
 
-<img src="https://github.com/miyamo2/dynmgrm/assets/79917704/984d2d10-a732-4477-b502-e3248681c49f" width="400">
+<img src=".assets/logo/svg/dynmgrm_logo_with_caption.svg" width="400">
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/miyamo2/dynmgrm.svg)](https://pkg.go.dev/github.com/miyamo2/dynmgrm)
 [![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/miyamo2/dynmgrm?logo=go)](https://img.shields.io/github/go-mod/go-version/miyamo2/dynmgrm?logo=go)
@@ -210,3 +210,17 @@ Feel free to open a PR or an Issue.
 ## License
 
 **dynmgrm** released under the [MIT License](https://github.com/miyamo2/dynmgrm/blob/master/LICENSE)
+
+## Credits
+
+### Go gopher
+
+The Go gopher was designed by [Renee French.](http://reneefrench.blogspot.com/)
+The design is licensed under the Creative Commons 3.0 Attributions license.
+Read this article for more [details](https://go.dev/blog/gopher)
+
+### Special Thanks
+
+- [JetBrainsMono](https://github.com/JetBrains/JetBrainsMono)
+
+	JetBrainsMono is used for the caption of the dynmgrm logo.
