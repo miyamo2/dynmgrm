@@ -1,6 +1,6 @@
 # dynmgrm - GORM DynamoDB Driver
 
-<img src=".assets/logo/svg/dynmgrm_logo_with_caption (2).svg" width="400">
+<img src=".assets/logo/svg/dynmgrm_logo_with_caption.svg" width="400">
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/miyamo2/dynmgrm.svg)](https://pkg.go.dev/github.com/miyamo2/dynmgrm)
 [![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/miyamo2/dynmgrm?logo=go)](https://img.shields.io/github/go-mod/go-version/miyamo2/dynmgrm?logo=go)
