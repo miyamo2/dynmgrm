@@ -176,6 +176,54 @@ func TestTypedList_Scan(t *testing.T) {
 			expectedState: TypedList[Something]{},
 			want:          ErrFailedToCast,
 		},
+		"unhappy-path/sut-is-not-empty": {
+			sut: TypedList[Something]{
+				{
+					A: "foo",
+					B: 1,
+					C: true,
+					D: 1.1,
+					E: aws.String("foo"),
+					F: aws.Int(1),
+					G: aws.Bool(true),
+					H: aws.Float64(1.1),
+					I: Set[string]{"foo", "bar", "baz"},
+					J: []byte("foo"),
+					K: toBinaryPtr(t, []byte("bar")),
+				},
+			},
+			args: []interface{}{
+				map[string]interface{}{
+					"A": "bar",
+					"B": 2,
+					"C": false,
+					"D": 2.2,
+					"E": "bar",
+					"F": 2,
+					"G": false,
+					"H": 2.2,
+					"I": []string{"foo", "bar", "baz"},
+					"J": []byte("bar"),
+					"K": []byte("baz"),
+				},
+			},
+			expectedState: TypedList[Something]{
+				{
+					A: "foo",
+					B: 1,
+					C: true,
+					D: 1.1,
+					E: aws.String("foo"),
+					F: aws.Int(1),
+					G: aws.Bool(true),
+					H: aws.Float64(1.1),
+					I: Set[string]{"foo", "bar", "baz"},
+					J: []byte("foo"),
+					K: toBinaryPtr(t, []byte("bar")),
+				},
+			},
+			want: ErrCollectionAlreadyContainsItem,
+		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
