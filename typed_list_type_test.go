@@ -170,6 +170,12 @@ func TestTypedList_Scan(t *testing.T) {
 			expectedState: TypedList[Something]{},
 			want:          ErrFailedToCast,
 		},
+		"unhappy-path/invalid-slice-attribute": {
+			sut:           TypedList[Something]{},
+			args:          []interface{}{""},
+			expectedState: TypedList[Something]{},
+			want:          ErrFailedToCast,
+		},
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {

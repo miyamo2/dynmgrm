@@ -37,94 +37,96 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 	}
 	*l = slices.Grow(*l, len(sv))
 	for _, v := range sv {
-		switch v := v.(type) {
-		case map[string]interface{}:
-			dest := new(T)
-			rv := reflect.ValueOf(dest)
-			for k, a := range v {
-				f := rv.Elem().FieldByName(k)
-				switch f.Interface().(type) {
-				case string:
-					str, ok := a.(string)
-					if !ok {
-						return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
-					}
-					f.SetString(str)
-					continue
-				case int:
-					i, ok := a.(int)
-					if !ok {
-						return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
-					}
-					f.SetInt(int64(i))
-					continue
-				case bool:
-					b, ok := a.(bool)
-					if !ok {
-						return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
-					}
-					f.SetBool(b)
-					continue
-				case float64:
-					f64, ok := a.(float64)
-					if !ok {
-						return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
-					}
-					f.SetFloat(f64)
-					continue
-				case []byte:
-					b, ok := a.([]byte)
-					if !ok {
-						return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
-					}
-					f.SetBytes(b)
-				case *string:
-					str, ok := a.(string)
-					if !ok {
-						break
-					}
-					f.Set(reflect.ValueOf(&str))
-					continue
-				case *int:
-					i, ok := a.(int)
-					if !ok {
-						break
-					}
-					f.Set(reflect.ValueOf(&i))
-					continue
-				case *bool:
-					b, ok := a.(bool)
-					if !ok {
-						break
-					}
-					f.Set(reflect.ValueOf(&b))
-					continue
-				case *float64:
-					f64, ok := a.(float64)
-					if !ok {
-						break
-					}
-					f.Set(reflect.ValueOf(&f64))
-					continue
-				case *[]byte:
-					b, ok := a.([]byte)
-					if !ok {
-						break
-					}
-					f.Set(reflect.ValueOf(&b))
+		mv, ok := v.(map[string]interface{})
+		if !ok {
+			var t T
+			return errors.Join(ErrFailedToCast, fmt.Errorf("incompatible %T and %T", t, v))
+		}
+		dest := new(T)
+		rv := reflect.ValueOf(dest)
+		for k, a := range mv {
+			f := rv.Elem().FieldByName(k)
+			switch f.Interface().(type) {
+			case string:
+				str, ok := a.(string)
+				if !ok {
+					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
 				}
-				if !f.CanAddr() {
-					continue
+				f.SetString(str)
+				continue
+			case int:
+				i, ok := a.(int)
+				if !ok {
+					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
 				}
-				switch ptr := f.Addr().Interface().(type) {
-				case sql.Scanner:
-					if err := ptr.Scan(a); err != nil {
-						return err
-					}
+				f.SetInt(int64(i))
+				continue
+			case bool:
+				b, ok := a.(bool)
+				if !ok {
+					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+				}
+				f.SetBool(b)
+				continue
+			case float64:
+				f64, ok := a.(float64)
+				if !ok {
+					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+				}
+				f.SetFloat(f64)
+				continue
+			case []byte:
+				b, ok := a.([]byte)
+				if !ok {
+					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+				}
+				f.SetBytes(b)
+			case *string:
+				str, ok := a.(string)
+				if !ok {
+					break
+				}
+				f.Set(reflect.ValueOf(&str))
+				continue
+			case *int:
+				i, ok := a.(int)
+				if !ok {
+					break
+				}
+				f.Set(reflect.ValueOf(&i))
+				continue
+			case *bool:
+				b, ok := a.(bool)
+				if !ok {
+					break
+				}
+				f.Set(reflect.ValueOf(&b))
+				continue
+			case *float64:
+				f64, ok := a.(float64)
+				if !ok {
+					break
+				}
+				f.Set(reflect.ValueOf(&f64))
+				continue
+			case *[]byte:
+				b, ok := a.([]byte)
+				if !ok {
+					break
+				}
+				f.Set(reflect.ValueOf(&b))
+			}
+			if !f.CanAddr() {
+				continue
+			}
+			switch ptr := f.Addr().Interface().(type) {
+			case sql.Scanner:
+				if err := ptr.Scan(a); err != nil {
+					return err
 				}
 			}
-			*l = append(*l, *dest)
 		}
+		*l = append(*l, *dest)
 	}
 	return nil
 }
