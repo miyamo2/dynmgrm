@@ -2,6 +2,7 @@ package dynmgrm
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
@@ -48,6 +49,38 @@ func toAttibuteValue(value interface{}) (types.AttributeValue, error) {
 	case Set[[]byte]:
 		return &types.AttributeValueMemberBS{Value: value}, nil
 	default:
+		rv := reflect.ValueOf(value)
+		switch rv.Kind() {
+		case reflect.Struct:
+			avm := make(map[string]types.AttributeValue)
+			for i := 0; i < rv.NumField(); i++ {
+				fv := rv.Field(i)
+				ft := rv.Type().Field(i)
+				if fv.CanInterface() {
+					av, err := toAttibuteValue(fv.Interface())
+					if err != nil {
+						return nil, err
+					}
+					avm[ft.Name] = av
+				}
+				if fv.CanAddr() {
+					av, err := toAttibuteValue(fv.Addr().Interface())
+					if err != nil {
+						return nil, err
+					}
+					avm[ft.Name] = av
+				}
+			}
+			return &types.AttributeValueMemberM{Value: avm}, nil
+		case reflect.Ptr:
+			if rv.IsNil() {
+				return &types.AttributeValueMemberNULL{}, nil
+			}
+			if !rv.CanAddr() {
+				return attributevalue.Marshal(value)
+			}
+			return toAttibuteValue(rv.Addr().Interface())
+		}
 		return attributevalue.Marshal(value)
 	}
 }
