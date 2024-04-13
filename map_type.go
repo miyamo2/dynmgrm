@@ -2,13 +2,18 @@ package dynmgrm
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
-var _ gorm.Valuer = (*Map)(nil)
+// compatibility check
+var (
+	_ gorm.Valuer = (*Map)(nil)
+	_ sql.Scanner = (*Map)(nil)
+)
 
 // Map is a DynamoDB map type.
 //

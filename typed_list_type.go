@@ -13,6 +13,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+// compatibility check
 var (
 	_ gorm.Valuer = (*TypedList[interface{}])(nil)
 	_ sql.Scanner = (*TypedList[interface{}])(nil)

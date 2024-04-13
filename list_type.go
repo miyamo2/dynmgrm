@@ -2,6 +2,7 @@ package dynmgrm
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -10,7 +11,11 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-var _ gorm.Valuer = (*List)(nil)
+// compatibility check
+var (
+	_ gorm.Valuer = (*List)(nil)
+	_ sql.Scanner = (*List)(nil)
+)
 
 // List is a DynamoDB list type.
 //

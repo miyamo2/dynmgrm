@@ -2,6 +2,7 @@ package dynmgrm
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"math"
 
@@ -22,7 +23,11 @@ type SetSupportable interface {
 	string | []byte | int | float64
 }
 
-var _ gorm.Valuer = (*Set[string])(nil)
+// compatibility check
+var (
+	_ gorm.Valuer = (*Set[string])(nil)
+	_ sql.Scanner = (*Set[string])(nil)
+)
 
 // Set is a DynamoDB set type.
 //
