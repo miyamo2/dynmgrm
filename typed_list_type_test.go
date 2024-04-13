@@ -21,6 +21,13 @@ type Something struct {
 	G *bool
 	H *float64
 	I Set[string]
+	J []byte
+	K *[]byte
+}
+
+func toBinaryPtr(t *testing.T, b []byte) *[]byte {
+	t.Helper()
+	return &b
 }
 
 func TestTypedList_Scan(t *testing.T) {
@@ -48,6 +55,8 @@ func TestTypedList_Scan(t *testing.T) {
 				"G": true,
 				"H": 1.1,
 				"I": []string{"foo", "bar", "baz"},
+				"J": []byte("foo"),
+				"K": []byte("bar"),
 			}},
 			expectedState: TypedList[Something]{
 				Something{
@@ -60,6 +69,8 @@ func TestTypedList_Scan(t *testing.T) {
 					G: aws.Bool(true),
 					H: aws.Float64(1.1),
 					I: Set[string]{"foo", "bar", "baz"},
+					J: []byte("foo"),
+					K: toBinaryPtr(t, []byte("bar")),
 				},
 			},
 		},
@@ -75,6 +86,8 @@ func TestTypedList_Scan(t *testing.T) {
 				"G": nil,
 				"H": nil,
 				"I": []string{"foo", "bar", "baz"},
+				"J": []byte("foo"),
+				"K": nil,
 			}},
 			expectedState: TypedList[Something]{
 				Something{
@@ -87,6 +100,8 @@ func TestTypedList_Scan(t *testing.T) {
 					G: nil,
 					H: nil,
 					I: Set[string]{"foo", "bar", "baz"},
+					J: []byte("foo"),
+					K: nil,
 				},
 			},
 		},
@@ -103,6 +118,8 @@ func TestTypedList_Scan(t *testing.T) {
 					"G": true,
 					"H": 1.1,
 					"I": []string{"foo", "bar", "baz"},
+					"J": []byte("foo"),
+					"K": []byte("bar"),
 				},
 				map[string]interface{}{
 					"A": "bar",
@@ -114,6 +131,8 @@ func TestTypedList_Scan(t *testing.T) {
 					"G": false,
 					"H": 2.2,
 					"I": []string{"foo", "bar", "baz"},
+					"J": []byte("bar"),
+					"K": []byte("baz"),
 				},
 			},
 			expectedState: TypedList[Something]{
@@ -127,6 +146,8 @@ func TestTypedList_Scan(t *testing.T) {
 					G: aws.Bool(true),
 					H: aws.Float64(1.1),
 					I: Set[string]{"foo", "bar", "baz"},
+					J: []byte("foo"),
+					K: toBinaryPtr(t, []byte("bar")),
 				},
 				Something{
 					A: "bar",
@@ -138,6 +159,8 @@ func TestTypedList_Scan(t *testing.T) {
 					G: aws.Bool(false),
 					H: aws.Float64(2.2),
 					I: Set[string]{"foo", "bar", "baz"},
+					J: []byte("bar"),
+					K: toBinaryPtr(t, []byte("baz")),
 				},
 			},
 		},
@@ -187,6 +210,8 @@ func TestTypedList_GormValue(t *testing.T) {
 					G: aws.Bool(true),
 					H: aws.Float64(1.1),
 					I: Set[string]{"foo", "bar", "baz"},
+					J: []byte("foo"),
+					K: toBinaryPtr(t, []byte("bar")),
 				},
 			},
 			args: args{
@@ -209,6 +234,8 @@ func TestTypedList_GormValue(t *testing.T) {
 									"G": &types.AttributeValueMemberBOOL{Value: true},
 									"H": &types.AttributeValueMemberN{Value: "1.1"},
 									"I": &types.AttributeValueMemberSS{Value: []string{"foo", "bar", "baz"}},
+									"J": &types.AttributeValueMemberB{Value: []byte("foo")},
+									"K": &types.AttributeValueMemberB{Value: []byte("bar")},
 								},
 							},
 						}},

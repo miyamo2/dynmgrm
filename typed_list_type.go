@@ -72,6 +72,12 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 					}
 					f.SetFloat(f64)
 					continue
+				case []byte:
+					b, ok := a.([]byte)
+					if !ok {
+						return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+					}
+					f.SetBytes(b)
 				case *string:
 					str, ok := a.(string)
 					if !ok {
@@ -100,6 +106,12 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 					}
 					f.Set(reflect.ValueOf(&f64))
 					continue
+				case *[]byte:
+					b, ok := a.([]byte)
+					if !ok {
+						break
+					}
+					f.Set(reflect.ValueOf(&b))
 				}
 				if !f.CanAddr() {
 					continue
@@ -109,7 +121,6 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 					if err := ptr.Scan(a); err != nil {
 						return err
 					}
-					continue
 				}
 			}
 			*l = append(*l, *dest)
