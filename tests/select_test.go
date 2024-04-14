@@ -9,8 +9,8 @@ import (
 
 func Test_Select_All(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -154,8 +154,8 @@ func Test_Select_All(t *testing.T) {
 
 func Test_Select_With_Columns_Specify(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -197,8 +197,8 @@ func Test_Select_With_Columns_Specify(t *testing.T) {
 
 func Test_Select_With_PK(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -270,8 +270,8 @@ func Test_Select_With_PK(t *testing.T) {
 
 func Test_Select_With_PK_And_SK(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -316,8 +316,8 @@ func Test_Select_With_PK_And_SK(t *testing.T) {
 
 func Test_Select_With_Secondary_Index(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -448,8 +448,8 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 
 func Test_Select_With_BeginWith(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -530,8 +530,8 @@ func Test_Select_With_BeginWith(t *testing.T) {
 
 func Test_Select_With_IsMissing(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -567,8 +567,8 @@ func Test_Select_With_IsMissing(t *testing.T) {
 
 func Test_Select_With_IsNotMissing(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -694,8 +694,8 @@ func Test_Select_With_IsNotMissing(t *testing.T) {
 
 func Test_Select_With_Contains(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -767,8 +767,8 @@ func Test_Select_With_Contains(t *testing.T) {
 
 func Test_Select_With_Size(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -894,8 +894,8 @@ func Test_Select_With_Size(t *testing.T) {
 
 func Test_Select_With_AttributeType(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -967,8 +967,8 @@ func Test_Select_With_AttributeType(t *testing.T) {
 
 func Test_Select_With_Parentheses(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -1082,8 +1082,8 @@ func Test_Select_With_Parentheses(t *testing.T) {
 
 func Test_Select_With_Not(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -1174,8 +1174,8 @@ func Test_Select_With_Not(t *testing.T) {
 
 func Test_Select_With_Or(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -1288,5 +1288,55 @@ func Test_Select_With_Or(t *testing.T) {
 	}
 	if diff := cmp.Diff(expected, resultWithOrMethod, setCmpOpts...); diff != "" {
 		t.Errorf("WithGroupCondition mismatch (-want +got):\n%s", diff)
+	}
+}
+
+func Test_Select_With_TypedList(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForTypedList, testTableName)
+	defer dataCleanup(t, testDataForTypedList, testTableName)
+
+	expected := []TestTableWithTypedList{
+		{
+			PK:         "Partition1",
+			SK:         1,
+			SomeString: "Hello",
+			TypedList: dynmgrm.TypedList[TypedListValue]{
+				{
+					SomeString: "Hello",
+					SomeInt:    1,
+					SomeFloat:  1.1,
+					SomeBool:   true,
+					SomeBinary: []byte("ABC"),
+					SomeList: dynmgrm.List{
+						"Hello",
+						float64(1),
+						1.1,
+						true,
+						[]byte("ABC"),
+					},
+					SomeMap: dynmgrm.Map{
+						"some_string": "Hello",
+						"some_number": 1.1,
+						"some_bool":   true,
+						"some_binary": []byte("ABC"),
+					},
+					SomeStringSet: dynmgrm.Set[string]{"Hello", "World"},
+					SomeIntSet:    dynmgrm.Set[int]{1, 2},
+					SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2},
+					SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("ABC"), []byte("DEF")},
+				},
+			},
+		},
+	}
+
+	var result []TestTableWithTypedList
+	err := db.Select("*").Table("test_tables").Scan(&result).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
+		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }

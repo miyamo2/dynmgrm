@@ -9,8 +9,8 @@ import (
 
 func Test_Delete(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect[1:], testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData[1:], testTableName)
 
 	data := TestTable{
 		PK: "Partition1",
@@ -28,8 +28,8 @@ func Test_Delete(t *testing.T) {
 
 func Test_Delete_With_Where_Clause(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect[1:], testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData[1:], testTableName)
 
 	data := TestTable{
 		PK: "Partition1",
@@ -47,8 +47,8 @@ func Test_Delete_With_Where_Clause(t *testing.T) {
 
 func Test_Delete_With_Tx_Commit(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect[1:], testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData[1:], testTableName)
 
 	data := TestTable{
 		PK: "Partition1",
@@ -68,8 +68,8 @@ func Test_Delete_With_Tx_Commit(t *testing.T) {
 
 func Test_Delete_With_Tx_Rollback(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	data := TestTable{
 		PK: "Partition1",
@@ -93,8 +93,8 @@ func Test_Delete_With_Tx_Rollback(t *testing.T) {
 
 func Test_Delete_With_Transaction_Success(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect[1:], testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData[1:], testTableName)
 
 	data := TestTable{
 		PK: "Partition1",
@@ -118,8 +118,8 @@ func Test_Delete_With_Transaction_Success(t *testing.T) {
 
 func Test_Delete_With_Transaction_Fail(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	data := TestTable{
 		PK: "Partition1",

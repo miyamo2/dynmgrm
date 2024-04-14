@@ -33,6 +33,31 @@ type TestTable struct {
 	Any           string
 }
 
+type TestTableWithTypedList struct {
+	PK         string `gorm:"primaryKey"`
+	SK         int    `gorm:"primaryKey"`
+	SomeString string
+	TypedList  dynmgrm.TypedList[TypedListValue]
+}
+
+type TypedListValue struct {
+	SomeString    string
+	SomeInt       int
+	SomeFloat     float64
+	SomeBool      bool
+	SomeBinary    []byte
+	SomeList      dynmgrm.List
+	SomeMap       dynmgrm.Map
+	SomeStringSet dynmgrm.Set[string]
+	SomeIntSet    dynmgrm.Set[int]
+	SomeFloatSet  dynmgrm.Set[float64]
+	SomeBinarySet dynmgrm.Set[[]byte]
+}
+
+func (t TestTableWithTypedList) TableName() string {
+	return "test_tables"
+}
+
 var (
 	endpoint       string
 	region         string
@@ -180,4 +205,9 @@ func deleteData(t *testing.T, tableName string, pk string, sk int) {
 	if err != nil {
 		t.Fatalf("failed to delete item: %s", err)
 	}
+}
+
+func toBinaryPointer(t *testing.T, data []byte) *[]byte {
+	t.Helper()
+	return &data
 }
