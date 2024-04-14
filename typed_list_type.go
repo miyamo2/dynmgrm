@@ -24,6 +24,11 @@ var (
 // See: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html
 type TypedList[T any] []T
 
+// GormDataType returns the data type for Gorm.
+func (l *TypedList[T]) GormDataType() string {
+	return "dgtypedlist"
+}
+
 // Scan implements the [sql.Scanner#Scan]
 //
 // [sql.Scanner#Scan]: https://golang.org/pkg/database/sql/#Scanner
@@ -67,7 +72,7 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 				vf.SetString(str)
 				continue
 			case int:
-				i, ok := a.(int)
+				i, ok := a.(float64)
 				if !ok {
 					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
 				}
@@ -101,7 +106,7 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 				vf.Set(reflect.ValueOf(&str))
 				continue
 			case *int:
-				i, ok := a.(int)
+				i, ok := a.(float64)
 				if !ok {
 					break
 				}
