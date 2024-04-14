@@ -135,6 +135,8 @@ Custom Data Types:
 
 - `Map`
 
+- `TypedList[T]`
+
 ## Quick Start
 
 ### Installation
