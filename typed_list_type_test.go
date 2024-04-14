@@ -246,10 +246,9 @@ func TestTypedList_GormValue(t *testing.T) {
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           TypedList[Something]
-		args          args
-		want          clause.Expr
-		expectDBError error
+		sut  TypedList[Something]
+		args args
+		want clause.Expr
 	}
 	tests := map[string]test{
 		"happy-path": {
