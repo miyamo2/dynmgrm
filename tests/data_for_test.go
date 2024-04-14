@@ -349,3 +349,87 @@ var testDataForSelect = []map[string]*dynamodb.AttributeValue{
 		},
 	},
 }
+
+var testDataForTypedList = []map[string]*dynamodb.AttributeValue{
+	{
+		"pk": {
+			S: aws.String("Partition1"),
+		},
+		"sk": {
+			N: aws.String("1"),
+		},
+		"some_string": {
+			S: aws.String("Hello"),
+		},
+		"typed_list": {
+			L: []*dynamodb.AttributeValue{
+				{
+					M: map[string]*dynamodb.AttributeValue{
+						"some_string": {
+							S: aws.String("Hello"),
+						},
+						"some_int": {
+							N: aws.String("1"),
+						},
+						"some_float": {
+							N: aws.String("1.1"),
+						},
+						"some_bool": {
+							BOOL: aws.Bool(true),
+						},
+						"some_binary": {
+							B: []byte("ABC"),
+						},
+						"some_list": {
+							L: []*dynamodb.AttributeValue{
+								{
+									S: aws.String("Hello"),
+								},
+								{
+									N: aws.String("1"),
+								},
+								{
+									N: aws.String("1.1"),
+								},
+								{
+									BOOL: aws.Bool(true),
+								},
+								{
+									B: []byte("ABC"),
+								},
+							},
+						},
+						"some_map": {
+							M: map[string]*dynamodb.AttributeValue{
+								"some_string": {
+									S: aws.String("Hello"),
+								},
+								"some_number": {
+									N: aws.String("1.1"),
+								},
+								"some_bool": {
+									BOOL: aws.Bool(true),
+								},
+								"some_binary": {
+									B: []byte("ABC"),
+								},
+							},
+						},
+						"some_string_set": {
+							SS: []*string{aws.String("Hello"), aws.String("World")},
+						},
+						"some_int_set": {
+							NS: []*string{aws.String("1"), aws.String("2")},
+						},
+						"some_float_set": {
+							NS: []*string{aws.String("1.1"), aws.String("2.2")},
+						},
+						"some_binary_set": {
+							BS: [][]byte{[]byte("ABC"), []byte("DEF")},
+						},
+					},
+				},
+			},
+		},
+	},
+}
