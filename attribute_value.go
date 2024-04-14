@@ -61,14 +61,13 @@ func toAttibuteValue(value interface{}) (types.AttributeValue, error) {
 					if err != nil {
 						return nil, err
 					}
-					avm[ft.Name] = av
-				}
-				if fv.CanAddr() {
+					avm[getDBNameFromStructField(ft)] = av
+				} else if fv.CanAddr() {
 					av, err := toAttibuteValue(fv.Addr().Interface())
 					if err != nil {
 						return nil, err
 					}
-					avm[ft.Name] = av
+					avm[getDBNameFromStructField(ft)] = av
 				}
 			}
 			return &types.AttributeValueMemberM{Value: avm}, nil

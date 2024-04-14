@@ -67,3 +67,57 @@ func Test_newGormTag(t *testing.T) {
 		})
 	}
 }
+
+func Test_getNameFromStructField(t *testing.T) {
+	type A struct {
+		A string `gorm:"column:aaa"`
+		B string `gorm:"column"`
+		C string `gorm:""`
+		D string
+	}
+
+	rt := reflect.TypeOf(A{})
+	type args struct {
+		tag reflect.StructField
+	}
+
+	type test struct {
+		args args
+		want string
+	}
+
+	tests := map[string]test{
+		"happy_path/with_tag": {
+			args: args{
+				tag: rt.Field(0),
+			},
+			want: "aaa",
+		},
+		"happy_path/column_name_is_empty": {
+			args: args{
+				tag: rt.Field(1),
+			},
+			want: "b",
+		},
+		"happy_path/empty_tag": {
+			args: args{
+				tag: rt.Field(2),
+			},
+			want: "c",
+		},
+		"happy_path/no_tag": {
+			args: args{
+				tag: rt.Field(3),
+			},
+			want: "d",
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := getDBNameFromStructField(tt.args.tag)
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("newGormTag() mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
+}

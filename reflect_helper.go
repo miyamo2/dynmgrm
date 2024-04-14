@@ -1,6 +1,7 @@
 package dynmgrm
 
 import (
+	"github.com/iancoleman/strcase"
 	"reflect"
 	"strings"
 )
@@ -26,4 +27,13 @@ func newGormTag(tag reflect.StructTag) gormTag {
 		}
 	}
 	return gTag
+}
+
+// getDBNameFromStructField returns the name of the field in the struct
+func getDBNameFromStructField(tf reflect.StructField) string {
+	gTag := newGormTag(tf.Tag)
+	if gTag.Column != "" {
+		return gTag.Column
+	}
+	return strcase.ToSnake(tf.Name)
 }

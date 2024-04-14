@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/iancoleman/strcase"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"reflect"
@@ -53,12 +52,7 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 		for i := 0; i < rt.NumField(); i++ {
 			tf := rt.Field(i)
 			vf := rv.Elem().Field(i)
-			gtag := newGormTag(tf.Tag)
-
-			name := gtag.Column
-			if name == "" {
-				name = strcase.ToSnake(tf.Name)
-			}
+			name := getDBNameFromStructField(tf)
 			a, ok := mv[name]
 			if !ok {
 				continue
@@ -72,11 +66,11 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 				vf.SetString(str)
 				continue
 			case int:
-				i, ok := a.(float64)
+				f64, ok := a.(float64)
 				if !ok {
 					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
 				}
-				vf.SetInt(int64(i))
+				vf.Set(reflect.ValueOf(int(f64)))
 				continue
 			case bool:
 				b, ok := a.(bool)
@@ -106,10 +100,11 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 				vf.Set(reflect.ValueOf(&str))
 				continue
 			case *int:
-				i, ok := a.(float64)
+				f64, ok := a.(float64)
 				if !ok {
 					break
 				}
+				i := int(f64)
 				vf.Set(reflect.ValueOf(&i))
 				continue
 			case *bool:
