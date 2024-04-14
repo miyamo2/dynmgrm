@@ -9,8 +9,8 @@ import (
 
 func Test_Select_All(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -154,8 +154,8 @@ func Test_Select_All(t *testing.T) {
 
 func Test_Select_With_Columns_Specify(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -197,8 +197,8 @@ func Test_Select_With_Columns_Specify(t *testing.T) {
 
 func Test_Select_With_PK(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -270,8 +270,8 @@ func Test_Select_With_PK(t *testing.T) {
 
 func Test_Select_With_PK_And_SK(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -316,8 +316,8 @@ func Test_Select_With_PK_And_SK(t *testing.T) {
 
 func Test_Select_With_Secondary_Index(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -448,8 +448,8 @@ func Test_Select_With_Secondary_Index(t *testing.T) {
 
 func Test_Select_With_BeginWith(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -530,8 +530,8 @@ func Test_Select_With_BeginWith(t *testing.T) {
 
 func Test_Select_With_IsMissing(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -567,8 +567,8 @@ func Test_Select_With_IsMissing(t *testing.T) {
 
 func Test_Select_With_IsNotMissing(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -694,8 +694,8 @@ func Test_Select_With_IsNotMissing(t *testing.T) {
 
 func Test_Select_With_Contains(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -767,8 +767,8 @@ func Test_Select_With_Contains(t *testing.T) {
 
 func Test_Select_With_Size(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -894,8 +894,8 @@ func Test_Select_With_Size(t *testing.T) {
 
 func Test_Select_With_AttributeType(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -967,8 +967,8 @@ func Test_Select_With_AttributeType(t *testing.T) {
 
 func Test_Select_With_Parentheses(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -1082,8 +1082,8 @@ func Test_Select_With_Parentheses(t *testing.T) {
 
 func Test_Select_With_Not(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{
@@ -1174,8 +1174,8 @@ func Test_Select_With_Not(t *testing.T) {
 
 func Test_Select_With_Or(t *testing.T) {
 	db := getGormDB(t)
-	dataPreparation(t, testDataForSelect, testTableName)
-	defer dataCleanup(t, testDataForSelect, testTableName)
+	dataPreparation(t, testData, testTableName)
+	defer dataCleanup(t, testData, testTableName)
 
 	expected := []TestTable{
 		{

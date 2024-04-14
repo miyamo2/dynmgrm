@@ -9,7 +9,7 @@ const (
 	testTableName = "test_tables"
 )
 
-var testDataForSelect = []map[string]*dynamodb.AttributeValue{
+var testData = []map[string]*dynamodb.AttributeValue{
 	{
 		"pk": {
 			S: aws.String("Partition1"),

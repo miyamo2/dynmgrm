@@ -55,7 +55,7 @@ type TypedListValue struct {
 }
 
 func (t TestTableWithTypedList) TableName() string {
-	return "test_table"
+	return "test_tables"
 }
 
 var (
