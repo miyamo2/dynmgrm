@@ -5,12 +5,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"reflect"
-	"slices"
-
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/iancoleman/strcase"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"reflect"
+	"slices"
 )
 
 // compatibility check
@@ -44,82 +44,94 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 		}
 		dest := new(T)
 		rv := reflect.ValueOf(dest)
-		for k, a := range mv {
-			f := rv.Elem().FieldByName(k)
-			switch f.Interface().(type) {
+		rt := reflect.TypeOf(*dest)
+		for i := 0; i < rt.NumField(); i++ {
+			tf := rt.Field(i)
+			vf := rv.Elem().Field(i)
+			gtag := newGormTag(tf.Tag)
+
+			name := gtag.Column
+			if name == "" {
+				name = strcase.ToSnake(tf.Name)
+			}
+			a, ok := mv[name]
+			if !ok {
+				continue
+			}
+			switch vf.Interface().(type) {
 			case string:
 				str, ok := a.(string)
 				if !ok {
-					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
 				}
-				f.SetString(str)
+				vf.SetString(str)
 				continue
 			case int:
 				i, ok := a.(int)
 				if !ok {
-					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
 				}
-				f.SetInt(int64(i))
+				vf.SetInt(int64(i))
 				continue
 			case bool:
 				b, ok := a.(bool)
 				if !ok {
-					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
 				}
-				f.SetBool(b)
+				vf.SetBool(b)
 				continue
 			case float64:
 				f64, ok := a.(float64)
 				if !ok {
-					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
 				}
-				f.SetFloat(f64)
+				vf.SetFloat(f64)
 				continue
 			case []byte:
 				b, ok := a.([]byte)
 				if !ok {
-					return fmt.Errorf("incompatible %T and %T", f.Interface(), a)
+					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
 				}
-				f.SetBytes(b)
+				vf.SetBytes(b)
 			case *string:
 				str, ok := a.(string)
 				if !ok {
 					break
 				}
-				f.Set(reflect.ValueOf(&str))
+				vf.Set(reflect.ValueOf(&str))
 				continue
 			case *int:
 				i, ok := a.(int)
 				if !ok {
 					break
 				}
-				f.Set(reflect.ValueOf(&i))
+				vf.Set(reflect.ValueOf(&i))
 				continue
 			case *bool:
 				b, ok := a.(bool)
 				if !ok {
 					break
 				}
-				f.Set(reflect.ValueOf(&b))
+				vf.Set(reflect.ValueOf(&b))
 				continue
 			case *float64:
 				f64, ok := a.(float64)
 				if !ok {
 					break
 				}
-				f.Set(reflect.ValueOf(&f64))
+				vf.Set(reflect.ValueOf(&f64))
 				continue
 			case *[]byte:
 				b, ok := a.([]byte)
 				if !ok {
 					break
 				}
-				f.Set(reflect.ValueOf(&b))
+				vf.Set(reflect.ValueOf(&b))
 			}
-			if !f.CanAddr() {
+			if !vf.CanAddr() {
 				continue
 			}
-			switch ptr := f.Addr().Interface().(type) {
+			switch ptr := vf.Addr().Interface().(type) {
 			case sql.Scanner:
 				if err := ptr.Scan(a); err != nil {
 					return err
