@@ -328,6 +328,19 @@ func TestBuildSetClause(t *testing.T) {
 			expectedSQL:  "",
 			expectedVars: nil,
 		},
+		"happy-path/with_list_append": {
+			set: clause.Set{
+				{Column: clause.Column{Name: "column1"}, Value: ListAppend("value1")},
+			},
+			expectedSQL: `SET "column1"=list_append(column1, ?)`,
+			expectedVars: []interface{}{
+				types.AttributeValueMemberL{
+					Value: []types.AttributeValue{
+						&types.AttributeValueMemberS{Value: "value1"},
+					},
+				},
+			},
+		},
 	}
 	opts := []cmp.Option{
 		cmp.AllowUnexported(types.AttributeValueMemberS{}),
