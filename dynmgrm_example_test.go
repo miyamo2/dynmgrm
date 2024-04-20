@@ -19,7 +19,10 @@ func Example() {
 	}
 
 	var dynamoDBWorkshop Event
-	db.Table("events").Where(`name=? AND date=?`, "DynamoDB Workshop", "2024/3/25").Scan(&dynamoDBWorkshop)
+	db.Table("events").
+		Where(`name=?`, "DynamoDB Workshop").
+		Where(`date=?`, "2024/3/25").
+		Scan(&dynamoDBWorkshop)
 
 	dynamoDBWorkshop.Guest = append(dynamoDBWorkshop.Guest, "Alice")
 	db.Save(&dynamoDBWorkshop)
@@ -34,7 +37,9 @@ func Example() {
 
 	var daveSchedule []Event
 	db.Table("events").
-		Where(`date=? AND ( host=? OR CONTAINS("guest", ?) )`, "2024/4/1", "Dave", "Dave").
+		Where(`date=?`, "2024/4/1").
+		Where(`( ? )`,
+			db.Where(`host=?`, "Dave").Or(`CONTAINS("guest", ?)`, "Dave")).
 		Scan(&daveSchedule)
 
 	tx := db.Begin()
