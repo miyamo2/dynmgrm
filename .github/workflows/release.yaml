@@ -83,18 +83,15 @@ jobs:
         run: |
           git fetch --prune --unshallow
           PRETAG=$(git describe --tags --abbrev=0)
-          git diff $PRETAG..${{ github.sha }} -- CHANGELOG.md | grep -E '^\+' | grep -v '+++' | sed -e 's/^\+//g' | sed -e 's/##\s[0-9.]*\s.*//g' | sed -e '/^$/d'> diff-changelog.txt
-
-      - name: Push Tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v5.2
-        with:
-          custom_tag: ${{ steps.versioning.outputs.version }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          CURRENTTAG=${{ steps.versioning.outputs.version }}
+          echo "## What's Changed in ${CURRENTTAG}" > diff-changelog.txt
+          git diff $PRETAG..${{ github.sha }} -- CHANGELOG.md | grep -E '^\+' | grep -v '+++' | sed -e 's/^\+//g' | sed -e 's/##\s[0-9.]*\s.*//g' | sed -e '/^$/d' >> diff-changelog.txt
+          echo "" >> diff-changelog.txt
+          echo "**Full Changelog**: https://github.com/miyamo2/dynmgrm/compare/${PRETAG}...${CURRENTTAG}" >> diff-changelog.txt
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.versioning.outputs.version }}
-          generate_release_notes: true
+          generate_release_notes: false
           body_path: diff-changelog.txt

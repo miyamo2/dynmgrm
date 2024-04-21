@@ -296,7 +296,6 @@ func TestSet_GormDataType(t *testing.T) {
 
 func TestSet_IsCompatibleWithSet_String(t *testing.T) {
 	type testCase struct {
-		sut  Set[string]
 		args interface{}
 		want bool
 	}
@@ -342,7 +341,6 @@ func TestSet_IsCompatibleWithSet_String(t *testing.T) {
 
 func TestSet_IsCompatibleWithSet_Int(t *testing.T) {
 	type testCase struct {
-		sut  Set[int]
 		args interface{}
 		want bool
 	}
@@ -388,7 +386,6 @@ func TestSet_IsCompatibleWithSet_Int(t *testing.T) {
 
 func TestSet_IsCompatibleWithSet_Float64(t *testing.T) {
 	type testCase struct {
-		sut  Set[float64]
 		args interface{}
 		want bool
 	}
@@ -434,7 +431,6 @@ func TestSet_IsCompatibleWithSet_Float64(t *testing.T) {
 
 func TestSet_IsCompatibleWithSet_Binary(t *testing.T) {
 	type testCase struct {
-		sut  Set[[]byte]
 		args interface{}
 		want bool
 	}
@@ -484,10 +480,9 @@ func TestSet_GormValue_String(t *testing.T) {
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           Set[string]
-		args          args
-		want          clause.Expr
-		expectDBError error
+		sut  Set[string]
+		args args
+		want clause.Expr
 	}
 	tests := map[string]test{
 		"happy-path": {
@@ -529,10 +524,9 @@ func TestSet_GormValue_Int(t *testing.T) {
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           Set[int]
-		args          args
-		want          clause.Expr
-		expectDBError error
+		sut  Set[int]
+		args args
+		want clause.Expr
 	}
 	tests := map[string]test{
 		"happy-path": {
@@ -574,10 +568,9 @@ func TestSet_GormValue_Float64(t *testing.T) {
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           Set[float64]
-		args          args
-		want          clause.Expr
-		expectDBError error
+		sut  Set[float64]
+		args args
+		want clause.Expr
 	}
 	tests := map[string]test{
 		"happy-path": {
@@ -619,10 +612,9 @@ func TestSet_GormValue_Binary(t *testing.T) {
 		db  *gorm.DB
 	}
 	type test struct {
-		sut           Set[[]byte]
-		args          args
-		want          clause.Expr
-		expectDBError error
+		sut  Set[[]byte]
+		args args
+		want clause.Expr
 	}
 	tests := map[string]test{
 		"happy-path": {

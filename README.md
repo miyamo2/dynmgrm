@@ -1,6 +1,6 @@
 # dynmgrm - GORM DynamoDB Driver
 
-<img src=".assets/logo/svg/dynmgrm_logo_with_caption.svg" width="400">
+<img src=".assets/logo/svg/dynmgrm_logo_with_caption.svg" width="400" alt="logo">
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/miyamo2/dynmgrm.svg)](https://pkg.go.dev/github.com/miyamo2/dynmgrm)
 [![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/miyamo2/dynmgrm?logo=go)](https://img.shields.io/github/go-mod/go-version/miyamo2/dynmgrm?logo=go)
@@ -24,6 +24,7 @@ Supports the following PartiQL operations:
 - [x] Update
   - [x] With `SET` clause
     - [x] With `list_append` function
+      - [x] `ListAppend()`
     - [x] With `set_add` function
     - [x] With `set_delete` function
   - [ ] With `REMOVE` clause
@@ -135,6 +136,8 @@ Custom Data Types:
 
 - `Map`
 
+- `TypedList[T]`
+
 ## Quick Start
 
 ### Installation
@@ -167,22 +170,27 @@ func main() {
 	}
 
 	var dynamoDBWorkshop Event
-	db.Table("events").Where(`name=? AND date=?`, "DynamoDB Workshop", "2024/3/25").Scan(&dynamoDBWorkshop)
+	db.Table("events").
+		Where(`name=?`, "DynamoDB Workshop").
+		Where(`date=?`, "2024/3/25").
+		Scan(&dynamoDBWorkshop)
 
 	dynamoDBWorkshop.Guest = append(dynamoDBWorkshop.Guest, "Alice")
 	db.Save(&dynamoDBWorkshop)
 
 	carolBirthday := Event{
-		Name:  "Carol's Birthday",
-		Date:  "2024/4/1",
-		Host:  "Charlie",
+		Name: "Carol's Birthday",
+		Date: "2024/4/1",
+		Host: "Charlie",
 		Guest: []string{"Alice", "Bob"},
 	}
 	db.Create(carolBirthday)
 
 	var daveSchedule []Event
 	db.Table("events").
-		Where(`date=? AND ( host=? OR CONTAINS("guest", ?) )`, "2024/4/1", "Dave", "Dave").
+		Where(`date=?`, "2024/4/1").
+		Where(`( ? )`,
+			db.Where(`host=?`, "Dave").Or(`CONTAINS("guest", ?)`, "Dave")).
 		Scan(&daveSchedule)
 
 	tx := db.Begin()
@@ -209,16 +217,14 @@ Feel free to open a PR or an Issue.
 
 ## License
 
-**dynmgrm** released under the [MIT License](https://github.com/miyamo2/dynmgrm/blob/master/LICENSE)
+**dynmgrm** released under the [MIT License](https://github.com/miyamo2/dynmgrm/blob/main/LICENSE)
 
 ## Credits
 
 ### Go gopher
 
 The Go gopher was designed by [Renee French.](http://reneefrench.blogspot.com/)
-
 The design is licensed under the Creative Commons 3.0 Attributions license.
-
 Read this article for more [details](https://go.dev/blog/gopher)
 
 ### Special Thanks

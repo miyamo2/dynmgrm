@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0 - 2024-04-16
+
+✨ New Features
+
+- Added `ListAppend()`, a helper to the `list_append` function
+
+## 0.4.0 - 2024-04-14
+
+✨ New Features
+
+- Add custom types
+
+    - `TypedList[T]`
+
 ## 0.3.0 - 2024-04-06
 
 💥 Breaking Change

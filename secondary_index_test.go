@@ -16,8 +16,6 @@ func TestSecondaryIndexExpression_Build(t *testing.T) {
 		expectedDist       interface{}
 	}
 
-	type TestTable struct{}
-
 	tests := map[string]test{
 		"happy-path": {
 			sut: SecondaryIndex("testTable.testIndex"),

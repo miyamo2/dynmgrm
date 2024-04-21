@@ -68,9 +68,16 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 			stmt.WriteByte(' ')
 		}
 		stmt.WriteString("SET ")
-		stmt.WriteQuoted(assignment.Column.Name)
+		stmt.WriteQuoted(asgcol)
 		stmt.WriteByte('=')
 		asgv := assignment.Value
+		switch asgv := asgv.(type) {
+		case functionForPartiQLUpdates:
+			stmt.WriteString(asgv.expression(stmt.DB, asgcol))
+			stmt.AddVar(stmt, asgv.bindVariable().GormValue(stmt.Context, stmt.DB))
+			stmt.WriteByte(')')
+			continue
+		}
 		stmt.AddVar(stmt, asgv)
 	}
 }
