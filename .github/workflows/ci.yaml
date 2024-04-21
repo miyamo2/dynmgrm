@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goversion: [ ">=1.21.0"]
+        goversion: [">=1.21.0"]
     env:
-        AWS_ACCESS_KEY_ID: ABC1234567890
-        AWS_SECRET_ACCESS_KEY: ABC1234567890
-        AWS_DEFAULT_REGION: ap-northeast-1
-        DYNAMODB_ENDPOINT: http://localhost:8000
+      AWS_ACCESS_KEY_ID: ABC1234567890
+      AWS_SECRET_ACCESS_KEY: ABC1234567890
+      AWS_DEFAULT_REGION: ap-northeast-1
+      DYNAMODB_ENDPOINT: http://localhost:8000
     services:
       dynamodb:
         image: amazon/dynamodb-local:latest
@@ -65,17 +65,36 @@ jobs:
         run: |
           staticcheck ./... | reviewdog -f=staticcheck -reporter=github-pr-check -level warning
 
-      - name: UnitTest
+      - name: Unit Test
         run: |
-          go test ./... -v
+          TARGET=$(go list ./... | grep -v "mock")
+          go test $TARGET -v -coverpkg=$TARGET -coverprofile=coverage.out
+
+      - name: Upload unit test coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.out
+          fail_ci_if_error: false
+          verbose: true
+          flags: unit
 
       - name: Create Table
         working-directory: ./.github
         run: |
           aws dynamodb create-table --cli-input-json file://table-def.json --endpoint-url ${{ env.DYNAMODB_ENDPOINT }}
 
-      - name: IntegrationTest
+      - name: Integration Test
         working-directory: ./tests
         run: |
           go mod tidy
-          go test ./... -v
+          go test -v -coverpkg=${{ format('github.com/{0}', github.repository) }} -coverprofile=coverage.out
+
+      - name: Upload integration test coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./tests/coverage.out
+          fail_ci_if_error: false
+          verbose: true
+          flags: integration
