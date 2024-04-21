@@ -217,7 +217,7 @@ Feel free to open a PR or an Issue.
 
 ## License
 
-**dynmgrm** released under the [MIT License](https://github.com/miyamo2/dynmgrm/blob/master/LICENSE)
+**dynmgrm** released under the [MIT License](https://github.com/miyamo2/dynmgrm/blob/main/LICENSE)
 
 ## Credits
 
