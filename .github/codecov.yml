@@ -1,0 +1,14 @@
+coverage:
+  status:
+    patch:
+      default:
+        target: 80%
+    project:
+      unit:
+        flags: [unit]
+      integration:
+        flags: [integration]
+
+comment:
+  layout: "diff, flags, files"
+  behavior: default

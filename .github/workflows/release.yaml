@@ -53,6 +53,7 @@ jobs:
           files: coverage.out
           fail_ci_if_error: false
           verbose: true
+          flags: unit
 
       - name: Create Table
         working-directory: ./.github
@@ -72,6 +73,7 @@ jobs:
           files: ./tests/coverage.out
           fail_ci_if_error: false
           verbose: true
+          flags: integration
 
       - name: Extract Version
         id: versioning
