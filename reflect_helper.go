@@ -7,8 +7,8 @@ import (
 )
 
 type gormTag struct {
-	column string
-	dbType string
+	Column string
+	DBType string
 }
 
 // gormTagWithStructTag returns gormTag representation of reflect.StructTag
@@ -24,9 +24,9 @@ func newGormTag(tag reflect.StructTag) gormTag {
 		}
 		switch kv[0] {
 		case "column":
-			gTag.column = kv[1]
+			gTag.Column = kv[1]
 		case "type":
-			gTag.dbType = kv[1]
+			gTag.DBType = kv[1]
 		}
 	}
 	return gTag
@@ -35,8 +35,8 @@ func newGormTag(tag reflect.StructTag) gormTag {
 // getDBNameFromStructField returns the name of the field in the struct
 func getDBNameFromStructField(tf reflect.StructField) string {
 	gTag := newGormTag(tf.Tag)
-	if gTag.column != "" {
-		return gTag.column
+	if gTag.Column != "" {
+		return gTag.Column
 	}
 	return strcase.ToSnake(tf.Name)
 }
@@ -44,7 +44,7 @@ func getDBNameFromStructField(tf reflect.StructField) string {
 // getDBTypeFromStructField returns the type of the field in the struct
 func getDBTypeFromStructField(tf reflect.StructField) string {
 	gTag := newGormTag(tf.Tag)
-	return gTag.dbType
+	return gTag.DBType
 }
 
 type secondaryIndexKind int
