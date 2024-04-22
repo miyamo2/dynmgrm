@@ -30,7 +30,7 @@ func Test_newGormTag(t *testing.T) {
 				tag: rt.Field(0).Tag,
 			},
 			want: gormTag{
-				Column: "a",
+				column: "a",
 			},
 		},
 		"unhappy_path/column_name_is_empty": {
@@ -38,7 +38,7 @@ func Test_newGormTag(t *testing.T) {
 				tag: rt.Field(1).Tag,
 			},
 			want: gormTag{
-				Column: "",
+				column: "",
 			},
 		},
 		"unhappy_path/empty_tag": {
@@ -46,7 +46,7 @@ func Test_newGormTag(t *testing.T) {
 				tag: rt.Field(2).Tag,
 			},
 			want: gormTag{
-				Column: "",
+				column: "",
 			},
 		},
 		"unhappy_path/no_tag": {
@@ -54,7 +54,7 @@ func Test_newGormTag(t *testing.T) {
 				tag: rt.Field(3).Tag,
 			},
 			want: gormTag{
-				Column: "",
+				column: "",
 			},
 		},
 	}
