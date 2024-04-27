@@ -96,21 +96,17 @@ func newDynmgrmTag(tag reflect.StructTag) dynmgrmTag {
 				continue
 			}
 			res.sk = true
-		case "gsi":
+		case "gsi-pk":
 			iprp := secondaryIndexProperty{}
-			for _, tval := range strings.Split(kv[1], ",") {
-				if tval == "" {
-					continue
-				}
-				switch tval {
-				case "pk":
-					iprp.pk = true
-				case "sk":
-					iprp.sk = true
-				default:
-					iprp.name = tval
-				}
-			}
+			tv := kv[1]
+			iprp.pk = true
+			iprp.name = tv
+			res.indexProperty = append(res.indexProperty, iprp)
+		case "gsi-sk":
+			iprp := secondaryIndexProperty{}
+			tv := kv[1]
+			iprp.sk = true
+			iprp.name = tv
 			res.indexProperty = append(res.indexProperty, iprp)
 		case "lsi":
 			iprp := secondaryIndexProperty{
@@ -162,14 +158,14 @@ func newDynmgrmTableDefine(modelMeta reflect.Type) dynmgrmTableDefine {
 		if dTag.pk {
 			res.pk = dynmgrmKeyDefine{
 				name:     cn,
-				dataType: structFieldToDBType(tf),
+				dataType: extractDBTypeFromStructField(tf),
 			}
 			isKey = true
 		}
 		if dTag.sk {
 			res.sk = dynmgrmKeyDefine{
 				name:     cn,
-				dataType: structFieldToDBType(tf),
+				dataType: extractDBTypeFromStructField(tf),
 			}
 			isKey = true
 		}
@@ -179,25 +175,28 @@ func newDynmgrmTableDefine(modelMeta reflect.Type) dynmgrmTableDefine {
 		for _, ip := range dTag.indexProperty {
 			switch ip.kind {
 			case secondaryIndexKindGSI:
-				sid := &dynmgrmSecondaryIndexDefine{}
+				sid, ok := res.gsi[ip.name]
+				if !ok {
+					sid = &dynmgrmSecondaryIndexDefine{}
+					res.gsi[ip.name] = sid
+				}
 				if ip.pk {
 					sid.pk = dynmgrmKeyDefine{
 						name:     cn,
-						dataType: structFieldToDBType(tf),
+						dataType: extractDBTypeFromStructField(tf),
 					}
 				}
 				if ip.sk {
 					sid.sk = dynmgrmKeyDefine{
 						name:     cn,
-						dataType: structFieldToDBType(tf),
+						dataType: extractDBTypeFromStructField(tf),
 					}
 				}
-				res.gsi[ip.name] = sid
 			case secondaryIndexKindLSI:
 				res.lsi[ip.name] = &dynmgrmSecondaryIndexDefine{
 					sk: dynmgrmKeyDefine{
 						name:     cn,
-						dataType: structFieldToDBType(tf),
+						dataType: extractDBTypeFromStructField(tf),
 					}}
 			}
 		}
@@ -216,7 +215,7 @@ func newDynmgrmTableDefine(modelMeta reflect.Type) dynmgrmTableDefine {
 	return res
 }
 
-func structFieldToDBType(field reflect.StructField) string {
+func extractDBTypeFromStructField(field reflect.StructField) string {
 	dbType := getDBTypeFromStructField(field)
 	if dbType != "" {
 		return dbType
@@ -226,8 +225,10 @@ func structFieldToDBType(field reflect.StructField) string {
 		return KeySchemaDataTypeString.String()
 	case reflect.Int, reflect.Float64:
 		return KeySchemaDataTypeNumber.String()
-	case reflect.Uint8:
-		return KeySchemaDataTypeBinary.String()
+	case reflect.Slice:
+		if field.Type.Elem().Kind() == reflect.Uint8 {
+			return KeySchemaDataTypeBinary.String()
+		}
 	}
-	return ""
+	return KeySchemaDataTypeString.String()
 }
