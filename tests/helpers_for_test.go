@@ -14,6 +14,7 @@ import (
 	"os"
 	"sort"
 	"testing"
+	"time"
 )
 
 type TestTable struct {
@@ -207,7 +208,37 @@ func deleteData(t *testing.T, tableName string, pk string, sk int) {
 	}
 }
 
-func toBinaryPointer(t *testing.T, data []byte) *[]byte {
+func getTable(t *testing.T, tableName string) *dynamodb.DescribeTableOutput {
 	t.Helper()
-	return &data
+	input := &dynamodb.DescribeTableInput{
+		TableName: aws.String(tableName),
+	}
+	output, err := dynamoDBClient.DescribeTable(input)
+	if err != nil {
+		return nil
+	}
+	return output
+}
+
+func deleteTable(t *testing.T, tableName string, retriedCount int) {
+	t.Helper()
+	if retriedCount > 4 {
+		return
+	}
+	input := &dynamodb.DeleteTableInput{
+		TableName: aws.String(tableName),
+	}
+	_, err := dynamoDBClient.DeleteTable(input)
+	if err != nil {
+		if retriedCount > 2 {
+			t.Fatalf("failed to delete table: %s", err)
+		}
+		retriedCount++
+		sleepSec := time.Second
+		for i := 0; i < retriedCount; i++ {
+			sleepSec *= 2
+		}
+		time.Sleep(sleepSec)
+		deleteTable(t, tableName, retriedCount)
+	}
 }

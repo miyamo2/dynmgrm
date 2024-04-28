@@ -11,7 +11,7 @@
 
 ## Features
 
-Supports the following PartiQL operations:
+Supports the following PartiQL statements:
 
 - [x] Select
   - [x] With Secondary Index
@@ -29,100 +29,55 @@ Supports the following PartiQL operations:
     - [x] With `set_delete` function
   - [ ] With `REMOVE` clause
 - [x] Delete
-- [ ] Create (Table | Index)
+- [x] Create Table ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
+- [ ] Create Index ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
 
 Supports the following GORM features:
 
-<details>
-<summary>Query</summary>
+- Query
+  - [x] `Select`
+  - [x] `Find`
+  - [x] `Scan`
 
-- [x] `Select`
-- [x] `Find`
-- [x] `Scan`
+- Update
+  - [x] `Update`
+  - [x] `Updates`
+  - [x] `Save`
 
-</details>
+- Create
+  - [x] `Create`
+  
+- Delete
+  - [x] `Delete`
 
-<details>
-<summary>Update</summary>
+- Condition
+  - [x] `Where`
+  - [x] `Not`
+  - [x] `Or`
 
-- [x] `Update`
-- [x] `Updates`
-- [x] `Save`
-
-</details>
-
-<details>
-<summary>Create</summary>
-
-- [x] `Create`
-
-</details>
-
-<details>
-<summary>Delete</summary>
-
-- [x] `Delete`
-
-</details>
-
-<details>
-<summary>Condition</summary>
-
-- [x] `Where`
-- [x] `Not`
-- [x] `Or`
-
-</details>
-
-<details>
-<summary>Table/Model</summary>
-
-- [x] `Table`
-- [x] `Model` ※ Combination with Secondary Index are not supported.
-
-</details>
-
-<details>
-<summary>Transaction</summary>
-
+- Table/Model
+  - [x] `Table`
+  - [x] `Model` ※ Combination with Secondary Index are not supported.
+  
+- Transaction ※ Supports only Insert, Update, and Delete.
   - [x] `Begin`
   - [x] `Commit`
   - [x] `Rollback`
   - [x] `Transaction`
 
-※ Supports only Insert, Update, and Delete.
-
-</details>
-
-<details>
-<summary>Migration</summary>
-
-- [ ] `AutoMigrate`
-- [ ] `CurrentDatabase`
-- [ ] `FullDataTypeOf`
-- [ ] `CreateTable`
-- [ ] `DropTable`
-- [ ] `HasTable`
-- [ ] `RenameTable`
-- [ ] `GetTables`
-- [ ] `AddColumn`
-- [ ] `DropColumn`
-- [ ] `AlterColumn`
-- [ ] `MigrateColumn`
-- [ ] `HasColumn`
-- [ ] `RenameColumn`
-- [ ] `ColumnTypes`
-- [ ] `CreateView`
-- [ ] `DropView`
-- [ ] `CreateConstraint`
-- [ ] `DropConstraint`
-- [ ] `HasConstraint`
-- [ ] `CreateIndex`
-- [ ] `DropIndex`
-- [ ] `HasIndex`
-- [ ] `RenameIndex`
-
-</details>
+- [Migration](.docs/MODEL.md)
+  - [ ] `AutoMigrate`
+  - [ ] `CurrentDatabase`
+  - [x] `FullDataTypeOf`
+  - [x] `CreateTable`
+  - [ ] `DropTable`
+  - [ ] `HasTable`
+  - [ ] `GetTables`
+  - [ ] `HasColumn`
+  - [ ] `ColumnTypes`
+  - [ ] `CreateIndex`
+  - [ ] `DropIndex`
+  - [ ] `HasIndex`
 
 Custom Clause:
 
@@ -228,6 +183,10 @@ The design is licensed under the Creative Commons 3.0 Attributions license.
 Read this article for more [details](https://go.dev/blog/gopher)
 
 ### Special Thanks
+
+- [btnguyen2k/godynamo](https://github.com/btnguyen2k/godynamo)
+
+  `dynmgrm` connects to `database/sql` by `btnguyen2k/godynamo`.
 
 - [JetBrainsMono](https://github.com/JetBrains/JetBrainsMono)
 

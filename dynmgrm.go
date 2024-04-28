@@ -1,9 +1,12 @@
 //go:generate mockgen -destination=internal/mocks/mock_dynmgrm.go -package=mocks -source=./dynmgrm.go
+//go:generate mockgen -destination=internal/mocks/mock_gorm_expression.go -package=mocks gorm.io/gorm/clause Expression
+//go:generate mockgen -destination=internal/mocks/mock_gorm_builder.go -package=mocks gorm.io/gorm/clause Builder
 package dynmgrm
 
 import (
 	"database/sql"
 	"fmt"
+	"gorm.io/gorm/migrator"
 	"strconv"
 	"strings"
 
@@ -264,8 +267,14 @@ func (dialector Dialector) DataTypeOf(field *schema.Field) string {
 }
 
 // Migrator returns the migrator for DynamoDB.
-//
-// Deprecated: Migration feature is not implemented.
 func (dialector Dialector) Migrator(db *gorm.DB) gorm.Migrator {
-	return &Migrator{}
+	return &Migrator{
+		db: db,
+		base: migrator.Migrator{
+			Config: migrator.Config{
+				DB:        db,
+				Dialector: dialector,
+			},
+		},
+	}
 }

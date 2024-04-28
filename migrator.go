@@ -1,37 +1,164 @@
+//go:generate mockgen -destination=internal/mocks/mock_db_for_migrator.go -package=mocks github.com/miyamo2/dynmgrm DBForMigrator
+//go:generate mockgen -destination=internal/mocks/mock_base_migrator.go -package=mocks github.com/miyamo2/dynmgrm BaseMigrator
 package dynmgrm
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
+	"reflect"
+	"slices"
+	"strings"
 )
+
+// CapacityUnitsSpecifier could specify WCUs and RCU
+type CapacityUnitsSpecifier interface {
+	WCU() int
+	RCU() int
+}
+
+// TableClass is the type of table class
+type TableClass int
+
+func (t TableClass) String() string {
+	switch t {
+	case TableClassStandard:
+		return "STANDARD"
+	case TableClassStandardIA:
+		return "STANDARD_IA"
+	}
+	return ""
+}
+
+// TableClassStandard and TableClassStandardIA are the supported table classes
+const (
+	TableClassStandard TableClass = iota
+	TableClassStandardIA
+)
+
+// TableClassSpecifier could specify table class.
+type TableClassSpecifier interface {
+	TableClass() TableClass
+}
+
+type DBForMigrator interface {
+	AddError(err error) error
+	Exec(sql string, values ...interface{}) (tx *gorm.DB)
+}
 
 // compatibility check
 var _ gorm.Migrator = (*Migrator)(nil)
 
-// Migrator is gorm.Migrator implementation for dynamodb
-//
-// Deprecated: Migrator is not implemented.
-type Migrator struct{}
+type BaseMigrator interface {
+	gorm.Migrator
+	RunWithValue(value interface{}, fc func(stmt *gorm.Statement) error) error
+	CurrentTable(stmt *gorm.Statement) interface{}
+}
 
-func (m Migrator) AutoMigrate(dst ...interface{}) error {
-	return ErrDynmgrmAreNotSupported
+// Migrator is gorm.Migrator implementation for dynamodb
+type Migrator struct {
+	db   DBForMigrator
+	base BaseMigrator
 }
 
 func (m Migrator) CurrentDatabase() string {
 	return ""
 }
 
+func (m Migrator) AutoMigrate(dst ...interface{}) error {
+	return ErrDynmgrmAreNotSupported
+}
+
 func (m Migrator) FullDataTypeOf(field *schema.Field) clause.Expr {
-	return clause.Expr{}
+	return m.base.FullDataTypeOf(field)
 }
 
 func (m Migrator) GetTypeAliases(databaseTypeName string) []string {
 	return []string{}
 }
 
-func (m Migrator) CreateTable(dst ...interface{}) error {
-	return ErrDynmgrmAreNotSupported
+func (m Migrator) CreateTable(models ...interface{}) error {
+	for _, model := range models {
+		err := m.base.RunWithValue(model, func(stmt *gorm.Statement) (err error) {
+			var (
+				wcu, rcu   int
+				tableClass string
+			)
+
+			if ws, ok := model.(CapacityUnitsSpecifier); ok {
+				wcu = ws.WCU()
+				rcu = ws.RCU()
+			}
+			if tcs, ok := model.(TableClassSpecifier); ok {
+				tableClass = tcs.TableClass().String()
+			}
+
+			rv := reflect.ValueOf(model)
+			var rt reflect.Type
+			switch rv.Kind() {
+			case reflect.Pointer:
+				rt = reflect.TypeOf(reflect.ValueOf(model).Elem().Interface())
+			default:
+				rt = reflect.TypeOf(model)
+			}
+
+			ddlBuilder := strings.Builder{}
+			ddlBuilder.WriteString(fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s`, m.currentTable(stmt)))
+
+			td := newDynmgrmTableDefine(rt)
+			// `CREATE TABLE` are proprietary PartiQL syntax by btnguyen2k/godynamo
+			// This is why place holder/bind variables are not used.
+			ddlBuilder.WriteString(fmt.Sprintf(` WITH PK=%s:%s`, td.PK.Name, td.PK.DataType))
+			if skn := td.SK.Name; skn != "" {
+				ddlBuilder.WriteString(fmt.Sprintf(`, WITH SK=%s:%s`, skn, td.SK.DataType))
+			}
+			opts := make([]string, 0, 7)
+			for k, v := range td.LSI {
+				lsi := fmt.Sprintf(`WITH LSI=%s:%s:%s`, k, v.SK.Name, v.SK.DataType)
+				projective := slices.DeleteFunc(td.NonKeyAttr, func(s string) bool {
+					if s == v.SK.Name {
+						return true
+					}
+					return slices.Contains(v.NonProjectiveAttrs, s)
+				})
+				if len(projective) > 0 {
+					lsi += fmt.Sprintf(`:%s`, strings.Join(projective, ","))
+				}
+				opts = append(opts, lsi)
+			}
+			if wcu > 0 {
+				opts = append(opts, fmt.Sprintf(`WITH wcu=%d`, wcu))
+			}
+			if rcu > 0 {
+				opts = append(opts, fmt.Sprintf(`WITH rcu=%d`, rcu))
+			}
+			if tableClass != "" {
+				opts = append(opts, fmt.Sprintf(`WITH table-class=%s`, tableClass))
+			}
+
+			for _, o := range opts {
+				ddlBuilder.WriteString(", ")
+				ddlBuilder.WriteString(o)
+			}
+			if err := m.db.Exec(ddlBuilder.String()).Error; err != nil {
+				return err
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (m Migrator) currentTable(stmt *gorm.Statement) string {
+	txp := m.base.CurrentTable(stmt)
+	if txp, ok := txp.(clause.Table); ok {
+		return txp.Name
+	}
+	return ""
 }
 
 func (m Migrator) DropTable(dst ...interface{}) error {
