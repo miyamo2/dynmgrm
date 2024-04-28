@@ -1,10 +1,10 @@
+//go:generate mockgen -destination=internal/mocks/mock_migrator.go -package=mocks -source=./migrator.go
 package dynmgrm
 
 import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
-	"gorm.io/gorm/migrator"
 	"gorm.io/gorm/schema"
 	"reflect"
 	"slices"
@@ -49,10 +49,16 @@ type dbForMigrator interface {
 // compatibility check
 var _ gorm.Migrator = (*Migrator)(nil)
 
+type baseMigrator interface {
+	gorm.Migrator
+	RunWithValue(value interface{}, fc func(stmt *gorm.Statement) error) error
+	CurrentTable(stmt *gorm.Statement) interface{}
+}
+
 // Migrator is gorm.Migrator implementation for dynamodb
 type Migrator struct {
 	db   dbForMigrator
-	base migrator.Migrator
+	base baseMigrator
 }
 
 func (m Migrator) CurrentDatabase() string {

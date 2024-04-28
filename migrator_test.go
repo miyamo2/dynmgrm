@@ -1,6 +1,8 @@
 package dynmgrm
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestTableClass_String(t *testing.T) {
 	type test struct {
