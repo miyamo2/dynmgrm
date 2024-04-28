@@ -427,3 +427,27 @@ func Test_newDynmgrmTableDefine(t *testing.T) {
 		})
 	}
 }
+
+func Test_secondaryIndexKind_String(t *testing.T) {
+	type test struct {
+		sut  secondaryIndexKind
+		want string
+	}
+	tests := map[string]test{
+		"happy_path/gsi": {
+			sut:  secondaryIndexKindGSI,
+			want: "GSI",
+		},
+		"happy_path/lsi": {
+			sut:  secondaryIndexKindLSI,
+			want: "LSI",
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			if got := tt.sut.String(); got != tt.want {
+				t.Errorf("String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
