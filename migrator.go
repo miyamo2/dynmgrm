@@ -102,9 +102,9 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 			td := newDynmgrmTableDefine(rt)
 			// `CREATE TABLE` are proprietary PartiQL syntax by btnguyen2k/godynamo
 			// This is why place holder/bind variables are not used.
-			ddlBuilder.WriteString(fmt.Sprintf(` WITH PK=%s:%s`, td.pk.name, td.pk.dataType))
-			if skn := td.sk.name; skn != "" {
-				ddlBuilder.WriteString(fmt.Sprintf(`, WITH SK=%s:%s`, skn, td.sk.dataType))
+			ddlBuilder.WriteString(fmt.Sprintf(` WITH PK=%s:%s`, td.PK.Name, td.PK.DataType))
+			if skn := td.SK.Name; skn != "" {
+				ddlBuilder.WriteString(fmt.Sprintf(`, WITH SK=%s:%s`, skn, td.SK.DataType))
 			}
 			opts := make([]string, 0, 7)
 			if wcu > 0 {
@@ -116,13 +116,13 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 			if tableClass != "" {
 				opts = append(opts, fmt.Sprintf(`WITH table-class=%s`, tableClass))
 			}
-			for k, v := range td.lsi {
-				lsi := fmt.Sprintf(`WITH LSI=%s:%s:%s`, k, v.sk.name, v.sk.dataType)
-				projective := slices.DeleteFunc(td.nonKey, func(s string) bool {
-					if s == v.sk.name {
+			for k, v := range td.LSI {
+				lsi := fmt.Sprintf(`WITH LSI=%s:%s:%s`, k, v.SK.Name, v.SK.DataType)
+				projective := slices.DeleteFunc(td.NonKeyAttr, func(s string) bool {
+					if s == v.SK.Name {
 						return true
 					}
-					return slices.Contains(v.nonProjectiveAttrs, s)
+					return slices.Contains(v.NonProjectiveAttrs, s)
 				})
 				if len(projective) > 0 {
 					lsi += fmt.Sprintf(`:%s`, strings.Join(projective, ","))

@@ -273,7 +273,7 @@ func Test_newDynmgrmTag(t *testing.T) {
 				tag: rt.Field(0).Tag,
 			},
 			want: dynmgrmTag{
-				pk: true,
+				PK: true,
 			},
 		},
 		"happy_path/sk": {
@@ -281,7 +281,7 @@ func Test_newDynmgrmTag(t *testing.T) {
 				tag: rt.Field(1).Tag,
 			},
 			want: dynmgrmTag{
-				sk: true,
+				SK: true,
 			},
 		},
 		"happy_path/gsi-pk": {
@@ -289,11 +289,11 @@ func Test_newDynmgrmTag(t *testing.T) {
 				tag: rt.Field(2).Tag,
 			},
 			want: dynmgrmTag{
-				indexProperty: []secondaryIndexProperty{
+				IndexProperty: []secondaryIndexProperty{
 					{
-						pk:   true,
-						name: "c_d-index",
-						kind: secondaryIndexKindGSI,
+						PK:   true,
+						Name: "c_d-index",
+						Kind: secondaryIndexKindGSI,
 					},
 				},
 			},
@@ -303,11 +303,11 @@ func Test_newDynmgrmTag(t *testing.T) {
 				tag: rt.Field(3).Tag,
 			},
 			want: dynmgrmTag{
-				indexProperty: []secondaryIndexProperty{
+				IndexProperty: []secondaryIndexProperty{
 					{
-						sk:   true,
-						name: "c_d-index",
-						kind: secondaryIndexKindGSI,
+						SK:   true,
+						Name: "c_d-index",
+						Kind: secondaryIndexKindGSI,
 					},
 				},
 			},
@@ -317,11 +317,11 @@ func Test_newDynmgrmTag(t *testing.T) {
 				tag: rt.Field(4).Tag,
 			},
 			want: dynmgrmTag{
-				indexProperty: []secondaryIndexProperty{
+				IndexProperty: []secondaryIndexProperty{
 					{
-						name: "e-index",
-						kind: secondaryIndexKindLSI,
-						sk:   true,
+						Name: "e-index",
+						Kind: secondaryIndexKindLSI,
+						SK:   true,
 					},
 				},
 			},
@@ -331,7 +331,7 @@ func Test_newDynmgrmTag(t *testing.T) {
 				tag: rt.Field(5).Tag,
 			},
 			want: dynmgrmTag{
-				nonProjective: []string{"c_d-index", "e-index"},
+				NonProjective: []string{"c_d-index", "e-index"},
 			},
 		},
 		"unhappy_path/pk_and_sk": {
@@ -339,7 +339,7 @@ func Test_newDynmgrmTag(t *testing.T) {
 				tag: rt.Field(6).Tag,
 			},
 			want: dynmgrmTag{
-				pk: true,
+				PK: true,
 			},
 		},
 		"unhappy_path/sk_and_pk": {
@@ -347,7 +347,7 @@ func Test_newDynmgrmTag(t *testing.T) {
 				tag: rt.Field(7).Tag,
 			},
 			want: dynmgrmTag{
-				sk: true,
+				SK: true,
 			},
 		},
 		"unhappy_path/empty_value": {
@@ -359,8 +359,70 @@ func Test_newDynmgrmTag(t *testing.T) {
 	}
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			if got := newDynmgrmTag(tt.args.tag); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("newDynmgrmTag() = %v, want %v", got, tt.want)
+			got := newDynmgrmTag(tt.args.tag)
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("newDynmgrmTag() mismatch (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
+
+func Test_newDynmgrmTableDefine(t *testing.T) {
+	type A struct {
+		A string `dynmgrm:"pk"`
+		B string `dynmgrm:"sk"`
+		C string `dynmgrm:"gsi-pk:c_d-index"`
+		D string `dynmgrm:"gsi-sk:c_d-index"`
+		E string `dynmgrm:"lsi:e-index"`
+		F string `dynmgrm:"non-projective:[c_d-index,e-index]"`
+	}
+	type test struct {
+		args reflect.Type
+		want dynmgrmTableDefine
+	}
+	tests := map[string]test{
+		"happy_path": {
+			args: reflect.TypeOf(A{}),
+			want: dynmgrmTableDefine{
+				PK: dynmgrmKeyDefine{
+					Name:     "a",
+					DataType: "string",
+				},
+				SK: dynmgrmKeyDefine{
+					Name:     "b",
+					DataType: "string",
+				},
+				NonKeyAttr: []string{"c", "d", "e", "f"},
+				GSI: map[string]*dynmgrmSecondaryIndexDefine{
+					"c_d-index": {
+						PK: dynmgrmKeyDefine{
+							Name:     "c",
+							DataType: "string",
+						},
+						SK: dynmgrmKeyDefine{
+							Name:     "d",
+							DataType: "string",
+						},
+						NonProjectiveAttrs: []string{"f"},
+					},
+				},
+				LSI: map[string]*dynmgrmSecondaryIndexDefine{
+					"e-index": {
+						SK: dynmgrmKeyDefine{
+							Name:     "e",
+							DataType: "string",
+						},
+						NonProjectiveAttrs: []string{"f"},
+					},
+				},
+			},
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := newDynmgrmTableDefine(tt.args)
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("newDynmgrmTableDefine() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}

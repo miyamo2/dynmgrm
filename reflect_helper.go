@@ -65,17 +65,17 @@ func (sik secondaryIndexKind) String() string {
 }
 
 type secondaryIndexProperty struct {
-	pk   bool
-	sk   bool
-	name string
-	kind secondaryIndexKind
+	PK   bool
+	SK   bool
+	Name string
+	Kind secondaryIndexKind
 }
 
 type dynmgrmTag struct {
-	pk            bool
-	sk            bool
-	indexProperty []secondaryIndexProperty
-	nonProjective []string
+	PK            bool
+	SK            bool
+	IndexProperty []secondaryIndexProperty
+	NonProjective []string
 }
 
 func newDynmgrmTag(tag reflect.StructTag) dynmgrmTag {
@@ -87,40 +87,40 @@ func newDynmgrmTag(tag reflect.StructTag) dynmgrmTag {
 		kv := strings.Split(value, ":")
 		switch tn := kv[0]; tn {
 		case "pk":
-			if res.sk {
+			if res.SK {
 				continue
 			}
-			res.pk = true
+			res.PK = true
 		case "sk":
-			if res.pk {
+			if res.PK {
 				continue
 			}
-			res.sk = true
+			res.SK = true
 		case "gsi-pk":
 			iprp := secondaryIndexProperty{
-				pk:   true,
-				name: kv[1],
-				kind: secondaryIndexKindGSI,
+				PK:   true,
+				Name: kv[1],
+				Kind: secondaryIndexKindGSI,
 			}
-			res.indexProperty = append(res.indexProperty, iprp)
+			res.IndexProperty = append(res.IndexProperty, iprp)
 		case "gsi-sk":
 			iprp := secondaryIndexProperty{
-				sk:   true,
-				name: kv[1],
-				kind: secondaryIndexKindGSI,
+				SK:   true,
+				Name: kv[1],
+				Kind: secondaryIndexKindGSI,
 			}
-			res.indexProperty = append(res.indexProperty, iprp)
+			res.IndexProperty = append(res.IndexProperty, iprp)
 		case "lsi":
 			iprp := secondaryIndexProperty{
-				name: kv[1],
-				sk:   true,
-				kind: secondaryIndexKindLSI,
+				Name: kv[1],
+				SK:   true,
+				Kind: secondaryIndexKindLSI,
 			}
-			res.indexProperty = append(res.indexProperty, iprp)
+			res.IndexProperty = append(res.IndexProperty, iprp)
 		case "non-projective":
 			npl := strings.ReplaceAll(strings.ReplaceAll(kv[1], "[", ""), "]", "")
 			for _, np := range strings.Split(npl, ",") {
-				res.nonProjective = append(res.nonProjective, np)
+				res.NonProjective = append(res.NonProjective, np)
 			}
 		}
 	}
@@ -128,89 +128,89 @@ func newDynmgrmTag(tag reflect.StructTag) dynmgrmTag {
 }
 
 type dynmgrmKeyDefine struct {
-	name     string
-	dataType string
+	Name     string
+	DataType string
 }
 
 type dynmgrmSecondaryIndexDefine struct {
-	pk                 dynmgrmKeyDefine
-	sk                 dynmgrmKeyDefine
-	nonProjectiveAttrs []string
+	PK                 dynmgrmKeyDefine
+	SK                 dynmgrmKeyDefine
+	NonProjectiveAttrs []string
 }
 
 type dynmgrmTableDefine struct {
-	pk     dynmgrmKeyDefine
-	sk     dynmgrmKeyDefine
-	nonKey []string
-	gsi    map[string]*dynmgrmSecondaryIndexDefine
-	lsi    map[string]*dynmgrmSecondaryIndexDefine
+	PK         dynmgrmKeyDefine
+	SK         dynmgrmKeyDefine
+	NonKeyAttr []string
+	GSI        map[string]*dynmgrmSecondaryIndexDefine
+	LSI        map[string]*dynmgrmSecondaryIndexDefine
 }
 
 func newDynmgrmTableDefine(modelMeta reflect.Type) dynmgrmTableDefine {
 	res := dynmgrmTableDefine{
-		nonKey: make([]string, 0, modelMeta.NumField()),
-		gsi:    make(map[string]*dynmgrmSecondaryIndexDefine),
-		lsi:    make(map[string]*dynmgrmSecondaryIndexDefine),
+		NonKeyAttr: make([]string, 0, modelMeta.NumField()),
+		GSI:        make(map[string]*dynmgrmSecondaryIndexDefine),
+		LSI:        make(map[string]*dynmgrmSecondaryIndexDefine),
 	}
 	for i := 0; i < modelMeta.NumField(); i++ {
 		tf := modelMeta.Field(i)
 		dTag := newDynmgrmTag(tf.Tag)
 		cn := getDBNameFromStructField(tf)
 		isKey := false
-		if dTag.pk {
-			res.pk = dynmgrmKeyDefine{
-				name:     cn,
-				dataType: extractDBTypeFromStructField(tf),
+		if dTag.PK {
+			res.PK = dynmgrmKeyDefine{
+				Name:     cn,
+				DataType: extractDBTypeFromStructField(tf),
 			}
 			isKey = true
 		}
-		if dTag.sk {
-			res.sk = dynmgrmKeyDefine{
-				name:     cn,
-				dataType: extractDBTypeFromStructField(tf),
+		if dTag.SK {
+			res.SK = dynmgrmKeyDefine{
+				Name:     cn,
+				DataType: extractDBTypeFromStructField(tf),
 			}
 			isKey = true
 		}
 		if !isKey {
-			res.nonKey = append(res.nonKey, cn)
+			res.NonKeyAttr = append(res.NonKeyAttr, cn)
 		}
-		for _, ip := range dTag.indexProperty {
-			switch ip.kind {
+		for _, ip := range dTag.IndexProperty {
+			switch ip.Kind {
 			case secondaryIndexKindGSI:
-				sid, ok := res.gsi[ip.name]
+				sid, ok := res.GSI[ip.Name]
 				if !ok {
 					sid = &dynmgrmSecondaryIndexDefine{}
-					res.gsi[ip.name] = sid
+					res.GSI[ip.Name] = sid
 				}
-				if ip.pk {
-					sid.pk = dynmgrmKeyDefine{
-						name:     cn,
-						dataType: extractDBTypeFromStructField(tf),
+				if ip.PK {
+					sid.PK = dynmgrmKeyDefine{
+						Name:     cn,
+						DataType: extractDBTypeFromStructField(tf),
 					}
 				}
-				if ip.sk {
-					sid.sk = dynmgrmKeyDefine{
-						name:     cn,
-						dataType: extractDBTypeFromStructField(tf),
+				if ip.SK {
+					sid.SK = dynmgrmKeyDefine{
+						Name:     cn,
+						DataType: extractDBTypeFromStructField(tf),
 					}
 				}
 			case secondaryIndexKindLSI:
-				res.lsi[ip.name] = &dynmgrmSecondaryIndexDefine{
-					sk: dynmgrmKeyDefine{
-						name:     cn,
-						dataType: extractDBTypeFromStructField(tf),
+				res.LSI[ip.Name] = &dynmgrmSecondaryIndexDefine{
+					SK: dynmgrmKeyDefine{
+						Name:     cn,
+						DataType: extractDBTypeFromStructField(tf),
 					}}
 			}
 		}
-		for _, np := range dTag.nonProjective {
-			index, ok := res.lsi[np]
+		for _, np := range dTag.NonProjective {
+			index, ok := res.LSI[np]
 			if ok {
-				index.nonProjectiveAttrs = append(index.nonProjectiveAttrs, cn)
+				index.NonProjectiveAttrs = append(index.NonProjectiveAttrs, cn)
 				continue
 			}
-			index, ok = res.gsi[np]
+			index, ok = res.GSI[np]
 			if ok {
-				index.nonProjectiveAttrs = append(index.nonProjectiveAttrs, cn)
+				index.NonProjectiveAttrs = append(index.NonProjectiveAttrs, cn)
 			}
 		}
 	}
