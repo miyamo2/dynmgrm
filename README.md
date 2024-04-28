@@ -65,7 +65,7 @@ Supports the following GORM features:
   - [x] `Rollback`
   - [x] `Transaction`
 
-- [Migration](.docs/MODEL.md)
+- [Migration](.docs/MIGRATION.md)
   - [ ] `AutoMigrate`
   - [ ] `CurrentDatabase`
   - [x] `FullDataTypeOf`
