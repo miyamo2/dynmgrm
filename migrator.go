@@ -93,11 +93,13 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 			}
 
 			rv := reflect.ValueOf(model)
+			var rt reflect.Type
 			switch rv.Kind() {
 			case reflect.Ptr:
-				model = reflect.ValueOf(model).Elem().Interface()
+				rt = reflect.TypeOf(reflect.ValueOf(model).Elem().Interface())
+			default:
+				rt = reflect.TypeOf(model)
 			}
-			rt := reflect.TypeOf(model)
 
 			ddlBuilder := strings.Builder{}
 			ddlBuilder.WriteString(fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s`, m.currentTable(stmt)))
