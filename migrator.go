@@ -97,7 +97,7 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 			rv := reflect.ValueOf(model)
 			var rt reflect.Type
 			switch rv.Kind() {
-			case reflect.Ptr:
+			case reflect.Pointer:
 				rt = reflect.TypeOf(reflect.ValueOf(model).Elem().Interface())
 			default:
 				rt = reflect.TypeOf(model)
@@ -114,15 +114,6 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 				ddlBuilder.WriteString(fmt.Sprintf(`, WITH SK=%s:%s`, skn, td.SK.DataType))
 			}
 			opts := make([]string, 0, 7)
-			if wcu > 0 {
-				opts = append(opts, fmt.Sprintf(`WITH wcu=%d`, wcu))
-			}
-			if rcu > 0 {
-				opts = append(opts, fmt.Sprintf(`WITH rcu=%d`, rcu))
-			}
-			if tableClass != "" {
-				opts = append(opts, fmt.Sprintf(`WITH table-class=%s`, tableClass))
-			}
 			for k, v := range td.LSI {
 				lsi := fmt.Sprintf(`WITH LSI=%s:%s:%s`, k, v.SK.Name, v.SK.DataType)
 				projective := slices.DeleteFunc(td.NonKeyAttr, func(s string) bool {
@@ -135,6 +126,15 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 					lsi += fmt.Sprintf(`:%s`, strings.Join(projective, ","))
 				}
 				opts = append(opts, lsi)
+			}
+			if wcu > 0 {
+				opts = append(opts, fmt.Sprintf(`WITH wcu=%d`, wcu))
+			}
+			if rcu > 0 {
+				opts = append(opts, fmt.Sprintf(`WITH rcu=%d`, rcu))
+			}
+			if tableClass != "" {
+				opts = append(opts, fmt.Sprintf(`WITH table-class=%s`, tableClass))
 			}
 
 			for _, o := range opts {

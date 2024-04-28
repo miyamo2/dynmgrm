@@ -68,7 +68,7 @@ Supports the following GORM features:
 - [Migration](.docs/MODEL.md)
   - [ ] `AutoMigrate`
   - [ ] `CurrentDatabase`
-  - [ ] `FullDataTypeOf`
+  - [x] `FullDataTypeOf`
   - [x] `CreateTable`
   - [ ] `DropTable`
   - [ ] `HasTable`
@@ -78,7 +78,6 @@ Supports the following GORM features:
   - [ ] `CreateIndex`
   - [ ] `DropIndex`
   - [ ] `HasIndex`
-  - [ ] `RenameIndex`
 
 Custom Clause:
 
