@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 - 2024-04-28
+
+📝 Fixed Dead Link in README
+
 ## 0.6.0 - 2024-04-28
 
 ✨ New Features
