@@ -97,22 +97,24 @@ func newDynmgrmTag(tag reflect.StructTag) dynmgrmTag {
 			}
 			res.sk = true
 		case "gsi-pk":
-			iprp := secondaryIndexProperty{}
-			tv := kv[1]
-			iprp.pk = true
-			iprp.name = tv
+			iprp := secondaryIndexProperty{
+				pk:   true,
+				name: kv[1],
+				kind: secondaryIndexKindGSI,
+			}
 			res.indexProperty = append(res.indexProperty, iprp)
 		case "gsi-sk":
-			iprp := secondaryIndexProperty{}
-			tv := kv[1]
-			iprp.sk = true
-			iprp.name = tv
+			iprp := secondaryIndexProperty{
+				sk:   true,
+				name: kv[1],
+				kind: secondaryIndexKindGSI,
+			}
 			res.indexProperty = append(res.indexProperty, iprp)
 		case "lsi":
 			iprp := secondaryIndexProperty{
 				name: kv[1],
-				kind: secondaryIndexKindLSI,
 				sk:   true,
+				kind: secondaryIndexKindLSI,
 			}
 			res.indexProperty = append(res.indexProperty, iprp)
 		case "non-projective":
