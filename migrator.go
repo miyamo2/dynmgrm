@@ -1,4 +1,5 @@
-//go:generate mockgen -destination=internal/mocks/mock_migrator.go -package=mocks -source=./migrator.go
+//go:generate mockgen -destination=internal/mocks/mock_db_for_migrator.go -package=mocks github.com/miyamo2/dynmgrm DBForMigrator
+//go:generate mockgen -destination=internal/mocks/mock_base_migrator.go -package=mocks github.com/miyamo2/dynmgrm BaseMigrator
 package dynmgrm
 
 import (
@@ -41,7 +42,7 @@ type TableClassSpecifier interface {
 	TableClass() TableClass
 }
 
-type dbForMigrator interface {
+type DBForMigrator interface {
 	AddError(err error) error
 	Exec(sql string, values ...interface{}) (tx *gorm.DB)
 }
@@ -49,7 +50,7 @@ type dbForMigrator interface {
 // compatibility check
 var _ gorm.Migrator = (*Migrator)(nil)
 
-type baseMigrator interface {
+type BaseMigrator interface {
 	gorm.Migrator
 	RunWithValue(value interface{}, fc func(stmt *gorm.Statement) error) error
 	CurrentTable(stmt *gorm.Statement) interface{}
@@ -57,8 +58,8 @@ type baseMigrator interface {
 
 // Migrator is gorm.Migrator implementation for dynamodb
 type Migrator struct {
-	db   dbForMigrator
-	base baseMigrator
+	db   DBForMigrator
+	base BaseMigrator
 }
 
 func (m Migrator) CurrentDatabase() string {
