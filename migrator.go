@@ -132,13 +132,6 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 				}
 				opts = append(opts, lsi)
 			}
-			for k, v := range td.gsi {
-				gsi := fmt.Sprintf(`WITH GSI=%s:%s:%s`, k, v.pk.name, v.pk.dataType)
-				if v.sk.name != "" {
-					gsi += fmt.Sprintf(`:%s:%s`, v.sk.name, v.sk.dataType)
-				}
-				opts = append(opts, gsi)
-			}
 
 			for _, o := range opts {
 				ddlBuilder.WriteString(", ")
