@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 - 2024-04-28
+
+✨ New Features
+
+- Added support for `Migratior.CreateTable()`.
+
 ## 0.5.0 - 2024-04-16
 
 ✨ New Features
