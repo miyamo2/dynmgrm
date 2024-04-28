@@ -11,13 +11,9 @@ import (
 	"strings"
 )
 
-// WCUSpecificationer is the interface for specifying WCU
-type WCUSpecificationer interface {
+// CapacityUnitsSpecifier could specify WCUs and RCU
+type CapacityUnitsSpecifier interface {
 	WCU() int
-}
-
-// RCUSpecificationer is the interface for specifying RCU
-type RCUSpecificationer interface {
 	RCU() int
 }
 
@@ -40,7 +36,8 @@ const (
 	TableClassStandardIA
 )
 
-type TableClassSpecificationer interface {
+// TableClassSpecifier could specify table class.
+type TableClassSpecifier interface {
 	TableClass() TableClass
 }
 
@@ -82,13 +79,11 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 				tableClass string
 			)
 
-			if ws, ok := model.(WCUSpecificationer); ok {
+			if ws, ok := model.(CapacityUnitsSpecifier); ok {
 				wcu = ws.WCU()
+				rcu = ws.RCU()
 			}
-			if rs, ok := model.(RCUSpecificationer); ok {
-				rcu = rs.RCU()
-			}
-			if tcs, ok := model.(TableClassSpecificationer); ok {
+			if tcs, ok := model.(TableClassSpecifier); ok {
 				tableClass = tcs.TableClass().String()
 			}
 
@@ -109,7 +104,7 @@ func (m Migrator) CreateTable(models ...interface{}) error {
 			// This is why place holder/bind variables are not used.
 			ddlBuilder.WriteString(fmt.Sprintf(` WITH PK=%s:%s`, td.pk.name, td.pk.dataType))
 			if skn := td.sk.name; skn != "" {
-				ddlBuilder.WriteString(fmt.Sprintf(` WITH SK=%s:%s`, skn, td.sk.dataType))
+				ddlBuilder.WriteString(fmt.Sprintf(`, WITH SK=%s:%s`, skn, td.sk.dataType))
 			}
 			opts := make([]string, 0, 7)
 			if wcu > 0 {
