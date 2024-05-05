@@ -1,7 +1,7 @@
 github.com/aws/aws-sdk-go-v2 v1.26.1 h1:5554eUqIYVWpU0YmeeYZ0wU64H2VLBs8TlhRB2L+EkA=
 github.com/aws/aws-sdk-go-v2 v1.26.1/go.mod h1:ffIFB97e2yNsv4aTSGkqtHnppsIJzw7G7BReUZ3jCXM=
-github.com/aws/aws-sdk-go-v2/credentials v1.17.4 h1:h5Vztbd8qLppiPwX+y0Q6WiwMZgpd9keKe2EAENgAuI=
-github.com/aws/aws-sdk-go-v2/credentials v1.17.4/go.mod h1:+30tpwrkOgvkJL1rUZuRLoxcJwtI/OkeBLYnHxJtVe0=
+github.com/aws/aws-sdk-go-v2/credentials v1.17.11 h1:YuIB1dJNf1Re822rriUOTxopaHHvIq0l/pX3fwO+Tzs=
+github.com/aws/aws-sdk-go-v2/credentials v1.17.11/go.mod h1:AQtFPsDH9bI2O+71anW6EKL+NcD7LG3dpKGMV4SShgo=
 github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.13.14 h1:MqN3V/VApAVAheStH43Dl3BWuGE712Cp5s97WmCMbYQ=
 github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.13.14/go.mod h1:WwwihVdoE2S7TTziJGvgWaHI8HlOt1DwO6DM338pkzo=
 github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.5 h1:aw39xVGeRWlWx9EzGVnhOR4yOjQDHPQ6o6NmBlscyQg=
@@ -22,8 +22,8 @@ github.com/btnguyen2k/consu/g18 v0.1.0 h1:IoS5w5QlOfkcrNOHJyICD6PgqLh+J5fIDqy3vR
 github.com/btnguyen2k/consu/g18 v0.1.0/go.mod h1:gTPcr87XdCLDISusRQyDey22/ZOw6bLh6EChxTLx6/c=
 github.com/btnguyen2k/consu/reddo v0.1.9 h1:NZyEzRcDXzksNMnvZVZyJmGN6ZQQmHg4hIPCPbfsCBE=
 github.com/btnguyen2k/consu/reddo v0.1.9/go.mod h1:pdY5oIVX3noZIaZu3nvoKZ59+seXL/taXNGWh9xJDbg=
-github.com/btnguyen2k/godynamo v1.2.1 h1:ipW+Q/pa0hNqxOvX4bEpJTLHlCDpnOz96bxc0FLoWNg=
-github.com/btnguyen2k/godynamo v1.2.1/go.mod h1:AA6j9/5GcTXCZA4YPgg7LUyudaP+Y6cgSeZrXl/wky8=
+github.com/btnguyen2k/godynamo v1.3.0 h1:8Ri9gVWMvBWlD5P04AEVrl2QcmMQR7KgC3zSCl/YLWw=
+github.com/btnguyen2k/godynamo v1.3.0/go.mod h1:vNE48BoUAZS4F5ohrZ7suhw61DmCiXSClKrJfr2maTo=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
