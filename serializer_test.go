@@ -53,9 +53,6 @@ func Test_nestedStructSerializer_Scan(t *testing.T) {
 					},
 				},
 			},
-			want: want{
-				err: nil,
-			},
 			expected: expected{
 				Outer{
 					Inner: Inner{
@@ -63,6 +60,62 @@ func Test_nestedStructSerializer_Scan(t *testing.T) {
 						B: "bar",
 					},
 				},
+			},
+		},
+		"unhappy_path/dbValue_is_nil": {
+			args: args{
+				ctx: context.Background(),
+				field: &schema.Field{
+					FieldType: reflect.TypeOf(Outer{}),
+					ReflectValueOf: func(ctx context.Context, value reflect.Value) reflect.Value {
+						return value.Elem()
+					},
+				},
+				dst:     Outer{},
+				dbValue: nil,
+			},
+			expected: expected{
+				Outer{},
+			},
+		},
+		"unhappy_path/dbValue_is_not_map": {
+			args: args{
+				ctx: context.Background(),
+				field: &schema.Field{
+					FieldType: reflect.TypeOf(Outer{}),
+					ReflectValueOf: func(ctx context.Context, value reflect.Value) reflect.Value {
+						return value.Elem()
+					},
+				},
+				dst:     Outer{},
+				dbValue: "",
+			},
+			want: want{
+				err: ErrIncompatibleNestedStruct,
+			},
+			expected: expected{
+				Outer{},
+			},
+		},
+		"unhappy_path/incompatible_dbValue_attribute": {
+			args: args{
+				ctx: context.Background(),
+				field: &schema.Field{
+					FieldType: reflect.TypeOf(Outer{}),
+					ReflectValueOf: func(ctx context.Context, value reflect.Value) reflect.Value {
+						return value.Elem()
+					},
+				},
+				dst: Outer{},
+				dbValue: map[string]interface{}{
+					"inner": "foo",
+				},
+			},
+			want: want{
+				err: ErrNestedStructHasIncompatibleAttributes,
+			},
+			expected: expected{
+				Outer{},
 			},
 		},
 	}
