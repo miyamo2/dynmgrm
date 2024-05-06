@@ -29,7 +29,8 @@ func assignInterfaceValueToReflectValue(rt reflect.Type, rv reflect.Value, value
 	if rv.CanAddr() {
 		switch ptr := rv.Addr().Interface().(type) {
 		case sql.Scanner:
-			if err := ptr.Scan(value); err != nil {
+			err := ptr.Scan(value)
+			if err != nil {
 				return err
 			}
 		}
@@ -79,7 +80,8 @@ func assignInterfaceValueToReflectValue(rt reflect.Type, rv reflect.Value, value
 			return nil
 		}
 		rv.Set(reflect.New(rt.Elem()))
-		if err := assignInterfaceValueToReflectValue(rt.Elem(), rv.Elem(), value); err != nil {
+		err := assignInterfaceValueToReflectValue(rt.Elem(), rv.Elem(), value)
+		if err != nil {
 			return err
 		}
 	}
