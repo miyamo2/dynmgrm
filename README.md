@@ -170,6 +170,8 @@ func main() {
 
 Feel free to open a PR or an Issue.
 
+However, you must promise to follow our [Code of Conduct](https://github.com/miyamo2/dynmgrm/blob/main/CODE_OF_CONDUCT.md).
+
 ## License
 
 **dynmgrm** released under the [MIT License](https://github.com/miyamo2/dynmgrm/blob/main/LICENSE)
