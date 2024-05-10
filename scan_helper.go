@@ -33,9 +33,14 @@ func assignMapValueToReflectValue(rt reflect.Type, rv reflect.Value, mv map[stri
 
 func assignInterfaceValueToReflectValue(rt reflect.Type, rv reflect.Value, value interface{}) error {
 	if rv.CanAddr() {
-		switch ptr := rv.Addr().Interface().(type) {
+		switch sc := rv.Addr().Interface().(type) {
 		case sql.Scanner:
-			return ptr.Scan(value)
+			return sc.Scan(value)
+		}
+	} else {
+		switch sc := rv.Interface().(type) {
+		case sql.Scanner:
+			return sc.Scan(value)
 		}
 	}
 	switch rt.Kind() {
