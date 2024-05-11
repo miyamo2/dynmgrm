@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0 - 2024-05-11
+
+✨ New Features
+
+- Added `dynamo-nested`, the custom GORM serializer for nested struct.
+
+💥 Breaking Change
+
+- Renamed the key name of tag, `dynmgrm:lsi` to `dynmgrm:lsi-sk`
+
 ## 0.6.1 - 2024-04-28
 
 📝 Fixed Dead Link in README

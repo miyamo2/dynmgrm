@@ -9,9 +9,11 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/miyamo2/dynmgrm)](https://goreportcard.com/report/github.com/miyamo2/dynmgrm)
 [![GitHub License](https://img.shields.io/github/license/miyamo2/dynmgrm?&color=blue)](https://img.shields.io/github/license/miyamo2/dynmgrm?&color=blue)
 
+dynmgrm is the driver to issue PartiQL Statement to DynamoDB with GORM⚡
+
 ## Features
 
-Supports the following PartiQL statements:
+### Supports the following PartiQL statements
 
 - [x] Select
   - [x] With Secondary Index
@@ -32,7 +34,7 @@ Supports the following PartiQL statements:
 - [x] Create Table ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
 - [ ] Create Index ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
 
-Supports the following GORM features:
+### Supports the following GORM features
 
 - Query
   - [x] `Select`
@@ -79,11 +81,11 @@ Supports the following GORM features:
   - [ ] `DropIndex`
   - [ ] `HasIndex`
 
-Custom Clause:
+### Custom Clause
 
 - `SecondaryIndex`
 
-Custom Data Types:
+### Custom Data Types
 
 - `Set[string | int | float64 | []byte]`
 
@@ -92,6 +94,12 @@ Custom Data Types:
 - `Map`
 
 - `TypedList[T]`
+
+### Custom Serializer
+
+- `dynamo-nested`
+
+[What is about GORM Serializer?](https://gorm.io/docs/serializer.html)
 
 ## Quick Start
 
