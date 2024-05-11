@@ -59,6 +59,23 @@ func (t TestTableWithTypedList) TableName() string {
 	return "test_tables"
 }
 
+type TestTableWithNested struct {
+	PK      string          `gorm:"primaryKey"`
+	SK      int             `gorm:"primaryKey"`
+	SomeMap NestedAttribute `gorm:"serializer:nested"`
+}
+
+func (t TestTableWithNested) TableName() string {
+	return "test_tables"
+}
+
+type NestedAttribute struct {
+	SomeString string
+	SomeNumber float64
+	SomeBool   bool
+	SomeBinary []byte
+}
+
 var (
 	endpoint       string
 	region         string

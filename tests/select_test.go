@@ -1340,3 +1340,61 @@ func Test_Select_With_TypedList(t *testing.T) {
 		t.Errorf("mismatch (-want +got):\n%s", diff)
 	}
 }
+
+func Test_Select_With_Nested(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForNested, testTableName)
+	defer dataCleanup(t, testDataForNested, testTableName)
+
+	expected := []TestTableWithNested{
+		{
+			PK: "Partition1",
+			SK: 1,
+			SomeMap: NestedAttribute{
+				SomeString: "Hello",
+				SomeNumber: 1.1,
+				SomeBool:   true,
+				SomeBinary: []byte("ABC"),
+			},
+		},
+		{
+			PK: "Partition1",
+			SK: 2,
+			SomeMap: NestedAttribute{
+				SomeString: "こんにちは",
+				SomeNumber: 2.2,
+				SomeBool:   false,
+				SomeBinary: []byte("GHI"),
+			},
+		},
+		{
+			PK: "Partition2",
+			SK: 1,
+			SomeMap: NestedAttribute{
+				SomeString: "Hello",
+				SomeNumber: 1.1,
+				SomeBool:   true,
+				SomeBinary: []byte("ABC"),
+			},
+		},
+		{
+			PK: "Partition2",
+			SK: 2,
+			SomeMap: NestedAttribute{
+				SomeString: "こんにちは",
+				SomeNumber: 2.2,
+				SomeBool:   false,
+				SomeBinary: []byte("GHI"),
+			},
+		},
+	}
+	var result []TestTableWithNested
+	err := db.Select("*").Table("test_tables").Scan(&result).Error
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+		err = nil
+	}
+	if diff := cmp.Diff(expected, result, setCmpOpts...); diff != "" {
+		t.Errorf("mismatch (-want +got):\n%s", diff)
+	}
+}
