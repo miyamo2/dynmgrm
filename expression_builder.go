@@ -90,6 +90,16 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 			stmt.WriteByte(')')
 			continue
 		}
+		// NOTE: this is a temporary hack, if `btnguyen2k/godynamo` will support `driver.Valuer`, remove the entire switch block.
+		switch dv := asgv.(type) {
+		case driver.Valuer:
+			dvv, err := dv.Value()
+			if err != nil {
+				stmt.AddError(err)
+				continue
+			}
+			asgv = dvv
+		}
 		stmt.AddVar(stmt, asgv)
 	}
 }

@@ -1303,3 +1303,50 @@ func Test_Update_With_ListAppend_helper(t *testing.T) {
 		t.Errorf("Mismatch (-want +got):\n%s", diff)
 	}
 }
+
+func Test_Update_With_Save_Has_NetedStruct_Column(t *testing.T) {
+	db := getGormDB(t)
+	dataPreparation(t, testDataForNested, testTableName)
+	defer dataCleanup(t, testDataForNested, testTableName)
+
+	expect := map[string]*dynamodb.AttributeValue{
+		"pk": {
+			S: aws.String("Partition1"),
+		},
+		"sk": {
+			N: aws.String("1"),
+		},
+		"some_map": {
+			M: map[string]*dynamodb.AttributeValue{
+				"some_string": {
+					S: aws.String("こんにちは"),
+				},
+				"some_number": {
+					N: aws.String("2.2"),
+				},
+				"some_bool": {
+					BOOL: aws.Bool(false),
+				},
+				"some_binary": {
+					B: []byte("DEF"),
+				},
+			}},
+	}
+
+	db.Save(TestTableWithNested{
+		PK: "Partition1",
+		SK: 1,
+		SomeMap: NestedAttribute{
+			SomeString: "こんにちは",
+			SomeNumber: 2.2,
+			SomeBool:   false,
+			SomeBinary: []byte("DEF"),
+		},
+	})
+
+	result := getData(t, testTableName, "Partition1", 1)
+
+	if diff := cmp.Diff(expect, result, append(avCmpOpts, setCmpOpts...)...); diff != "" {
+		t.Errorf("Mismatch (-want +got):\n%s", diff)
+	}
+}
