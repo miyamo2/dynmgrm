@@ -101,7 +101,6 @@ dynmgrm is the driver to issue PartiQL Statement to DynamoDB with GORM⚡
 
 [What is about GORM Serializer?](https://gorm.io/docs/serializer.html)
 
-
 ## Quick Start
 
 ### Installation
