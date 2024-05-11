@@ -46,5 +46,5 @@ func (n nestedStructSerializer) Value(_ context.Context, _ *schema.Field, _ refl
 }
 
 func init() {
-	schema.RegisterSerializer("nested", nestedStructSerializer{})
+	schema.RegisterSerializer("dynamo-nested", nestedStructSerializer{})
 }
