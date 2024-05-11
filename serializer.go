@@ -3,10 +3,12 @@ package dynmgrm
 import (
 	"context"
 	"errors"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"gorm.io/gorm/schema"
 	"reflect"
 )
 
+// ErrIncompatibleNestedStruct occurs when an incompatible with nested-struct.
 var ErrIncompatibleNestedStruct = errors.New("incompatible nested struct")
 
 var (
@@ -14,6 +16,7 @@ var (
 	_ schema.SerializerValuerInterface = (*nestedStructSerializer)(nil)
 )
 
+// nestedStructSerializer is a serializer for nested struct.
 type nestedStructSerializer struct{}
 
 func (n nestedStructSerializer) Scan(ctx context.Context, field *schema.Field, dst reflect.Value, dbValue interface{}) error {
@@ -34,9 +37,12 @@ func (n nestedStructSerializer) Scan(ctx context.Context, field *schema.Field, d
 	return nil
 }
 
-func (n nestedStructSerializer) Value(ctx context.Context, field *schema.Field, dst reflect.Value, fieldValue interface{}) (interface{}, error) {
-	//TODO implement me
-	panic("implement me")
+func (n nestedStructSerializer) Value(_ context.Context, _ *schema.Field, _ reflect.Value, fieldValue interface{}) (interface{}, error) {
+	av, err := toDocumentAttributeValue[*types.AttributeValueMemberM](fieldValue)
+	if av == (*types.AttributeValueMemberM)(nil) {
+		return nil, err
+	}
+	return av, err
 }
 
 func init() {

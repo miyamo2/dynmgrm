@@ -8,7 +8,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
-var errValueInCompatible = fmt.Errorf("value is incompatible")
+// errDocumentAttributeValueIsIncompatible occurs when an incompatible conversion to following:
+//   - *types.AttributeValueMemberL
+//   - *types.AttributeValueMemberM
+//   - *types.AttributeValueMemberSS
+//   - *types.AttributeValueMemberNS
+//   - *types.AttributeValueMemberBS
+var errDocumentAttributeValueIsIncompatible = fmt.Errorf("document-attribute-value is incompatible")
 
 func toAttibuteValue(value interface{}) (types.AttributeValue, error) {
 	switch value := value.(type) {
@@ -96,5 +102,5 @@ func toDocumentAttributeValue[T documentAttributeMember](value interface{}) (T, 
 	if v, ok := v.(T); ok {
 		return v, nil
 	}
-	return nil, errValueInCompatible
+	return nil, errDocumentAttributeValueIsIncompatible
 }

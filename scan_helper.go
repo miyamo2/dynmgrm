@@ -7,8 +7,10 @@ import (
 	"reflect"
 )
 
+// ErrNestedStructHasIncompatibleAttributes occurs when the nested struct has incompatible attributes.
 var ErrNestedStructHasIncompatibleAttributes = errors.New("nested struct has incompatible attributes")
 
+// assignMapValueToReflectValue assigns the map type value to the reflect.Value
 func assignMapValueToReflectValue(rt reflect.Type, rv reflect.Value, mv map[string]interface{}) error {
 	for i := 0; i < rt.NumField(); i++ {
 		tf := rt.Field(i)
@@ -31,6 +33,7 @@ func assignMapValueToReflectValue(rt reflect.Type, rv reflect.Value, mv map[stri
 	return nil
 }
 
+// assignInterfaceValueToReflectValue assigns the value to the reflect.Value
 func assignInterfaceValueToReflectValue(rt reflect.Type, rv reflect.Value, value interface{}) error {
 	if rv.CanAddr() {
 		switch sc := rv.Addr().Interface().(type) {
