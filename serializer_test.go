@@ -198,7 +198,7 @@ func Test_nestedStructSerializer_Value(t *testing.T) {
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
 			sut := nestedStructSerializer{}
-			got, err := sut.Value(nil, nil, reflect.Value{}, tt.args.value)
+			got, err := sut.Value(context.Background(), nil, reflect.Value{}, tt.args.value)
 			if !errors.Is(err, tt.want.err) {
 				t.Errorf("Value() error = %v, want %v", err, tt.want.err)
 			}
