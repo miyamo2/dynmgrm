@@ -42,7 +42,7 @@ func (n nestedStructSerializer) Value(_ context.Context, _ *schema.Field, _ refl
 	if av == (*types.AttributeValueMemberM)(nil) {
 		return nil, err
 	}
-	return av, err
+	return *av, err
 }
 
 func init() {

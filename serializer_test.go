@@ -157,7 +157,7 @@ func Test_nestedStructSerializer_Value(t *testing.T) {
 				},
 			},
 			want: want{
-				value: &types.AttributeValueMemberM{
+				value: types.AttributeValueMemberM{
 					Value: map[string]types.AttributeValue{
 						"inner": &types.AttributeValueMemberM{
 							Value: map[string]types.AttributeValue{
