@@ -62,7 +62,7 @@ func (t TestTableWithTypedList) TableName() string {
 type TestTableWithNested struct {
 	PK      string          `gorm:"primaryKey"`
 	SK      int             `gorm:"primaryKey"`
-	SomeMap NestedAttribute `gorm:"serializer:nested"`
+	SomeMap NestedAttribute `gorm:"serializer:dynamo-nested"`
 }
 
 func (t TestTableWithNested) TableName() string {
