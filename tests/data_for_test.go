@@ -433,3 +433,102 @@ var testDataForTypedList = []map[string]*dynamodb.AttributeValue{
 		},
 	},
 }
+
+var testDataForNested = []map[string]*dynamodb.AttributeValue{
+	{
+		"pk": {
+			S: aws.String("Partition1"),
+		},
+		"sk": {
+			N: aws.String("1"),
+		},
+		"some_map": {
+			M: map[string]*dynamodb.AttributeValue{
+				"some_string": {
+					S: aws.String("Hello"),
+				},
+				"some_number": {
+					N: aws.String("1.1"),
+				},
+				"some_bool": {
+					BOOL: aws.Bool(true),
+				},
+				"some_binary": {
+					B: []byte("ABC"),
+				},
+			},
+		},
+	},
+	{
+		"pk": {
+			S: aws.String("Partition1"),
+		},
+		"sk": {
+			N: aws.String("2"),
+		},
+		"some_map": {
+			M: map[string]*dynamodb.AttributeValue{
+				"some_string": {
+					S: aws.String("こんにちは"),
+				},
+				"some_number": {
+					N: aws.String("2.2"),
+				},
+				"some_bool": {
+					BOOL: aws.Bool(false),
+				},
+				"some_binary": {
+					B: []byte("GHI"),
+				},
+			},
+		},
+	},
+	{
+		"pk": {
+			S: aws.String("Partition2"),
+		},
+		"sk": {
+			N: aws.String("1"),
+		},
+		"some_map": {
+			M: map[string]*dynamodb.AttributeValue{
+				"some_string": {
+					S: aws.String("Hello"),
+				},
+				"some_number": {
+					N: aws.String("1.1"),
+				},
+				"some_bool": {
+					BOOL: aws.Bool(true),
+				},
+				"some_binary": {
+					B: []byte("ABC"),
+				},
+			},
+		},
+	},
+	{
+		"pk": {
+			S: aws.String("Partition2"),
+		},
+		"sk": {
+			N: aws.String("2"),
+		},
+		"some_map": {
+			M: map[string]*dynamodb.AttributeValue{
+				"some_string": {
+					S: aws.String("こんにちは"),
+				},
+				"some_number": {
+					N: aws.String("2.2"),
+				},
+				"some_bool": {
+					BOOL: aws.Bool(false),
+				},
+				"some_binary": {
+					B: []byte("GHI"),
+				},
+			},
+		},
+	},
+}

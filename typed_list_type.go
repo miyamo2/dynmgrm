@@ -49,94 +49,9 @@ func (l *TypedList[T]) Scan(value interface{}) error {
 		dest := new(T)
 		rv := reflect.ValueOf(dest)
 		rt := reflect.TypeOf(*dest)
-		for i := 0; i < rt.NumField(); i++ {
-			tf := rt.Field(i)
-			vf := rv.Elem().Field(i)
-			name := getDBNameFromStructField(tf)
-			a, ok := mv[name]
-			if !ok {
-				continue
-			}
-			switch vf.Interface().(type) {
-			case string:
-				str, ok := a.(string)
-				if !ok {
-					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
-				}
-				vf.SetString(str)
-				continue
-			case int:
-				f64, ok := a.(float64)
-				if !ok {
-					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
-				}
-				vf.Set(reflect.ValueOf(int(f64)))
-				continue
-			case bool:
-				b, ok := a.(bool)
-				if !ok {
-					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
-				}
-				vf.SetBool(b)
-				continue
-			case float64:
-				f64, ok := a.(float64)
-				if !ok {
-					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
-				}
-				vf.SetFloat(f64)
-				continue
-			case []byte:
-				b, ok := a.([]byte)
-				if !ok {
-					return fmt.Errorf("incompatible %T and %T", vf.Interface(), a)
-				}
-				vf.SetBytes(b)
-			case *string:
-				str, ok := a.(string)
-				if !ok {
-					break
-				}
-				vf.Set(reflect.ValueOf(&str))
-				continue
-			case *int:
-				f64, ok := a.(float64)
-				if !ok {
-					break
-				}
-				i := int(f64)
-				vf.Set(reflect.ValueOf(&i))
-				continue
-			case *bool:
-				b, ok := a.(bool)
-				if !ok {
-					break
-				}
-				vf.Set(reflect.ValueOf(&b))
-				continue
-			case *float64:
-				f64, ok := a.(float64)
-				if !ok {
-					break
-				}
-				vf.Set(reflect.ValueOf(&f64))
-				continue
-			case *[]byte:
-				b, ok := a.([]byte)
-				if !ok {
-					break
-				}
-				vf.Set(reflect.ValueOf(&b))
-			}
-			if !vf.CanAddr() {
-				continue
-			}
-			switch ptr := vf.Addr().Interface().(type) {
-			case sql.Scanner:
-				if err := ptr.Scan(a); err != nil {
-					return err
-				}
-			}
+		err := assignMapValueToReflectValue(rt, rv, mv)
+		if err != nil {
+			return err
 		}
 		*l = append(*l, *dest)
 	}

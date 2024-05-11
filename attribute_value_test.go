@@ -139,7 +139,7 @@ func Test_toDocumentAttributeValue_StringSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberSS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/float-sets": {
@@ -148,7 +148,7 @@ func Test_toDocumentAttributeValue_StringSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberSS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/byte-sets": {
@@ -157,7 +157,7 @@ func Test_toDocumentAttributeValue_StringSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberSS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/list": {
@@ -166,7 +166,7 @@ func Test_toDocumentAttributeValue_StringSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberSS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/map": {
@@ -175,7 +175,7 @@ func Test_toDocumentAttributeValue_StringSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberSS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 	}
@@ -240,7 +240,7 @@ func Test_toDocumentAttributeValue_NumberSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberNS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/byte-sets": {
@@ -249,7 +249,7 @@ func Test_toDocumentAttributeValue_NumberSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberNS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/list": {
@@ -258,7 +258,7 @@ func Test_toDocumentAttributeValue_NumberSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberNS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/map": {
@@ -267,7 +267,7 @@ func Test_toDocumentAttributeValue_NumberSet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberNS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 	}
@@ -323,7 +323,7 @@ func Test_toDocumentAttributeValue_BinarySet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberBS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/float-sets": {
@@ -332,7 +332,7 @@ func Test_toDocumentAttributeValue_BinarySet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberBS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"happy-path/string-sets": {
@@ -341,7 +341,7 @@ func Test_toDocumentAttributeValue_BinarySet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberBS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/list": {
@@ -350,7 +350,7 @@ func Test_toDocumentAttributeValue_BinarySet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberBS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/map": {
@@ -359,7 +359,7 @@ func Test_toDocumentAttributeValue_BinarySet(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberBS)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 	}
@@ -421,7 +421,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/int-sets": {
@@ -430,7 +430,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/float-sets": {
@@ -439,7 +439,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"happy-path/string-sets": {
@@ -448,7 +448,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/map": {
@@ -457,7 +457,7 @@ func Test_toDocumentAttributeValue_List(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberL)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 	}
@@ -519,7 +519,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"happy-path/binary-sets": {
@@ -528,7 +528,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/int-sets": {
@@ -537,7 +537,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"unhappy-path/float-sets": {
@@ -546,7 +546,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 		"happy-path/string-sets": {
@@ -555,7 +555,7 @@ func Test_toDocumentAttributeValue_Map(t *testing.T) {
 			},
 			want: want{
 				av:  (*types.AttributeValueMemberM)(nil),
-				err: errValueInCompatible,
+				err: errDocumentAttributeValueIsIncompatible,
 			},
 		},
 	}
