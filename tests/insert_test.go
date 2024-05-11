@@ -276,3 +276,51 @@ func Test_Insert_With_Create_Has_TypedList_Column(t *testing.T) {
 		t.Errorf("mismatch (-want +got)\n%s", diff)
 	}
 }
+
+func Test_Insert_With_Create_Has_NetedStruct_Column(t *testing.T) {
+	db := getGormDB(t)
+
+	data := TestTableWithNested{
+		PK: "Partition4",
+		SK: 1,
+		SomeMap: NestedAttribute{
+			SomeString: "Hello",
+			SomeNumber: 1.1,
+			SomeBool:   true,
+			SomeBinary: []byte("ABC"),
+		},
+	}
+	defer deleteData(t, testTableName, data.PK, data.SK)
+
+	db.Create(data)
+
+	expect := []map[string]*dynamodb.AttributeValue{
+		{
+			"pk": {
+				S: aws.String("Partition4"),
+			},
+			"sk": {
+				N: aws.String("1"),
+			},
+			"some_map": &dynamodb.AttributeValue{
+				M: map[string]*dynamodb.AttributeValue{
+					"some_string": {
+						S: aws.String("Hello"),
+					},
+					"some_number": {
+						N: aws.String("1.1"),
+					},
+					"some_bool": {
+						BOOL: aws.Bool(true),
+					},
+					"some_binary": {
+						B: []byte("ABC"),
+					},
+				}},
+		},
+	}
+	actual := scanData(t, testTableName)
+	if diff := cmp.Diff(expect, actual, setCmpOpts...); diff != "" {
+		t.Errorf("mismatch (-want +got)\n%s", diff)
+	}
+}
