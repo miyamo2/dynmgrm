@@ -251,7 +251,7 @@ func Test_newDynmgrmTag(t *testing.T) {
 		B string `dynmgrm:"sk"`
 		C string `dynmgrm:"gsi-pk:c_d-index"`
 		D string `dynmgrm:"gsi-sk:c_d-index"`
-		E string `dynmgrm:"lsi:e-index"`
+		E string `dynmgrm:"lsi-sk:e-index"`
 		F string `dynmgrm:"non-projective:[c_d-index,e-index]"`
 		G string `dynmgrm:"pk;sk"`
 		H string `dynmgrm:"sk;pk"`
@@ -373,7 +373,7 @@ func Test_newDynmgrmTableDefine(t *testing.T) {
 		B string `dynmgrm:"sk"`
 		C string `dynmgrm:"gsi-pk:c_d-index"`
 		D string `dynmgrm:"gsi-sk:c_d-index"`
-		E string `dynmgrm:"lsi:e-index"`
+		E string `dynmgrm:"lsi-sk:e-index"`
 		F string `dynmgrm:"non-projective:[c_d-index,e-index]"`
 	}
 	type test struct {

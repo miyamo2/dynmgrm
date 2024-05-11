@@ -95,7 +95,7 @@ var (
 type CreateTableATable struct {
 	PK              string `dynmgrm:"pk"`
 	SK              int    `dynmgrm:"sk"`
-	LsiSK           []byte `dynmgrm:"lsi:lsi_sk-index"`
+	LsiSK           []byte `dynmgrm:"lsi-sk:lsi_sk-index"`
 	ProjectiveAttr1 string
 	ProjectiveAttr2 string
 	NonProjective   string `dynmgrm:"non-projective:[lsi_sk-index]"`

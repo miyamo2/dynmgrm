@@ -110,7 +110,7 @@ func newDynmgrmTag(tag reflect.StructTag) dynmgrmTag {
 				Kind: secondaryIndexKindGSI,
 			}
 			res.IndexProperty = append(res.IndexProperty, iprp)
-		case "lsi":
+		case "lsi-sk":
 			iprp := secondaryIndexProperty{
 				Name: kv[1],
 				SK:   true,

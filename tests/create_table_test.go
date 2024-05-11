@@ -84,7 +84,7 @@ func Test_CreateTable(t *testing.T) {
 type CreateTableTestWithLSITable struct {
 	PK            string `dynmgrm:"pk"`
 	SK            int    `dynmgrm:"sk"`
-	Name          string `dynmgrm:"lsi:pk-name-index"`
+	Name          string `dynmgrm:"lsi-sk:pk-name-index"`
 	Projective    string
 	NonProjective string `dynmgrm:"non-projective:[pk-name-index]"`
 }
