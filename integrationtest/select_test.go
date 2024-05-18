@@ -1,4 +1,4 @@
-package tests
+package integrationtest
 
 import (
 	"github.com/google/go-cmp/cmp"

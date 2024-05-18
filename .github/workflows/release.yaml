@@ -61,7 +61,7 @@ jobs:
           aws dynamodb create-table --cli-input-json file://table-def.json --endpoint-url ${{ env.DYNAMODB_ENDPOINT }}
 
       - name: Integration Test
-        working-directory: ./tests
+        working-directory: ./integrationtest
         run: |
           go mod tidy
           go test -v -coverpkg=${{ format('github.com/{0}', github.repository) }} -coverprofile=coverage.out
@@ -70,7 +70,7 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./tests/coverage.out
+          files: ./integrationtest/coverage.out
           fail_ci_if_error: false
           verbose: true
           flags: integration
