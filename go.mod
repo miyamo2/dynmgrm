@@ -3,7 +3,7 @@ module github.com/miyamo2/dynmgrm
 go 1.21
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.27.0
+	github.com/aws/aws-sdk-go-v2 v1.27.2
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.13.20
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.32.6
 	github.com/btnguyen2k/godynamo v1.3.0
