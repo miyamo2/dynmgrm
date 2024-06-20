@@ -2,6 +2,7 @@ package dynmgrm
 
 import (
 	"errors"
+	"fmt"
 	"github.com/google/go-cmp/cmp"
 	"github.com/miyamo2/dynmgrm/internal/mocks"
 	"go.uber.org/mock/gomock"
@@ -96,9 +97,11 @@ type CreateTableATable struct {
 	PK              string `dynmgrm:"pk"`
 	SK              int    `dynmgrm:"sk"`
 	LsiSK           []byte `dynmgrm:"lsi-sk:lsi_sk-index"`
+	GsiPK           string `dynmgrm:"gsi-pk:gsi_pk-gsi_sk-index;non-projective:[lsi_sk-index]"`
+	GsiSK           string `dynmgrm:"gsi-sk:gsi_pk-gsi_sk-index;non-projective:[lsi_sk-index]"`
 	ProjectiveAttr1 string
 	ProjectiveAttr2 string
-	NonProjective   string `dynmgrm:"non-projective:[lsi_sk-index]"`
+	NonProjective   string `dynmgrm:"non-projective:[lsi_sk-index,gsi_pk-gsi_sk-index]"`
 }
 
 func (t CreateTableATable) TableClass() TableClass {
@@ -242,5 +245,97 @@ func mockBaseMigratorCurrentTableWithTimes(t *testing.T, times int) func(*mockBa
 	t.Helper()
 	return func(prop *mockBaseMigratorCurrentTableProp) {
 		prop.times = times
+	}
+}
+
+func TestMigrator_CreateIndex(t *testing.T) {
+	type args struct {
+		dest interface{}
+		name string
+	}
+	type test struct {
+		args              args
+		mockDBExecOptions []func(*mockDBExecProp)
+		want              error
+	}
+	errDBExec := errors.New("db exec error")
+	tests := map[string]test{
+		"happy_path/pointer": {
+			args: args{&CreateTableATable{}, ""},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH wcu=10, WITH rcu=10, WITH projection=lsi_sk,projective_attr_1,projective_attr_2,pk,sk`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{}),
+			},
+		},
+		"happy_path/physical": {
+			args: args{&CreateTableATable{}, ""},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH wcu=10, WITH rcu=10, WITH projection=lsi_sk,projective_attr_1,projective_attr_2,pk,sk`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{}),
+			},
+		},
+		"happy_path/with_name": {
+			args: args{&CreateTableATable{}, "gsi_pk-gsi_sk-index"},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH wcu=10, WITH rcu=10, WITH projection=lsi_sk,projective_attr_1,projective_attr_2,pk,sk`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{}),
+			},
+		},
+		"unhappy_path/db_exec_returns_error": {
+			args: args{&CreateTableATable{}, ""},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH wcu=10, WITH rcu=10, WITH projection=lsi_sk,projective_attr_1,projective_attr_2,pk,sk`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{Error: errDBExec}),
+			},
+			want: errDBExec,
+		},
+		"unhappy_path/with-undefined-gsi-name": {
+			args: args{&CreateTableATable{}, "test"},
+			want: fmt.Errorf("gsi '%s' is not defined in %T", `test`, &CreateTableATable{}),
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mdb := mocks.NewMockDBForMigrator(ctrl)
+			mbm := mocks.NewMockBaseMigrator(ctrl)
+
+			ep := mockDBExecProp{}
+			for _, o := range tt.mockDBExecOptions {
+				o(&ep)
+			}
+			var dbExecCall *gomock.Call
+			if ep.args != nil {
+				dbExecCall = mdb.EXPECT().Exec(ep.args.sql, ep.args.values...)
+			} else {
+				dbExecCall = mdb.EXPECT().Exec(gomock.Any(), gomock.Any())
+			}
+			dbExecCall.Return(ep.result).Times(ep.times)
+			sut := Migrator{
+				db:   mdb,
+				base: mbm,
+			}
+			err := sut.CreateIndex(tt.args.dest, tt.args.name)
+			if !errors.Is(err, tt.want) && err.Error() != tt.want.Error() {
+				t.Errorf("CreateIndex() error = %v, want %v", err, tt.want)
+			}
+		})
 	}
 }
