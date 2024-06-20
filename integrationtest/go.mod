@@ -1,4 +1,4 @@
-module github.com/miyamo2/dynmgrm/tests
+module github.com/miyamo2/dynmgrm/integrationtest
 
 go 1.21
 
