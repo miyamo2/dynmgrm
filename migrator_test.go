@@ -306,7 +306,7 @@ func TestMigrator_CreateIndex(t *testing.T) {
 			},
 		},
 		"happy_path/physical": {
-			args: args{&CreateIndexTable{}, ""},
+			args: args{CreateIndexTable{}, ""},
 			mockDBExecOptions: []func(*mockDBExecProp){
 				mockDBForMigratorExecWithArgs(t,
 					mockDBExecArgs{
