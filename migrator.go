@@ -3,6 +3,7 @@
 package dynmgrm
 
 import (
+	"errors"
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -11,6 +12,8 @@ import (
 	"slices"
 	"strings"
 )
+
+var ErrDynmgrmAreNotSupported = errors.New("dynmgrm are not supported this operation")
 
 // CapacityUnitsSpecifier could specify WCUs and RCU
 type CapacityUnitsSpecifier interface {
