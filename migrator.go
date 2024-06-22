@@ -234,68 +234,73 @@ func (m Migrator) HasConstraint(dst interface{}, name string) bool {
 }
 
 func (m Migrator) CreateIndex(dst interface{}, name string) error {
-	var (
-		wcu, rcu int
-	)
+	return m.base.RunWithValue(dst, func(stmt *gorm.Statement) (err error) {
+		var (
+			wcu, rcu int
+		)
 
-	if ws, ok := dst.(CapacityUnitsSpecifier); ok {
-		wcu = ws.WCU()
-		rcu = ws.RCU()
-	}
-
-	rv := reflect.ValueOf(dst)
-	var rt reflect.Type
-	switch rv.Kind() {
-	case reflect.Pointer:
-		rt = reflect.TypeOf(reflect.ValueOf(dst).Elem().Interface())
-	default:
-		rt = reflect.TypeOf(dst)
-	}
-
-	td := newDynmgrmTableDefine(rt)
-	if name != "" {
-		v, ok := td.GSI[name]
-		if !ok {
-			return fmt.Errorf("gsi '%s' is not defined in %T", name, dst)
-		}
-		td.GSI = map[string]*dynmgrmSecondaryIndexDefine{name: v}
-	}
-	for k, v := range td.GSI {
-		// `CREATE GSI` are proprietary PartiQL syntax by btnguyen2k/godynamo
-		// This is why place holder/bind variables are not used.
-		ddlBuilder := strings.Builder{}
-		ddlBuilder.WriteString(fmt.Sprintf(`CREATE GSI IF NOT EXISTS %s `, k))
-		ddlBuilder.WriteString(fmt.Sprintf(`WITH PK=%s:%s`, v.PK.Name, v.PK.DataType))
-		if skn := v.SK.Name; skn != "" {
-			ddlBuilder.WriteString(fmt.Sprintf(`, WITH SK=%s:%s`, skn, v.SK.DataType))
-		}
-		opts := make([]string, 0, 3)
-		if wcu > 0 {
-			opts = append(opts, fmt.Sprintf(`WITH wcu=%d`, wcu))
-		}
-		if rcu > 0 {
-			opts = append(opts, fmt.Sprintf(`WITH rcu=%d`, rcu))
+		if ws, ok := dst.(CapacityUnitsSpecifier); ok {
+			wcu = ws.WCU()
+			rcu = ws.RCU()
 		}
 
-		projective := slices.DeleteFunc(append(td.NonKeyAttr, td.PK.Name, td.SK.Name), func(s string) bool {
-			if s == v.PK.Name || s == v.SK.Name {
-				return true
+		rv := reflect.ValueOf(dst)
+		var rt reflect.Type
+		switch rv.Kind() {
+		case reflect.Pointer:
+			rt = reflect.TypeOf(reflect.ValueOf(dst).Elem().Interface())
+		default:
+			rt = reflect.TypeOf(dst)
+		}
+
+		td := newDynmgrmTableDefine(rt)
+		if name != "" {
+			v, ok := td.GSI[name]
+			if !ok {
+				return fmt.Errorf("gsi '%s' is not defined in %T", name, dst)
 			}
-			return slices.Contains(v.NonProjectiveAttrs, s)
-		})
-		if len(projective) > 0 {
-			opts = append(opts, fmt.Sprintf(`WITH projection=%s`, strings.Join(projective, ",")))
+			td.GSI = map[string]*dynmgrmSecondaryIndexDefine{name: v}
 		}
+		for k, v := range td.GSI {
+			// `CREATE GSI` are proprietary PartiQL syntax by btnguyen2k/godynamo
+			// This is why place holder/bind variables are not used.
+			ddlBuilder := strings.Builder{}
+			ddlBuilder.WriteString(fmt.Sprintf(`CREATE GSI IF NOT EXISTS %s ON %s `, k, m.currentTable(stmt)))
+			ddlBuilder.WriteString(fmt.Sprintf(`WITH PK=%s:%s`, v.PK.Name, v.PK.DataType))
+			if skn := v.SK.Name; skn != "" {
+				ddlBuilder.WriteString(fmt.Sprintf(`, WITH SK=%s:%s`, skn, v.SK.DataType))
+			}
+			opts := make([]string, 0, 3)
+			if wcu > 0 {
+				opts = append(opts, fmt.Sprintf(`WITH wcu=%d`, wcu))
+			}
+			if rcu > 0 {
+				opts = append(opts, fmt.Sprintf(`WITH rcu=%d`, rcu))
+			}
 
-		for _, o := range opts {
-			ddlBuilder.WriteString(", ")
-			ddlBuilder.WriteString(o)
+			projective := make([]string, 0)
+			if len(v.NonProjectiveAttrs) != 0 {
+				projective = slices.DeleteFunc(append(td.NonKeyAttr, td.PK.Name, td.SK.Name), func(s string) bool {
+					if s == v.PK.Name || s == v.SK.Name {
+						return true
+					}
+					return slices.Contains(v.NonProjectiveAttrs, s)
+				})
+			}
+			if len(projective) > 0 {
+				opts = append(opts, fmt.Sprintf(`WITH projection=%s`, strings.Join(projective, ",")))
+			}
+
+			for _, o := range opts {
+				ddlBuilder.WriteString(", ")
+				ddlBuilder.WriteString(o)
+			}
+			if err := m.db.Exec(ddlBuilder.String()).Error; err != nil {
+				return err
+			}
 		}
-		if err := m.db.Exec(ddlBuilder.String()).Error; err != nil {
-			return err
-		}
-	}
-	return nil
+		return nil
+	})
 }
 
 func (m Migrator) DropIndex(dst interface{}, name string) error {
