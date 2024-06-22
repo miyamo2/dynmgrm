@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0 - 2024-06-22
+
+✨ New Features
+
+- GSI creation by `Migrator.CreateIndex` is now supported
+
 ## 0.7.0 - 2024-05-11
 
 ✨ New Features

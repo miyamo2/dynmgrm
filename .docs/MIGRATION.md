@@ -23,3 +23,58 @@ type User struct {
 | gsi-sk         | :\<index name\>      | field will be the SK attribute of the specified Global Secondary Index.<br/>It works with `Migrator.CreateIndex()` |
 | lsi-sk         | :\<index name\>      | field will be the SK attribute of the specified Local Secondary Index.                                             |
 | non-projective | :[(,)\<index name\>] | exclude from projection at enumerated Index.                                                                       |
+
+
+## Create Table
+
+```go
+package main
+
+import (
+    "github.com/miyamo2/dynmgrm"
+    "gorm.io/gorm"
+)
+
+type User struct {
+    ProjectID string `gorm:"primaryKey dynmgrm:"pk"`
+    ID        string `gorm:"primaryKey dynmgrm:"sk;gsi-pk:id_name-index"`
+    Name      string `dynmgrm:"gsi-sk:id_name-index;lsi-sk:name-index"`
+    Note      string `dynmgrm:"non-projective:[id_name-index,name-index]"`
+}
+
+func main() {
+    db, err := gorm.Open(dynmgrm.New())
+    if err != nil {
+        panic(err)
+    }
+
+    db.Migrator().CreateTable(&User{})
+}
+```
+
+## Create GSI
+
+```go
+package main
+
+import (
+    "github.com/miyamo2/dynmgrm"
+    "gorm.io/gorm"
+)
+
+type User struct {
+    ProjectID string `gorm:"primaryKey dynmgrm:"pk"`
+    ID        string `gorm:"primaryKey dynmgrm:"sk;gsi-pk:id_name-index"`
+    Name      string `dynmgrm:"gsi-sk:id_name-index;lsi-sk:name-index"`
+    Note      string `dynmgrm:"non-projective:[id_name-index,name-index]"`
+}
+
+func main() {
+    db, err := gorm.Open(dynmgrm.New())
+    if err != nil {
+        panic(err)
+    }
+
+    db.Migrator().CreateIndex(&User{}, "")
+}
+```
