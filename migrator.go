@@ -279,7 +279,9 @@ func (m Migrator) CreateIndex(dst interface{}, name string) error {
 			}
 
 			projective := make([]string, 0)
-			if len(v.NonProjectiveAttrs) != 0 {
+			if len(v.NonProjectiveAttrs) == 0 {
+				projective = append(projective, "*")
+			} else {
 				projective = slices.DeleteFunc(append(td.NonKeyAttr, td.PK.Name, td.SK.Name), func(s string) bool {
 					if s == v.PK.Name || s == v.SK.Name {
 						return true
