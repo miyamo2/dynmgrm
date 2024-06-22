@@ -226,8 +226,9 @@ func newDynmgrmTableDefine(modelMeta reflect.Type) dynmgrmTableDefine {
 				continue
 			}
 		}
-		for _, npan := range *list {
-			index.NonProjectiveAttrs = append(index.NonProjectiveAttrs, npan)
+		// list will never be nil
+		if pl := *list; len(pl) > 0 {
+			index.NonProjectiveAttrs = append(index.NonProjectiveAttrs, pl...)
 		}
 	}
 	return res
