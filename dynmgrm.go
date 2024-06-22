@@ -5,7 +5,9 @@ package dynmgrm
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	"github.com/btnguyen2k/godynamo"
 	"gorm.io/gorm/migrator"
 	"strconv"
 	"strings"
@@ -277,4 +279,40 @@ func (dialector Dialector) Migrator(db *gorm.DB) gorm.Migrator {
 			},
 		},
 	}
+}
+
+// Translate it will translate the error to native gorm errors.
+func (dialector Dialector) Translate(err error) error {
+	switch {
+	case errors.Is(err, godynamo.ErrTxCommitting),
+		errors.Is(err, godynamo.ErrTxRollingBack),
+		errors.Is(err, godynamo.ErrInTx),
+		errors.Is(err, godynamo.ErrInvalidTxStage),
+		errors.Is(err, godynamo.ErrNoTx):
+		return gorm.ErrInvalidTransaction
+	}
+	return err
+}
+
+type dbOpener struct {
+	dsn        string
+	driverName string
+}
+
+func (o dbOpener) DSN() string {
+	return o.dsn
+}
+
+func (o dbOpener) DriverName() string {
+	return o.driverName
+}
+
+func (o dbOpener) Apply() (*sql.DB, error) {
+	return sql.Open(o.DriverName(), o.DSN())
+}
+
+type callbacksRegisterer struct{}
+
+func (c *callbacksRegisterer) Register(db *gorm.DB, config *callbacks.Config) {
+	callbacks.RegisterDefaultCallbacks(db, config)
 }
