@@ -237,6 +237,31 @@ func getTable(t *testing.T, tableName string) *dynamodb.DescribeTableOutput {
 	return output
 }
 
+func getTableWithRetry(t *testing.T, tableName string, retriedCount int) *dynamodb.DescribeTableOutput {
+	t.Helper()
+	if retriedCount > 5 {
+		return nil
+	}
+	input := &dynamodb.DescribeTableInput{
+		TableName: aws.String(tableName),
+	}
+	output, err := dynamoDBClient.DescribeTable(input)
+	if err != nil || *output.Table.TableStatus != "ACTIVE" {
+		retriedCount++
+		sleepSec := time.Second
+		for i := 0; i < retriedCount; i++ {
+			sleepSec *= 2
+		}
+		time.Sleep(sleepSec)
+		output = getTableWithRetry(t, tableName, retriedCount)
+	}
+	if *output.Table.TableStatus != "ACTIVE" {
+		t.Fatalf("table status is not active")
+		return nil
+	}
+	return output
+}
+
 func deleteTable(t *testing.T, tableName string, retriedCount int) {
 	t.Helper()
 	if retriedCount > 4 {
@@ -249,6 +274,56 @@ func deleteTable(t *testing.T, tableName string, retriedCount int) {
 	if err != nil {
 		if retriedCount > 2 {
 			t.Fatalf("failed to delete table: %s", err)
+		}
+		retriedCount++
+		sleepSec := time.Second
+		for i := 0; i < retriedCount; i++ {
+			sleepSec *= 2
+		}
+		time.Sleep(sleepSec)
+		deleteTable(t, tableName, retriedCount)
+	}
+}
+
+func createTable(t *testing.T, tableName string, pk, sk dynamodb.AttributeDefinition, mode int, retriedCount int) {
+	t.Helper()
+	if retriedCount > 4 {
+		return
+	}
+	input := &dynamodb.CreateTableInput{
+		TableName: aws.String(tableName),
+		AttributeDefinitions: []*dynamodb.AttributeDefinition{
+			&pk, &sk,
+		},
+		KeySchema: []*dynamodb.KeySchemaElement{
+			{
+				AttributeName: pk.AttributeName,
+				KeyType:       aws.String("HASH"),
+			},
+			{
+				AttributeName: sk.AttributeName,
+				KeyType:       aws.String("RANGE"),
+			},
+		},
+	}
+	switch mode {
+	case 0:
+		input.BillingMode = aws.String("PROVISIONED")
+		input.ProvisionedThroughput = &dynamodb.ProvisionedThroughput{
+			ReadCapacityUnits:  aws.Int64(1),
+			WriteCapacityUnits: aws.Int64(1),
+		}
+	case 1:
+		input.BillingMode = aws.String("PAY_PER_REQUEST")
+		input.OnDemandThroughput = &dynamodb.OnDemandThroughput{
+			MaxReadRequestUnits:  aws.Int64(10),
+			MaxWriteRequestUnits: aws.Int64(10),
+		}
+	}
+	_, err := dynamoDBClient.CreateTable(input)
+	if err != nil {
+		if retriedCount > 2 {
+			t.Fatalf("failed to create table: %s", err)
 		}
 		retriedCount++
 		sleepSec := time.Second

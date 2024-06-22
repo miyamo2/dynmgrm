@@ -152,6 +152,8 @@ func newDynmgrmTableDefine(modelMeta reflect.Type) dynmgrmTableDefine {
 		GSI:        make(map[string]*dynmgrmSecondaryIndexDefine),
 		LSI:        make(map[string]*dynmgrmSecondaryIndexDefine),
 	}
+
+	nonProjectiveAttrsMap := make(map[string]*[]string)
 	for i := 0; i < modelMeta.NumField(); i++ {
 		tf := modelMeta.Field(i)
 		dTag := newDynmgrmTag(tf.Tag)
@@ -195,23 +197,38 @@ func newDynmgrmTableDefine(modelMeta reflect.Type) dynmgrmTableDefine {
 					}
 				}
 			case secondaryIndexKindLSI:
-				res.LSI[ip.Name] = &dynmgrmSecondaryIndexDefine{
-					SK: dynmgrmKeyDefine{
-						Name:     cn,
-						DataType: extractDBTypeFromStructField(tf),
-					}}
+				sid, ok := res.LSI[ip.Name]
+				if !ok {
+					sid = &dynmgrmSecondaryIndexDefine{}
+					res.LSI[ip.Name] = sid
+				}
+				sid.SK = dynmgrmKeyDefine{
+					Name:     cn,
+					DataType: extractDBTypeFromStructField(tf),
+				}
 			}
 		}
 		for _, np := range dTag.NonProjective {
-			index, ok := res.LSI[np]
-			if ok {
-				index.NonProjectiveAttrs = append(index.NonProjectiveAttrs, cn)
+			list, ok := nonProjectiveAttrsMap[np]
+			if !ok {
+				physicalList := make([]string, 0)
+				list = &physicalList
+				nonProjectiveAttrsMap[np] = list
+			}
+			*list = append(*list, cn)
+		}
+	}
+	for idxn, list := range nonProjectiveAttrsMap {
+		index, ok := res.LSI[idxn]
+		if !ok {
+			index, ok = res.GSI[idxn]
+			if !ok {
 				continue
 			}
-			index, ok = res.GSI[np]
-			if ok {
-				index.NonProjectiveAttrs = append(index.NonProjectiveAttrs, cn)
-			}
+		}
+		// list will never be nil
+		if pl := *list; len(pl) > 0 {
+			index.NonProjectiveAttrs = append(index.NonProjectiveAttrs, pl...)
 		}
 	}
 	return res

@@ -2,6 +2,7 @@ package dynmgrm
 
 import (
 	"errors"
+	"fmt"
 	"github.com/google/go-cmp/cmp"
 	"github.com/miyamo2/dynmgrm/internal/mocks"
 	"go.uber.org/mock/gomock"
@@ -98,7 +99,7 @@ type CreateTableATable struct {
 	LsiSK           []byte `dynmgrm:"lsi-sk:lsi_sk-index"`
 	ProjectiveAttr1 string
 	ProjectiveAttr2 string
-	NonProjective   string `dynmgrm:"non-projective:[lsi_sk-index]"`
+	NonProjective   string `dynmgrm:"non-projective:[lsi_sk-index,gsi_pk-gsi_sk-index]"`
 }
 
 func (t CreateTableATable) TableClass() TableClass {
@@ -242,5 +243,191 @@ func mockBaseMigratorCurrentTableWithTimes(t *testing.T, times int) func(*mockBa
 	t.Helper()
 	return func(prop *mockBaseMigratorCurrentTableProp) {
 		prop.times = times
+	}
+}
+
+type CreateIndexTable struct {
+	PK    string `dynmgrm:"pk"`
+	SK    int    `dynmgrm:"sk"`
+	GsiPK string `dynmgrm:"gsi-pk:gsi_pk-gsi_sk-index"`
+	GsiSK string `dynmgrm:"gsi-sk:gsi_pk-gsi_sk-index"`
+}
+
+type CreateIndexWithNonProjectiveTable struct {
+	PK                string `dynmgrm:"pk"`
+	SK                int    `dynmgrm:"sk"`
+	GsiPK             string `dynmgrm:"gsi-pk:gsi_pk-gsi_sk-index;non-projective:[lsi_sk-index]"`
+	GsiSK             string `dynmgrm:"gsi-sk:gsi_pk-gsi_sk-index;non-projective:[lsi_sk-index]"`
+	ProjectiveAttr    string
+	NonProjectiveAttr string `dynmgrm:"non-projective:[gsi_pk-gsi_sk-index]"`
+}
+
+type CreateIndexWithCapacity struct {
+	PK    string `dynmgrm:"pk"`
+	SK    int    `dynmgrm:"sk"`
+	GsiPK string `dynmgrm:"gsi-pk:gsi_pk-gsi_sk-index"`
+	GsiSK string `dynmgrm:"gsi-sk:gsi_pk-gsi_sk-index"`
+}
+
+func (t CreateIndexWithCapacity) WCU() int {
+	return 10
+}
+
+func (t CreateIndexWithCapacity) RCU() int {
+	return 10
+}
+
+func TestMigrator_CreateIndex(t *testing.T) {
+	type args struct {
+		dest interface{}
+		name string
+	}
+	type test struct {
+		args                                args
+		mockDBExecOptions                   []func(*mockDBExecProp)
+		mockBaseMigratorCurrentTableOptions []func(*mockBaseMigratorCurrentTableProp)
+		want                                error
+	}
+	errDBExec := errors.New("db exec error")
+	tests := map[string]test{
+		"happy_path/pointer": {
+			args: args{&CreateIndexTable{}, ""},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index ON create_index_tables WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH projection=*`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{}),
+			},
+			mockBaseMigratorCurrentTableOptions: []func(*mockBaseMigratorCurrentTableProp){
+				mockBaseMigratorCurrentTableWithResult(t, clause.Table{Name: "create_index_tables"}),
+				mockBaseMigratorCurrentTableWithTimes(t, 1),
+			},
+		},
+		"happy_path/physical": {
+			args: args{CreateIndexTable{}, ""},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index ON create_index_tables WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH projection=*`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{}),
+			},
+			mockBaseMigratorCurrentTableOptions: []func(*mockBaseMigratorCurrentTableProp){
+				mockBaseMigratorCurrentTableWithResult(t, clause.Table{Name: "create_index_tables"}),
+				mockBaseMigratorCurrentTableWithTimes(t, 1),
+			},
+		},
+		"happy_path/with_name": {
+			args: args{&CreateIndexTable{}, "gsi_pk-gsi_sk-index"},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index ON create_index_tables WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH projection=*`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{}),
+			},
+			mockBaseMigratorCurrentTableOptions: []func(*mockBaseMigratorCurrentTableProp){
+				mockBaseMigratorCurrentTableWithResult(t, clause.Table{Name: "create_index_tables"}),
+				mockBaseMigratorCurrentTableWithTimes(t, 1),
+			},
+		},
+		"happy_path/with_non-projective": {
+			args: args{&CreateIndexWithNonProjectiveTable{}, ""},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index ON create_index_with_non_projective_tables WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH projection=projective_attr,pk,sk`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{}),
+			},
+			mockBaseMigratorCurrentTableOptions: []func(*mockBaseMigratorCurrentTableProp){
+				mockBaseMigratorCurrentTableWithResult(t, clause.Table{Name: "create_index_with_non_projective_tables"}),
+				mockBaseMigratorCurrentTableWithTimes(t, 1),
+			},
+		},
+		"happy_path/with_capacity_unit": {
+			args: args{&CreateIndexWithCapacity{}, ""},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index ON create_index_with_capacity_tables WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH wcu=10, WITH rcu=10, WITH projection=*`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{}),
+			},
+			mockBaseMigratorCurrentTableOptions: []func(*mockBaseMigratorCurrentTableProp){
+				mockBaseMigratorCurrentTableWithResult(t, clause.Table{Name: "create_index_with_capacity_tables"}),
+				mockBaseMigratorCurrentTableWithTimes(t, 1),
+			},
+		},
+		"unhappy_path/db_exec_returns_error": {
+			args: args{&CreateIndexTable{}, ""},
+			mockDBExecOptions: []func(*mockDBExecProp){
+				mockDBForMigratorExecWithArgs(t,
+					mockDBExecArgs{
+						`CREATE GSI IF NOT EXISTS gsi_pk-gsi_sk-index ON create_index_tables WITH PK=gsi_pk:string, WITH SK=gsi_sk:string, WITH projection=*`,
+						nil}),
+				mockDBForMigratorExecWithTimes(t, 1),
+				mockDBForMigratorExecWithResult(t, &gorm.DB{Error: errDBExec}),
+			},
+			mockBaseMigratorCurrentTableOptions: []func(*mockBaseMigratorCurrentTableProp){
+				mockBaseMigratorCurrentTableWithResult(t, clause.Table{Name: "create_index_tables"}),
+				mockBaseMigratorCurrentTableWithTimes(t, 1),
+			},
+			want: errDBExec,
+		},
+		"unhappy_path/with-undefined-gsi-name": {
+			args: args{&CreateIndexTable{}, "test"},
+			want: fmt.Errorf("gsi '%s' is not defined in %T", `test`, &CreateIndexTable{}),
+		},
+	}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mdb := mocks.NewMockDBForMigrator(ctrl)
+			mbm := mocks.NewMockBaseMigrator(ctrl)
+			mbm.EXPECT().RunWithValue(gomock.Any(), gomock.Any()).DoAndReturn(
+				func(model interface{}, f func(stmt *gorm.Statement) error) error {
+					return f(nil)
+				},
+			).Times(1)
+
+			ctp := mockBaseMigratorCurrentTableProp{}
+			for _, o := range tt.mockBaseMigratorCurrentTableOptions {
+				o(&ctp)
+			}
+			mbmxp := mbm.EXPECT().CurrentTable(gomock.Any())
+			if cmp.Diff(ctp.result, clause.Table{}) != "" {
+				mbmxp = mbmxp.Return(ctp.result)
+			}
+			mbmxp.Times(ctp.times)
+
+			ep := mockDBExecProp{}
+			for _, o := range tt.mockDBExecOptions {
+				o(&ep)
+			}
+
+			var dbExecCall *gomock.Call
+			if ep.args != nil {
+				dbExecCall = mdb.EXPECT().Exec(ep.args.sql, ep.args.values...)
+			} else {
+				dbExecCall = mdb.EXPECT().Exec(gomock.Any(), gomock.Any())
+			}
+			dbExecCall.Return(ep.result).Times(ep.times)
+			sut := Migrator{
+				db:   mdb,
+				base: mbm,
+			}
+			err := sut.CreateIndex(tt.args.dest, tt.args.name)
+			if !errors.Is(err, tt.want) && err.Error() != tt.want.Error() {
+				t.Errorf("CreateIndex() error = %v, want %v", err, tt.want)
+			}
+		})
 	}
 }
