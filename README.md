@@ -32,7 +32,7 @@ dynmgrm is the driver to issue PartiQL Statement to DynamoDB with GORM⚡
   - [ ] With `REMOVE` clause
 - [x] Delete
 - [x] Create Table ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
-- [ ] Create Index ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
+- [x] Create GSI ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
 
 ### Supports the following GORM features
 
@@ -77,7 +77,7 @@ dynmgrm is the driver to issue PartiQL Statement to DynamoDB with GORM⚡
   - [ ] `GetTables`
   - [ ] `HasColumn`
   - [ ] `ColumnTypes`
-  - [ ] `CreateIndex`
+  - [x] `CreateIndex`
   - [ ] `DropIndex`
   - [ ] `HasIndex`
 
