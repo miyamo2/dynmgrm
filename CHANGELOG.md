@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1 - 2024-06-23
+
+Deprecated unsupported methods of `Migrator`
+
 ## 0.8.0 - 2024-06-22
 
 ✨ New Features
