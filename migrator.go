@@ -173,6 +173,7 @@ func (m Migrator) HasTable(dst interface{}) bool {
 }
 
 // RenameTable See: [gorm.migrator.Migrator.RenameTable]
+//
 // Deprecated: DynamoDB does not possibly rename an existing table, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.RenameTable]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.RenameTable
@@ -189,6 +190,7 @@ func (m Migrator) TableType(dst interface{}) (gorm.TableType, error) {
 }
 
 // AddColumn See: [gorm.migrator.Migrator.AddColumn]
+//
 // Deprecated: DynamoDB are schema less, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.AlterColumn]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.AddColumn
@@ -197,6 +199,7 @@ func (m Migrator) AddColumn(dst interface{}, field string) error {
 }
 
 // DropColumn See: [gorm.migrator.Migrator.DropColumn]
+//
 // Deprecated: DynamoDB are schema less, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.DropColumn]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.DropColumn
@@ -205,6 +208,7 @@ func (m Migrator) DropColumn(dst interface{}, field string) error {
 }
 
 // AlterColumn See: [gorm.migrator.Migrator.AlterColumn]
+//
 // Deprecated: DynamoDB are schema less, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.AlterColumn]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.AlterColumn
@@ -213,6 +217,7 @@ func (m Migrator) AlterColumn(dst interface{}, field string) error {
 }
 
 // MigrateColumn See: [gorm.migrator.Migrator.MigrateColumn]
+//
 // Deprecated: DynamoDB are schema less, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.MigrateColumn]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.MigrateColumn
@@ -221,6 +226,7 @@ func (m Migrator) MigrateColumn(dst interface{}, field *schema.Field, columnType
 }
 
 // MigrateColumnUnique See: [gorm.migrator.Migrator.MigrateColumnUnique]
+//
 // Deprecated: DynamoDB are schema less, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.MigrateColumnUnique]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.MigrateColumnUnique
@@ -233,6 +239,7 @@ func (m Migrator) HasColumn(dst interface{}, field string) bool {
 }
 
 // RenameColumn See: [gorm.migrator.Migrator.RenameColumn]
+//
 // Deprecated: DynamoDB are schema less, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.RenameColumn]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.RenameColumn
@@ -245,6 +252,7 @@ func (m Migrator) ColumnTypes(dst interface{}) ([]gorm.ColumnType, error) {
 }
 
 // CreateView See: [gorm.migrator.Migrator.CreateView]
+//
 // Deprecated: DynamoDB does not provide View feature, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.CreateView]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.CreateView
@@ -253,6 +261,7 @@ func (m Migrator) CreateView(name string, option gorm.ViewOption) error {
 }
 
 // DropView See: [gorm.migrator.Migrator.DropView]
+//
 // Deprecated: DynamoDB does not provide View feature, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.DropView]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.DropView
@@ -261,6 +270,7 @@ func (m Migrator) DropView(name string) error {
 }
 
 // CreateConstraint See: [gorm.migrator.Migrator.CreateConstraint]
+//
 // Deprecated: DynamoDB does not provide constraint feature, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.CreateConstraint]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.CreateConstraint
@@ -269,6 +279,7 @@ func (m Migrator) CreateConstraint(dst interface{}, name string) error {
 }
 
 // DropConstraint See: [gorm.migrator.Migrator.DropConstraint]
+//
 // Deprecated: DynamoDB does not provide constraint feature, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.DropConstraint]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.DropConstraint
@@ -277,6 +288,7 @@ func (m Migrator) DropConstraint(dst interface{}, name string) error {
 }
 
 // HasConstraint See: [gorm.migrator.Migrator.HasConstraint]
+//
 // Deprecated: DynamoDB does not provide constraint feature, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.HasConstraint]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.HasConstraint
@@ -365,6 +377,7 @@ func (m Migrator) HasIndex(dst interface{}, name string) bool {
 }
 
 // RenameIndex See: [gorm.migrator.Migrator.RenameIndex]
+//
 // Deprecated: DynamoDB does not possibly rename an existing index, so this operation is not supported.
 //
 // [gorm.migrator.Migrator.RenameIndex]: https://pkg.go.dev/gorm.io/gorm/migrator#Migrator.RenameIndex
