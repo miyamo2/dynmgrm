@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.2 - 2024-06-23
+
+Only a few GoDoc fixes
+
 ## 0.8.1 - 2024-06-23
 
 Deprecated unsupported methods of `Migrator`
