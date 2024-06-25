@@ -4,8 +4,8 @@ go 1.21
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.30.0
-	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.14.4
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.33.1
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.14.5
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.33.2
 	github.com/btnguyen2k/godynamo v1.3.0
 	github.com/google/go-cmp v0.6.0
 	github.com/iancoleman/strcase v0.3.0
