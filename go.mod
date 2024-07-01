@@ -3,7 +3,7 @@ module github.com/miyamo2/dynmgrm
 go 1.21
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.30.0
+	github.com/aws/aws-sdk-go-v2 v1.30.1
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.14.5
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.33.2
 	github.com/btnguyen2k/godynamo v1.3.0
@@ -20,7 +20,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.21.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.2 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.9.13 // indirect
-	github.com/aws/smithy-go v1.20.2 // indirect
+	github.com/aws/smithy-go v1.20.3 // indirect
 	github.com/btnguyen2k/consu/g18 v0.1.0 // indirect
 	github.com/btnguyen2k/consu/reddo v0.1.9 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
