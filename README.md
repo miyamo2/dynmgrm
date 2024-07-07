@@ -180,6 +180,8 @@ Feel free to open a PR or an Issue.
 
 However, you must promise to follow our [Code of Conduct](https://github.com/miyamo2/dynmgrm/blob/main/CODE_OF_CONDUCT.md).
 
+See [here](https://github.com/miyamo2/dynmgrm/blob/main/CONTRIBUTING.md) for more details on contributing.
+
 ## License
 
 **dynmgrm** released under the [MIT License](https://github.com/miyamo2/dynmgrm/blob/main/LICENSE)
