@@ -80,7 +80,7 @@ jobs:
           flags: unit
 
       - name: Create Table
-        working-directory: ./.github
+        working-directory: ./integrationtest
         run: |
           aws dynamodb create-table --cli-input-json file://table-def.json --endpoint-url ${{ env.DYNAMODB_ENDPOINT }}
 
