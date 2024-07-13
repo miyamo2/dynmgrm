@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.0 - 2024-07-13
+
+### 💥 Breaking Changes
+
+- **Removed custom types** 
+
+    `dynmgrm.List`, `dynmgrm.Map`, `dynmgrm.Set`, and `dynmgrm.TypedList` are removed.
+    Please use [`miyamoto/sqldav`](https://github.com/miyamo2/sqldav) instead from now on.
+
+- **Replace SQL driver**
+
 ## 0.8.2 - 2024-06-23
 
 Only a few GoDoc fixes
