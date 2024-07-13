@@ -85,16 +85,6 @@ dynmgrm is the driver to issue PartiQL Statement to DynamoDB with GORM⚡
 
 - `SecondaryIndex`
 
-### Custom Data Types
-
-- `Set[string | int | float64 | []byte]`
-
-- `List`
-
-- `Map`
-
-- `TypedList[T]`
-
 ### Custom Serializer
 
 - `dynamo-nested`
@@ -114,7 +104,9 @@ go get github.com/miyamo2/dynmgrm
 > [!TIP]
 >
 > `miyamo2/dynmgrm` is recommended to be used in with `miyamo2/sqldav`.
+> 
 > `miyamo2/sqldav` provides Defined Type of slice/map that implements `sql.Scanner` and `driver.Valuer`.
+> 
 > These are as the equivalent to `Set`, `List`, `Map` and `TypedList` included in `miyamo2/dynmgrm` before `v0.9.0`.
 
 ```go
