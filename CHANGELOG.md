@@ -6,7 +6,7 @@
 
 - **Removed custom types** 
 
-    `dynmgrm.List`, `dynmgrm.Map`, `dynmgrm.Set`, and `dynmgrm.TypedList` are removed.
+    `dynmgrm.List`, `dynmgrm.Map`, `dynmgrm.Set`, and `dynmgrm.TypedList` are removed.  
     Please use [`miyamoto/sqldav`](https://github.com/miyamo2/sqldav) instead from now on.
 
 - **Replace SQL driver**
