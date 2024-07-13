@@ -6,7 +6,7 @@ replace github.com/miyamo2/dynmgrm => ../
 
 require (
 	github.com/aws/aws-sdk-go v1.54.15
-	github.com/btnguyen2k/godynamo v1.3.0
+	github.com/miyamo2/godynamo v1.4.0
 	github.com/google/go-cmp v0.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/miyamo2/dynmgrm v0.0.0-00010101000000-000000000000
@@ -16,7 +16,7 @@ require (
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.30.3 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.21 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.24 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.14.9 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.15 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.15 // indirect

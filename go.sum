@@ -1,7 +1,7 @@
 github.com/aws/aws-sdk-go-v2 v1.30.3 h1:jUeBtG0Ih+ZIFH0F4UkmL9w3cSpaMv9tYYDbzILP8dY=
 github.com/aws/aws-sdk-go-v2 v1.30.3/go.mod h1:nIQjQVp5sfpQcTc9mPSr1B0PaWK5ByX9MOoDadSN4lc=
-github.com/aws/aws-sdk-go-v2/credentials v1.17.21 h1:pjAqgzfgFhTv5grc7xPHtXCAaMapzmwA7aU+c/SZQGw=
-github.com/aws/aws-sdk-go-v2/credentials v1.17.21/go.mod h1:nhK6PtBlfHTUDVmBLr1dg+WHCOCK+1Fu/WQyVHPsgNQ=
+github.com/aws/aws-sdk-go-v2/credentials v1.17.24 h1:YclAsrnb1/GTQNt2nzv+756Iw4mF8AOzcDfweWwwm/M=
+github.com/aws/aws-sdk-go-v2/credentials v1.17.24/go.mod h1:Hld7tmnAkoBQdTMNYZGzztzKRdA4fCdn9L83LOoigac=
 github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.14.9 h1:aVVgQDwvAGq8Olf9nb+sQgSujPEybAg4ptxm+L2zisY=
 github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.14.9/go.mod h1:uCzvi36pXcTcGHwWXPHXkhaK9F4AjNo+IByRSv7BRe4=
 github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.15 h1:SoNJ4RlFEQEbtDcCEt+QG56MY4fm4W8rYirAmq+/DdU=
@@ -22,8 +22,6 @@ github.com/btnguyen2k/consu/g18 v0.1.0 h1:IoS5w5QlOfkcrNOHJyICD6PgqLh+J5fIDqy3vR
 github.com/btnguyen2k/consu/g18 v0.1.0/go.mod h1:gTPcr87XdCLDISusRQyDey22/ZOw6bLh6EChxTLx6/c=
 github.com/btnguyen2k/consu/reddo v0.1.9 h1:NZyEzRcDXzksNMnvZVZyJmGN6ZQQmHg4hIPCPbfsCBE=
 github.com/btnguyen2k/consu/reddo v0.1.9/go.mod h1:pdY5oIVX3noZIaZu3nvoKZ59+seXL/taXNGWh9xJDbg=
-github.com/btnguyen2k/godynamo v1.3.0 h1:8Ri9gVWMvBWlD5P04AEVrl2QcmMQR7KgC3zSCl/YLWw=
-github.com/btnguyen2k/godynamo v1.3.0/go.mod h1:vNE48BoUAZS4F5ohrZ7suhw61DmCiXSClKrJfr2maTo=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -39,6 +37,8 @@ github.com/jmespath/go-jmespath v0.4.0 h1:BEgLn5cpjn8UN1mAw4NjwDrS35OdebyEtFe+9Y
 github.com/jmespath/go-jmespath v0.4.0/go.mod h1:T8mJZnbsbmF+m6zOOFylbeCJqk5+pHWvzYPziyZiYoo=
 github.com/jmespath/go-jmespath/internal/testify v1.5.1 h1:shLQSRRSCCPj3f2gpwzGwWFoC7ycTf1rcQZHOlsJ6N8=
 github.com/jmespath/go-jmespath/internal/testify v1.5.1/go.mod h1:L3OGu8Wl2/fWfCI6z80xFu9LTZmf1ZRjMHUOPmWr69U=
+github.com/miyamo2/godynamo v1.4.0 h1:FXXsW+41lMYOWi3JhnjvhySCDK6Db7g6DKnCjriGZVM=
+github.com/miyamo2/godynamo v1.4.0/go.mod h1:bq+yV+cLMgvHQEnqYpDhl+Gvw2Y5XZazj/ITiuajGnY=
 github.com/miyamo2/sqldav v0.2.0 h1:wypwCiGCqRRj10RxcHIUrA5l1kvuTayeAigBZVI/C1E=
 github.com/miyamo2/sqldav v0.2.0/go.mod h1:rH1tNr6wcjLIVbtLefllzfYwU+3C9wVtUwZB6pNpZ/g=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

@@ -31,8 +31,8 @@ dynmgrm is the driver to issue PartiQL Statement to DynamoDB with GORM⚡
     - [x] With `set_delete` function
   - [ ] With `REMOVE` clause
 - [x] Delete
-- [x] Create Table ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
-- [x] Create GSI ※ proprietary PartiQL syntax by [`btnguyen2k/godynamo`](https://github.com/btnguyen2k/godynamo)
+- [x] Create Table ※ proprietary PartiQL syntax by [`miyamo2/godynamo`](https://github.com/miyamo2/godynamo)
+- [x] Create GSI ※ proprietary PartiQL syntax by [`miyamo2/godynamo`](https://github.com/miyamo2/godynamo)
 
 ### Supports the following GORM features
 
@@ -198,7 +198,7 @@ Read this article for more [details](https://go.dev/blog/gopher)
 
 - [btnguyen2k/godynamo](https://github.com/btnguyen2k/godynamo)
 
-  `dynmgrm` connects to `database/sql` by `btnguyen2k/godynamo`.
+  `dynmgrm` connects to `database/sql` by `miyamo2/godynamo` that forked from `btnguyen2k/godynamo`.
 
 - [JetBrainsMono](https://github.com/JetBrains/JetBrainsMono)
 
