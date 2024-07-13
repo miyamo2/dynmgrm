@@ -10,7 +10,7 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/miyamo2/dynmgrm v0.0.0-00010101000000-000000000000
-	github.com/miyamo2/sqldav v0.1.1
+	github.com/miyamo2/sqldav v0.2.0
 	gorm.io/gorm v1.25.10
 )
 

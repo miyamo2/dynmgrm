@@ -7,7 +7,7 @@ require (
 	github.com/btnguyen2k/godynamo v1.3.0
 	github.com/google/go-cmp v0.6.0
 	github.com/iancoleman/strcase v0.3.0
-	github.com/miyamo2/sqldav v0.1.1
+	github.com/miyamo2/sqldav v0.2.0
 	go.uber.org/mock v0.4.0
 	gorm.io/gorm v1.25.10
 )
