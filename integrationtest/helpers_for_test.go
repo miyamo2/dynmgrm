@@ -10,6 +10,7 @@ import (
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/joho/godotenv"
 	"github.com/miyamo2/dynmgrm"
+	"github.com/miyamo2/sqldav"
 	"gorm.io/gorm"
 	"os"
 	"sort"
@@ -25,12 +26,12 @@ type TestTable struct {
 	SomeFloat     float64
 	SomeBool      bool
 	SomeBinary    []byte
-	SomeList      dynmgrm.List
-	SomeMap       dynmgrm.Map
-	SomeStringSet dynmgrm.Set[string]
-	SomeIntSet    dynmgrm.Set[int]
-	SomeFloatSet  dynmgrm.Set[float64]
-	SomeBinarySet dynmgrm.Set[[]byte]
+	SomeList      sqldav.List
+	SomeMap       sqldav.Map
+	SomeStringSet sqldav.Set[string]
+	SomeIntSet    sqldav.Set[int]
+	SomeFloatSet  sqldav.Set[float64]
+	SomeBinarySet sqldav.Set[[]byte]
 	Any           string
 }
 
@@ -38,7 +39,7 @@ type TestTableWithTypedList struct {
 	PK         string `gorm:"primaryKey"`
 	SK         int    `gorm:"primaryKey"`
 	SomeString string
-	TypedList  dynmgrm.TypedList[TypedListValue]
+	TypedList  sqldav.TypedList[TypedListValue]
 }
 
 type TypedListValue struct {
@@ -47,12 +48,12 @@ type TypedListValue struct {
 	SomeFloat     float64
 	SomeBool      bool
 	SomeBinary    []byte
-	SomeList      dynmgrm.List
-	SomeMap       dynmgrm.Map
-	SomeStringSet dynmgrm.Set[string]
-	SomeIntSet    dynmgrm.Set[int]
-	SomeFloatSet  dynmgrm.Set[float64]
-	SomeBinarySet dynmgrm.Set[[]byte]
+	SomeList      sqldav.List
+	SomeMap       sqldav.Map
+	SomeStringSet sqldav.Set[string]
+	SomeIntSet    sqldav.Set[int]
+	SomeFloatSet  sqldav.Set[float64]
+	SomeBinarySet sqldav.Set[[]byte]
 }
 
 func (t TestTableWithTypedList) TableName() string {

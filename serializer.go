@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/miyamo2/sqldav"
 	"gorm.io/gorm/schema"
 	"reflect"
 )
@@ -26,7 +27,7 @@ func (n nestedStructSerializer) Scan(ctx context.Context, field *schema.Field, d
 	fieldValue := reflect.New(field.FieldType)
 	switch dbValue := dbValue.(type) {
 	case map[string]interface{}:
-		err := assignMapValueToReflectValue(field.FieldType, fieldValue, dbValue)
+		err := sqldav.AssignMapValueToReflectValue(field.FieldType, fieldValue, dbValue)
 		if err != nil {
 			return err
 		}
@@ -38,7 +39,7 @@ func (n nestedStructSerializer) Scan(ctx context.Context, field *schema.Field, d
 }
 
 func (n nestedStructSerializer) Value(_ context.Context, _ *schema.Field, _ reflect.Value, fieldValue interface{}) (interface{}, error) {
-	av, err := toDocumentAttributeValue[*types.AttributeValueMemberM](fieldValue)
+	av, err := sqldav.ToDocumentAttributeValue[*types.AttributeValueMemberM](fieldValue)
 	if av == (*types.AttributeValueMemberM)(nil) {
 		return nil, err
 	}

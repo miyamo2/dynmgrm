@@ -3,6 +3,7 @@ package dynmgrm
 import (
 	"database/sql/driver"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"reflect"
@@ -58,7 +59,7 @@ func buildValuesClause(values clause.Values, stmt *gorm.Statement) {
 				stmt.AddError(err)
 				continue
 			}
-			v = dvv
+			v = toPhysicalDocumentAttributeValue(dvv)
 		}
 		stmt.AddVar(stmt, v)
 	}
@@ -85,8 +86,13 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 		asgv := assignment.Value
 		switch asgv := asgv.(type) {
 		case functionForPartiQLUpdates:
+			dvv, err := asgv.bindVariable().Value()
+			if err != nil {
+				stmt.AddError(err)
+				continue
+			}
 			stmt.WriteString(asgv.expression(stmt.DB, asgcol))
-			stmt.AddVar(stmt, asgv.bindVariable().GormValue(stmt.Context, stmt.DB))
+			stmt.AddVar(stmt, toPhysicalDocumentAttributeValue(dvv))
 			stmt.WriteByte(')')
 			continue
 		}
@@ -98,7 +104,7 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 				stmt.AddError(err)
 				continue
 			}
-			asgv = dvv
+			asgv = toPhysicalDocumentAttributeValue(dvv)
 		}
 		stmt.AddVar(stmt, asgv)
 	}
@@ -109,4 +115,20 @@ func isZeroValue(v interface{}) bool {
 		return true
 	}
 	return reflect.ValueOf(v).IsZero()
+}
+
+func toPhysicalDocumentAttributeValue(v interface{}) driver.Value {
+	switch v := v.(type) {
+	case *types.AttributeValueMemberM:
+		return *v
+	case *types.AttributeValueMemberL:
+		return *v
+	case *types.AttributeValueMemberSS:
+		return *v
+	case *types.AttributeValueMemberNS:
+		return *v
+	case *types.AttributeValueMemberBS:
+		return *v
+	}
+	return v
 }

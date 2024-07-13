@@ -2,6 +2,7 @@ package dynmgrm_test
 
 import (
 	"github.com/miyamo2/dynmgrm"
+	"github.com/miyamo2/sqldav"
 	"gorm.io/gorm"
 )
 
@@ -9,7 +10,7 @@ type Event struct {
 	Name  string `gorm:"primaryKey"`
 	Date  string `gorm:"primaryKey"`
 	Host  string
-	Guest dynmgrm.Set[string]
+	Guest sqldav.Set[string]
 }
 
 func Example() {
@@ -47,10 +48,10 @@ func Example() {
 		if event.Host == "Dave" {
 			tx.Delete(&event)
 		} else {
-			tx.Model(&event).Update("guest", gorm.Expr("set_delete(guest, ?)", dynmgrm.Set[string]{"Dave"}))
+			tx.Model(&event).Update("guest", gorm.Expr("set_delete(guest, ?)", sqldav.Set[string]{"Dave"}))
 		}
 	}
-	tx.Model(&carolBirthday).Update("guest", gorm.Expr("set_add(guest, ?)", dynmgrm.Set[string]{"Dave"}))
+	tx.Model(&carolBirthday).Update("guest", gorm.Expr("set_add(guest, ?)", sqldav.Set[string]{"Dave"}))
 	tx.Commit()
 
 	var hostDateIndex []Event

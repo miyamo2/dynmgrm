@@ -5,6 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/google/go-cmp/cmp"
 	"github.com/miyamo2/dynmgrm/internal/mocks"
+	"github.com/miyamo2/sqldav"
 	"go.uber.org/mock/gomock"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -90,7 +91,7 @@ func TestValuesClause(t *testing.T) {
 					},
 				},
 				Values: [][]interface{}{
-					{Set[string]{"value1", "value2"}},
+					{sqldav.Set[string]{"value1", "value2"}},
 				},
 			},
 			expectedSQL:  "VALUE {'column1' : ?}",
@@ -104,7 +105,7 @@ func TestValuesClause(t *testing.T) {
 					},
 				},
 				Values: [][]interface{}{
-					{Map{"key1": "value1"}},
+					{sqldav.Map{"key1": "value1"}},
 				},
 			},
 			expectedSQL: "VALUE {'column1' : ?}",
@@ -121,7 +122,7 @@ func TestValuesClause(t *testing.T) {
 					},
 				},
 				Values: [][]interface{}{
-					{List{"value1", "value2"}},
+					{sqldav.List{"value1", "value2"}},
 				},
 			},
 			expectedSQL: "VALUE {'column1' : ?}",
@@ -287,14 +288,14 @@ func TestBuildSetClause(t *testing.T) {
 		},
 		"happy-path/with-sets": {
 			set: clause.Set{
-				{Column: clause.Column{Name: "column1"}, Value: Set[string]{"value1", "value2"}},
+				{Column: clause.Column{Name: "column1"}, Value: sqldav.Set[string]{"value1", "value2"}},
 			},
 			expectedSQL:  `SET "column1"=?`,
 			expectedVars: []interface{}{types.AttributeValueMemberSS{Value: []string{"value1", "value2"}}},
 		},
 		"happy-path/with-map": {
 			set: clause.Set{
-				{Column: clause.Column{Name: "column1"}, Value: Map{"key1": "value1"}},
+				{Column: clause.Column{Name: "column1"}, Value: sqldav.Map{"key1": "value1"}},
 			},
 			expectedSQL: `SET "column1"=?`,
 			expectedVars: []interface{}{
@@ -303,7 +304,7 @@ func TestBuildSetClause(t *testing.T) {
 		},
 		"happy-path/with-list": {
 			set: clause.Set{
-				{Column: clause.Column{Name: "column1"}, Value: List{"value1", "value2"}},
+				{Column: clause.Column{Name: "column1"}, Value: sqldav.List{"value1", "value2"}},
 			},
 			expectedSQL: `SET "column1"=?`,
 			expectedVars: []interface{}{

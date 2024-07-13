@@ -2,6 +2,7 @@ package dynmgrm_test
 
 import (
 	"github.com/miyamo2/dynmgrm"
+	"github.com/miyamo2/sqldav"
 	"gorm.io/gorm"
 	"log"
 )
@@ -17,5 +18,5 @@ func ExampleListAppend() {
 	}
 	db.Model(&TestTable{PK: "Partition1", SK: 1}).
 		Update("list_type_attr",
-			dynmgrm.ListAppend(dynmgrm.Map{"Foo": "Bar"}))
+			dynmgrm.ListAppend(sqldav.Map{"Foo": "Bar"}))
 }
