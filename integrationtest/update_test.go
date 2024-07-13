@@ -2,12 +2,14 @@ package integrationtest
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/google/go-cmp/cmp"
 	"github.com/miyamo2/dynmgrm"
+	"github.com/miyamo2/sqldav"
 	"gorm.io/gorm"
-	"testing"
 )
 
 func Test_Update_With_Save(t *testing.T) {
@@ -97,12 +99,12 @@ func Test_Update_With_Save(t *testing.T) {
 		SomeFloat:     5.5,
 		SomeBool:      false,
 		SomeBinary:    []byte("XYZ"),
-		SomeList:      dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
-		SomeMap:       dynmgrm.Map{"some_string": "UPDATED", "some_number": 5.5, "some_bool": false, "some_binary": []byte("XYZ")},
-		SomeStringSet: dynmgrm.Set[string]{"UPDATED"},
-		SomeIntSet:    dynmgrm.Set[int]{5, 10},
-		SomeFloatSet:  dynmgrm.Set[float64]{5.5, 11.0},
-		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+		SomeList:      sqldav.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+		SomeMap:       sqldav.Map{"some_string": "UPDATED", "some_number": 5.5, "some_bool": false, "some_binary": []byte("XYZ")},
+		SomeStringSet: sqldav.Set[string]{"UPDATED"},
+		SomeIntSet:    sqldav.Set[int]{5, 10},
+		SomeFloatSet:  sqldav.Set[float64]{5.5, 11.0},
+		SomeBinarySet: sqldav.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
 		Any:           "UPDATED",
 	})
 
@@ -206,16 +208,16 @@ func Test_Update_With_Updates(t *testing.T) {
 			"some_float":  5.5,
 			"some_bool":   false,
 			"some_binary": []byte("XYZ"),
-			"some_list":   dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
-			"some_map": dynmgrm.Map{
+			"some_list":   sqldav.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+			"some_map": sqldav.Map{
 				"some_string": "UPDATED",
 				"some_number": 5.5,
 				"some_bool":   false,
 				"some_binary": []byte("XYZ")},
-			"some_string_set": dynmgrm.Set[string]{"UPDATED"},
-			"some_int_set":    dynmgrm.Set[int]{5, 10},
-			"some_float_set":  dynmgrm.Set[float64]{5.5, 11.0},
-			"some_binary_set": dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+			"some_string_set": sqldav.Set[string]{"UPDATED"},
+			"some_int_set":    sqldav.Set[int]{5, 10},
+			"some_float_set":  sqldav.Set[float64]{5.5, 11.0},
+			"some_binary_set": sqldav.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
 			"any":             "UPDATED",
 		})
 
@@ -409,16 +411,16 @@ func Test_Update_With_Tx_Commit(t *testing.T) {
 			"some_float":  5.5,
 			"some_bool":   false,
 			"some_binary": []byte("XYZ"),
-			"some_list":   dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
-			"some_map": dynmgrm.Map{
+			"some_list":   sqldav.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+			"some_map": sqldav.Map{
 				"some_string": "UPDATED",
 				"some_number": 5.5,
 				"some_bool":   false,
 				"some_binary": []byte("XYZ")},
-			"some_string_set": dynmgrm.Set[string]{"UPDATED"},
-			"some_int_set":    dynmgrm.Set[int]{5, 10},
-			"some_float_set":  dynmgrm.Set[float64]{5.5, 11.0},
-			"some_binary_set": dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+			"some_string_set": sqldav.Set[string]{"UPDATED"},
+			"some_int_set":    sqldav.Set[int]{5, 10},
+			"some_float_set":  sqldav.Set[float64]{5.5, 11.0},
+			"some_binary_set": sqldav.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
 			"any":             "UPDATED",
 		})
 	tx.Commit()
@@ -449,16 +451,16 @@ func Test_Update_With_Tx_Rollback(t *testing.T) {
 			"some_float":  5.5,
 			"some_bool":   false,
 			"some_binary": []byte("XYZ"),
-			"some_list":   dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
-			"some_map": dynmgrm.Map{
+			"some_list":   sqldav.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+			"some_map": sqldav.Map{
 				"some_string": "UPDATED",
 				"some_number": 5.5,
 				"some_bool":   false,
 				"some_binary": []byte("XYZ")},
-			"some_string_set": dynmgrm.Set[string]{"UPDATED"},
-			"some_int_set":    dynmgrm.Set[int]{5, 10},
-			"some_float_set":  dynmgrm.Set[float64]{5.5, 11.0},
-			"some_binary_set": dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+			"some_string_set": sqldav.Set[string]{"UPDATED"},
+			"some_int_set":    sqldav.Set[int]{5, 10},
+			"some_float_set":  sqldav.Set[float64]{5.5, 11.0},
+			"some_binary_set": sqldav.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
 			"any":             "UPDATED",
 		})
 	tx.Rollback()
@@ -553,7 +555,7 @@ func Test_Update_With_SetAdd(t *testing.T) {
 		&TestTable{
 			PK: "Partition1",
 			SK: 1,
-		}).Update("some_string_set", gorm.Expr("set_add(some_string_set, ?)", dynmgrm.Set[string]{"Bye"}))
+		}).Update("some_string_set", gorm.Expr("set_add(some_string_set, ?)", sqldav.Set[string]{"Bye"}))
 
 	result := getData(t, testTableName, "Partition1", 1)
 
@@ -645,7 +647,7 @@ func Test_Update_With_SetDelete(t *testing.T) {
 		&TestTable{
 			PK: "Partition1",
 			SK: 1,
-		}).Update("some_string_set", gorm.Expr("set_delete(some_string_set, ?)", dynmgrm.Set[string]{"Hello"}))
+		}).Update("some_string_set", gorm.Expr("set_delete(some_string_set, ?)", sqldav.Set[string]{"Hello"}))
 
 	result := getData(t, testTableName, "Partition1", 1)
 
@@ -740,7 +742,7 @@ func Test_Update_With_ListAppend(t *testing.T) {
 		&TestTable{
 			PK: "Partition1",
 			SK: 1,
-		}).Update("some_list", gorm.Expr("list_append(some_list, ?)", dynmgrm.List{dynmgrm.Map{"append_item": "Foo"}}))
+		}).Update("some_list", gorm.Expr("list_append(some_list, ?)", sqldav.List{sqldav.Map{"append_item": "Foo"}}))
 
 	result := getData(t, testTableName, "Partition1", 1)
 
@@ -840,16 +842,16 @@ func Test_Update_With_Transaction_Success(t *testing.T) {
 				"some_float":  5.5,
 				"some_bool":   false,
 				"some_binary": []byte("XYZ"),
-				"some_list":   dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
-				"some_map": dynmgrm.Map{
+				"some_list":   sqldav.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+				"some_map": sqldav.Map{
 					"some_string": "UPDATED",
 					"some_number": 5.5,
 					"some_bool":   false,
 					"some_binary": []byte("XYZ")},
-				"some_string_set": dynmgrm.Set[string]{"UPDATED"},
-				"some_int_set":    dynmgrm.Set[int]{5, 10},
-				"some_float_set":  dynmgrm.Set[float64]{5.5, 11.0},
-				"some_binary_set": dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+				"some_string_set": sqldav.Set[string]{"UPDATED"},
+				"some_int_set":    sqldav.Set[int]{5, 10},
+				"some_float_set":  sqldav.Set[float64]{5.5, 11.0},
+				"some_binary_set": sqldav.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
 				"any":             "UPDATED",
 			}).Error
 	})
@@ -957,16 +959,16 @@ func Test_Update_With_Transaction_Fail(t *testing.T) {
 				"some_float":  5.5,
 				"some_bool":   false,
 				"some_binary": []byte("XYZ"),
-				"some_list":   dynmgrm.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
-				"some_map": dynmgrm.Map{
+				"some_list":   sqldav.List{"UPDATED", 5, 5.5, false, []byte("XYZ")},
+				"some_map": sqldav.Map{
 					"some_string": "UPDATED",
 					"some_number": 5.5,
 					"some_bool":   false,
 					"some_binary": []byte("XYZ")},
-				"some_string_set": dynmgrm.Set[string]{"UPDATED"},
-				"some_int_set":    dynmgrm.Set[int]{5, 10},
-				"some_float_set":  dynmgrm.Set[float64]{5.5, 11.0},
-				"some_binary_set": dynmgrm.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
+				"some_string_set": sqldav.Set[string]{"UPDATED"},
+				"some_int_set":    sqldav.Set[int]{5, 10},
+				"some_float_set":  sqldav.Set[float64]{5.5, 11.0},
+				"some_binary_set": sqldav.Set[[]byte]{[]byte("XYZ"), []byte("ABC")},
 				"any":             "UPDATED",
 			})
 		return errFoo
@@ -1031,19 +1033,19 @@ func Test_Update_With_Save_Has_TypedList_Column(t *testing.T) {
 		PK:         "Partition1",
 		SK:         1,
 		SomeString: "Hello",
-		TypedList: dynmgrm.TypedList[TypedListValue]{
+		TypedList: sqldav.TypedList[TypedListValue]{
 			{
 				SomeString:    "World",
 				SomeInt:       2,
 				SomeFloat:     2.2,
 				SomeBool:      false,
 				SomeBinary:    []byte("DEF"),
-				SomeMap:       dynmgrm.Map{"k": "v"},
-				SomeList:      dynmgrm.List{"b", dynmgrm.Map{"k": "v"}, dynmgrm.Set[string]{"d", "e", "f"}},
-				SomeStringSet: dynmgrm.Set[string]{"d", "e", "f"},
-				SomeIntSet:    dynmgrm.Set[int]{4, 5, 6},
-				SomeFloatSet:  dynmgrm.Set[float64]{4.4, 5.5, 6.6},
-				SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("d"), []byte("e"), []byte("f")},
+				SomeMap:       sqldav.Map{"k": "v"},
+				SomeList:      sqldav.List{"b", sqldav.Map{"k": "v"}, sqldav.Set[string]{"d", "e", "f"}},
+				SomeStringSet: sqldav.Set[string]{"d", "e", "f"},
+				SomeIntSet:    sqldav.Set[int]{4, 5, 6},
+				SomeFloatSet:  sqldav.Set[float64]{4.4, 5.5, 6.6},
+				SomeBinarySet: sqldav.Set[[]byte]{[]byte("d"), []byte("e"), []byte("f")},
 			},
 		},
 	})
@@ -1103,27 +1105,27 @@ func Test_Update_With_Updates_Has_TypedList_Column(t *testing.T) {
 			SK: 1,
 		}).Updates(
 		map[string]interface{}{
-			"typed_list": dynmgrm.TypedList[TypedListValue]{
+			"typed_list": sqldav.TypedList[TypedListValue]{
 				{
 					SomeString: "UPDATED",
 					SomeInt:    1,
 					SomeFloat:  1.1,
 					SomeBool:   true,
 					SomeBinary: []byte("ABC"),
-					SomeMap: dynmgrm.Map{
+					SomeMap: sqldav.Map{
 						"UPDATED": "UPDATED",
 					},
-					SomeList: dynmgrm.List{
+					SomeList: sqldav.List{
 						"UPDATED",
-						dynmgrm.Map{
+						sqldav.Map{
 							"UPDATED": "UPDATED",
 						},
-						dynmgrm.Set[string]{"UPDATED"},
+						sqldav.Set[string]{"UPDATED"},
 					},
-					SomeStringSet: dynmgrm.Set[string]{"UPDATED"},
-					SomeIntSet:    dynmgrm.Set[int]{4, 5, 6},
-					SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4, 6.6},
-					SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("d"), []byte("e"), []byte("f")},
+					SomeStringSet: sqldav.Set[string]{"UPDATED"},
+					SomeIntSet:    sqldav.Set[int]{4, 5, 6},
+					SomeFloatSet:  sqldav.Set[float64]{2.2, 4.4, 6.6},
+					SomeBinarySet: sqldav.Set[[]byte]{[]byte("d"), []byte("e"), []byte("f")},
 				},
 			},
 		})
@@ -1178,27 +1180,27 @@ func Test_Update_With_Update_Clause_TypedList_Column(t *testing.T) {
 		&TestTableWithTypedList{
 			PK: "Partition1",
 			SK: 1,
-		}).Update("typed_list", dynmgrm.TypedList[TypedListValue]{
+		}).Update("typed_list", sqldav.TypedList[TypedListValue]{
 		{
 			SomeString: "UPDATED",
 			SomeInt:    1,
 			SomeFloat:  1.1,
 			SomeBool:   true,
 			SomeBinary: []byte("ABC"),
-			SomeMap: dynmgrm.Map{
+			SomeMap: sqldav.Map{
 				"UPDATED": "UPDATED",
 			},
-			SomeList: dynmgrm.List{
+			SomeList: sqldav.List{
 				"UPDATED",
-				dynmgrm.Map{
+				sqldav.Map{
 					"UPDATED": "UPDATED",
 				},
-				dynmgrm.Set[string]{"UPDATED"},
+				sqldav.Set[string]{"UPDATED"},
 			},
-			SomeStringSet: dynmgrm.Set[string]{"UPDATED"},
-			SomeIntSet:    dynmgrm.Set[int]{4, 5, 6},
-			SomeFloatSet:  dynmgrm.Set[float64]{2.2, 4.4, 6.6},
-			SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("d"), []byte("e"), []byte("f")},
+			SomeStringSet: sqldav.Set[string]{"UPDATED"},
+			SomeIntSet:    sqldav.Set[int]{4, 5, 6},
+			SomeFloatSet:  sqldav.Set[float64]{2.2, 4.4, 6.6},
+			SomeBinarySet: sqldav.Set[[]byte]{[]byte("d"), []byte("e"), []byte("f")},
 		},
 	})
 
@@ -1295,7 +1297,7 @@ func Test_Update_With_ListAppend_helper(t *testing.T) {
 		&TestTable{
 			PK: "Partition1",
 			SK: 1,
-		}).Update("some_list", dynmgrm.ListAppend(dynmgrm.Map{"append_item": "Foo"}))
+		}).Update("some_list", dynmgrm.ListAppend(sqldav.Map{"append_item": "Foo"}))
 
 	result := getData(t, testTableName, "Partition1", 1)
 

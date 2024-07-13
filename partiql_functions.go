@@ -1,8 +1,10 @@
 package dynmgrm
 
 import (
+	"database/sql/driver"
 	"errors"
 	"fmt"
+	"github.com/miyamo2/sqldav"
 	"gorm.io/gorm"
 	"regexp"
 )
@@ -21,12 +23,12 @@ type functionForPartiQLUpdates interface {
 	// expression returns a string that represents the function in the SQL query.
 	expression(db *gorm.DB, column string) string
 	// bindVariable returns a gorm.Valuer that represents the bind variable for the function.
-	bindVariable() gorm.Valuer
+	bindVariable() driver.Valuer
 }
 
 // listAppend is a struct that implements functionForPartiQLUpdates interface for `list_append` function.
 type listAppend struct {
-	value List
+	value sqldav.List
 }
 
 func (la *listAppend) expression(db *gorm.DB, column string) string {
@@ -37,7 +39,7 @@ func (la *listAppend) expression(db *gorm.DB, column string) string {
 	return fmt.Sprintf("list_append(%s, ", column)
 }
 
-func (la *listAppend) bindVariable() gorm.Valuer {
+func (la *listAppend) bindVariable() driver.Valuer {
 	return la.value
 }
 

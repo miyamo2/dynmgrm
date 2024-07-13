@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/google/go-cmp/cmp"
-	"github.com/miyamo2/dynmgrm"
+	"github.com/miyamo2/sqldav"
 	"gorm.io/gorm"
 	"testing"
 )
@@ -17,12 +17,12 @@ func Test_Insert_With_Create(t *testing.T) {
 	data := TestTable{
 		PK:            "Partition4",
 		SK:            1,
-		SomeMap:       dynmgrm.Map{"key": "value"},
-		SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
-		SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
-		SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
-		SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
-		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+		SomeMap:       sqldav.Map{"key": "value"},
+		SomeList:      sqldav.List{"a", sqldav.Map{"key": "value"}, sqldav.Set[string]{"a", "b", "c"}},
+		SomeStringSet: sqldav.Set[string]{"a", "b", "c"},
+		SomeIntSet:    sqldav.Set[int]{1, 2, 3},
+		SomeFloatSet:  sqldav.Set[float64]{1.1, 2.2, 3.3},
+		SomeBinarySet: sqldav.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 	}
 	defer deleteData(t, testTableName, data.PK, data.SK)
 
@@ -61,12 +61,12 @@ func Test_Insert_With_Tx_Commit(t *testing.T) {
 	data := TestTable{
 		PK:            "Partition4",
 		SK:            1,
-		SomeMap:       dynmgrm.Map{"key": "value"},
-		SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
-		SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
-		SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
-		SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
-		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+		SomeMap:       sqldav.Map{"key": "value"},
+		SomeList:      sqldav.List{"a", sqldav.Map{"key": "value"}, sqldav.Set[string]{"a", "b", "c"}},
+		SomeStringSet: sqldav.Set[string]{"a", "b", "c"},
+		SomeIntSet:    sqldav.Set[int]{1, 2, 3},
+		SomeFloatSet:  sqldav.Set[float64]{1.1, 2.2, 3.3},
+		SomeBinarySet: sqldav.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 	}
 	defer deleteData(t, testTableName, data.PK, data.SK)
 
@@ -107,12 +107,12 @@ func Test_Insert_With_Tx_Rollback(t *testing.T) {
 	data := TestTable{
 		PK:            "Partition4",
 		SK:            1,
-		SomeMap:       dynmgrm.Map{"key": "value"},
-		SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
-		SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
-		SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
-		SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
-		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+		SomeMap:       sqldav.Map{"key": "value"},
+		SomeList:      sqldav.List{"a", sqldav.Map{"key": "value"}, sqldav.Set[string]{"a", "b", "c"}},
+		SomeStringSet: sqldav.Set[string]{"a", "b", "c"},
+		SomeIntSet:    sqldav.Set[int]{1, 2, 3},
+		SomeFloatSet:  sqldav.Set[float64]{1.1, 2.2, 3.3},
+		SomeBinarySet: sqldav.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 	}
 	defer deleteData(t, testTableName, data.PK, data.SK)
 
@@ -133,12 +133,12 @@ func Test_Insert_With_Transaction_Success(t *testing.T) {
 	data := TestTable{
 		PK:            "Partition4",
 		SK:            1,
-		SomeMap:       dynmgrm.Map{"key": "value"},
-		SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
-		SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
-		SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
-		SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
-		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+		SomeMap:       sqldav.Map{"key": "value"},
+		SomeList:      sqldav.List{"a", sqldav.Map{"key": "value"}, sqldav.Set[string]{"a", "b", "c"}},
+		SomeStringSet: sqldav.Set[string]{"a", "b", "c"},
+		SomeIntSet:    sqldav.Set[int]{1, 2, 3},
+		SomeFloatSet:  sqldav.Set[float64]{1.1, 2.2, 3.3},
+		SomeBinarySet: sqldav.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 	}
 	defer deleteData(t, testTableName, data.PK, data.SK)
 
@@ -183,12 +183,12 @@ func Test_Insert_With_Transaction_Fail(t *testing.T) {
 	data := TestTable{
 		PK:            "Partition4",
 		SK:            1,
-		SomeMap:       dynmgrm.Map{"key": "value"},
-		SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
-		SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
-		SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
-		SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
-		SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+		SomeMap:       sqldav.Map{"key": "value"},
+		SomeList:      sqldav.List{"a", sqldav.Map{"key": "value"}, sqldav.Set[string]{"a", "b", "c"}},
+		SomeStringSet: sqldav.Set[string]{"a", "b", "c"},
+		SomeIntSet:    sqldav.Set[int]{1, 2, 3},
+		SomeFloatSet:  sqldav.Set[float64]{1.1, 2.2, 3.3},
+		SomeBinarySet: sqldav.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 	}
 	defer deleteData(t, testTableName, data.PK, data.SK)
 
@@ -216,19 +216,19 @@ func Test_Insert_With_Create_Has_TypedList_Column(t *testing.T) {
 		PK:         "Partition4",
 		SK:         1,
 		SomeString: "Hello",
-		TypedList: dynmgrm.TypedList[TypedListValue]{
+		TypedList: sqldav.TypedList[TypedListValue]{
 			{
 				SomeString:    "Hello",
 				SomeInt:       1,
 				SomeFloat:     1.1,
 				SomeBool:      true,
 				SomeBinary:    []byte("ABC"),
-				SomeMap:       dynmgrm.Map{"key": "value"},
-				SomeList:      dynmgrm.List{"a", dynmgrm.Map{"key": "value"}, dynmgrm.Set[string]{"a", "b", "c"}},
-				SomeStringSet: dynmgrm.Set[string]{"a", "b", "c"},
-				SomeIntSet:    dynmgrm.Set[int]{1, 2, 3},
-				SomeFloatSet:  dynmgrm.Set[float64]{1.1, 2.2, 3.3},
-				SomeBinarySet: dynmgrm.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
+				SomeMap:       sqldav.Map{"key": "value"},
+				SomeList:      sqldav.List{"a", sqldav.Map{"key": "value"}, sqldav.Set[string]{"a", "b", "c"}},
+				SomeStringSet: sqldav.Set[string]{"a", "b", "c"},
+				SomeIntSet:    sqldav.Set[int]{1, 2, 3},
+				SomeFloatSet:  sqldav.Set[float64]{1.1, 2.2, 3.3},
+				SomeBinarySet: sqldav.Set[[]byte]{[]byte("a"), []byte("b"), []byte("c")},
 			},
 		},
 	}

@@ -1,7 +1,6 @@
 package dynmgrm
 
 import (
-	"database/sql/driver"
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -50,16 +49,6 @@ func buildValuesClause(values clause.Values, stmt *gorm.Statement) {
 		stmt.WriteString(fmt.Sprintf(`'%s'`, column.Name))
 		stmt.WriteString(" : ")
 
-		// NOTE: this is a temporary hack, if `btnguyen2k/godynamo` will support `driver.Valuer`, remove the entire switch block.
-		switch dv := v.(type) {
-		case driver.Valuer:
-			dvv, err := dv.Value()
-			if err != nil {
-				stmt.AddError(err)
-				continue
-			}
-			v = dvv
-		}
 		stmt.AddVar(stmt, v)
 	}
 	stmt.WriteByte('}')
@@ -85,20 +74,11 @@ func buildSetClause(set clause.Set, stmt *gorm.Statement) {
 		asgv := assignment.Value
 		switch asgv := asgv.(type) {
 		case functionForPartiQLUpdates:
+			valuer := asgv.bindVariable()
 			stmt.WriteString(asgv.expression(stmt.DB, asgcol))
-			stmt.AddVar(stmt, asgv.bindVariable().GormValue(stmt.Context, stmt.DB))
+			stmt.AddVar(stmt, valuer)
 			stmt.WriteByte(')')
 			continue
-		}
-		// NOTE: this is a temporary hack, if `btnguyen2k/godynamo` will support `driver.Valuer`, remove the entire switch block.
-		switch dv := asgv.(type) {
-		case driver.Valuer:
-			dvv, err := dv.Value()
-			if err != nil {
-				stmt.AddError(err)
-				continue
-			}
-			asgv = dvv
 		}
 		stmt.AddVar(stmt, asgv)
 	}

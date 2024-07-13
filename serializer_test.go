@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/google/go-cmp/cmp"
+	"github.com/miyamo2/sqldav"
 	"gorm.io/gorm/schema"
 	"reflect"
 	"testing"
@@ -113,7 +114,7 @@ func Test_nestedStructSerializer_Scan(t *testing.T) {
 				},
 			},
 			want: want{
-				err: ErrNestedStructHasIncompatibleAttributes,
+				err: sqldav.ErrNestedStructHasIncompatibleAttributes,
 			},
 			expected: expected{
 				Outer{},
@@ -179,7 +180,7 @@ func Test_nestedStructSerializer_Value(t *testing.T) {
 			},
 			want: want{
 				value: nil,
-				err:   errDocumentAttributeValueIsIncompatible,
+				err:   sqldav.ErrDocumentAttributeValueIsIncompatible,
 			},
 		},
 	}

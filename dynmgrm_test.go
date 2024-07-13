@@ -3,8 +3,8 @@ package dynmgrm
 import (
 	"database/sql"
 	"errors"
-	"github.com/btnguyen2k/godynamo"
 	"github.com/miyamo2/dynmgrm/internal/mocks"
+	"github.com/miyamo2/godynamo"
 	"go.uber.org/mock/gomock"
 	"reflect"
 	"strings"
