@@ -24,8 +24,6 @@ github.com/btnguyen2k/consu/g18 v0.1.0 h1:IoS5w5QlOfkcrNOHJyICD6PgqLh+J5fIDqy3vR
 github.com/btnguyen2k/consu/g18 v0.1.0/go.mod h1:gTPcr87XdCLDISusRQyDey22/ZOw6bLh6EChxTLx6/c=
 github.com/btnguyen2k/consu/reddo v0.1.9 h1:NZyEzRcDXzksNMnvZVZyJmGN6ZQQmHg4hIPCPbfsCBE=
 github.com/btnguyen2k/consu/reddo v0.1.9/go.mod h1:pdY5oIVX3noZIaZu3nvoKZ59+seXL/taXNGWh9xJDbg=
-github.com/btnguyen2k/godynamo v1.3.0 h1:8Ri9gVWMvBWlD5P04AEVrl2QcmMQR7KgC3zSCl/YLWw=
-github.com/btnguyen2k/godynamo v1.3.0/go.mod h1:vNE48BoUAZS4F5ohrZ7suhw61DmCiXSClKrJfr2maTo=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -43,6 +41,7 @@ github.com/jmespath/go-jmespath/internal/testify v1.5.1 h1:shLQSRRSCCPj3f2gpwzGw
 github.com/jmespath/go-jmespath/internal/testify v1.5.1/go.mod h1:L3OGu8Wl2/fWfCI6z80xFu9LTZmf1ZRjMHUOPmWr69U=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/miyamo2/godynamo v1.4.0 h1:FXXsW+41lMYOWi3JhnjvhySCDK6Db7g6DKnCjriGZVM=
 github.com/miyamo2/godynamo v1.4.0/go.mod h1:bq+yV+cLMgvHQEnqYpDhl+Gvw2Y5XZazj/ITiuajGnY=
 github.com/miyamo2/sqldav v0.2.0 h1:wypwCiGCqRRj10RxcHIUrA5l1kvuTayeAigBZVI/C1E=
 github.com/miyamo2/sqldav v0.2.0/go.mod h1:rH1tNr6wcjLIVbtLefllzfYwU+3C9wVtUwZB6pNpZ/g=

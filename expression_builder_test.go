@@ -95,7 +95,7 @@ func TestValuesClause(t *testing.T) {
 				},
 			},
 			expectedSQL:  "VALUE {'column1' : ?}",
-			expectedVars: []interface{}{types.AttributeValueMemberSS{Value: []string{"value1", "value2"}}},
+			expectedVars: []interface{}{sqldav.Set[string]{"value1", "value2"}},
 		},
 		"happy-path/with-map": {
 			args: clause.Values{
@@ -108,11 +108,8 @@ func TestValuesClause(t *testing.T) {
 					{sqldav.Map{"key1": "value1"}},
 				},
 			},
-			expectedSQL: "VALUE {'column1' : ?}",
-			expectedVars: []interface{}{
-				types.AttributeValueMemberM{
-					Value: map[string]types.AttributeValue{"key1": &types.AttributeValueMemberS{Value: "value1"}}},
-			},
+			expectedSQL:  "VALUE {'column1' : ?}",
+			expectedVars: []interface{}{sqldav.Map{"key1": "value1"}},
 		},
 		"happy-path/with-list": {
 			args: clause.Values{
@@ -125,15 +122,8 @@ func TestValuesClause(t *testing.T) {
 					{sqldav.List{"value1", "value2"}},
 				},
 			},
-			expectedSQL: "VALUE {'column1' : ?}",
-			expectedVars: []interface{}{
-				types.AttributeValueMemberL{
-					Value: []types.AttributeValue{
-						&types.AttributeValueMemberS{Value: "value1"},
-						&types.AttributeValueMemberS{Value: "value2"},
-					},
-				},
-			},
+			expectedSQL:  "VALUE {'column1' : ?}",
+			expectedVars: []interface{}{sqldav.List{"value1", "value2"}},
 		},
 		"happy-path/with-zero-value": {
 			args: clause.Values{
@@ -291,30 +281,21 @@ func TestBuildSetClause(t *testing.T) {
 				{Column: clause.Column{Name: "column1"}, Value: sqldav.Set[string]{"value1", "value2"}},
 			},
 			expectedSQL:  `SET "column1"=?`,
-			expectedVars: []interface{}{types.AttributeValueMemberSS{Value: []string{"value1", "value2"}}},
+			expectedVars: []interface{}{sqldav.Set[string]{"value1", "value2"}},
 		},
 		"happy-path/with-map": {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: sqldav.Map{"key1": "value1"}},
 			},
-			expectedSQL: `SET "column1"=?`,
-			expectedVars: []interface{}{
-				types.AttributeValueMemberM{
-					Value: map[string]types.AttributeValue{"key1": &types.AttributeValueMemberS{Value: "value1"}}}},
+			expectedSQL:  `SET "column1"=?`,
+			expectedVars: []interface{}{sqldav.Map{"key1": "value1"}},
 		},
 		"happy-path/with-list": {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: sqldav.List{"value1", "value2"}},
 			},
-			expectedSQL: `SET "column1"=?`,
-			expectedVars: []interface{}{
-				types.AttributeValueMemberL{
-					Value: []types.AttributeValue{
-						&types.AttributeValueMemberS{Value: "value1"},
-						&types.AttributeValueMemberS{Value: "value2"},
-					},
-				},
-			},
+			expectedSQL:  `SET "column1"=?`,
+			expectedVars: []interface{}{sqldav.List{"value1", "value2"}},
 		},
 		"happy-path/contains-primary-key": {
 			set: clause.Set{
@@ -333,14 +314,8 @@ func TestBuildSetClause(t *testing.T) {
 			set: clause.Set{
 				{Column: clause.Column{Name: "column1"}, Value: ListAppend("value1")},
 			},
-			expectedSQL: `SET "column1"=list_append(column1, ?)`,
-			expectedVars: []interface{}{
-				types.AttributeValueMemberL{
-					Value: []types.AttributeValue{
-						&types.AttributeValueMemberS{Value: "value1"},
-					},
-				},
-			},
+			expectedSQL:  `SET "column1"=list_append(column1, ?)`,
+			expectedVars: []interface{}{sqldav.List{"value1"}},
 		},
 	}
 	opts := []cmp.Option{

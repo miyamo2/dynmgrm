@@ -40,7 +40,7 @@ func (la *listAppend) expression(db *gorm.DB, column string) string {
 }
 
 func (la *listAppend) bindVariable() driver.Valuer {
-	return &la.value
+	return la.value
 }
 
 // ListAppend returns a functionForPartiQLUpdates implementation for `list_append` function.
