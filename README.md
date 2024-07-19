@@ -185,6 +185,12 @@ See [here](https://github.com/miyamo2/dynmgrm/blob/main/CONTRIBUTING.md) for mor
 
 **dynmgrm** released under the [MIT License](https://github.com/miyamo2/dynmgrm/blob/main/LICENSE)
 
+## Merchandise
+
+<iframe height="162" width="375" src="https://suzuri.jp/miyamo2/16272228/sticker/m/white/embed"></iframe><br/>
+
+<iframe height="162" width="375" src="https://suzuri.jp/miyamo2/16272228/one-point-t-shirt/l/white/embed"></iframe>
+
 ## Credits
 
 ### Go gopher
