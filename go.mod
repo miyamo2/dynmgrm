@@ -3,7 +3,7 @@ module github.com/miyamo2/dynmgrm
 go 1.21
 
 require (
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.34.3
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.34.4
 	github.com/google/go-cmp v0.6.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/miyamo2/godynamo v1.4.0
