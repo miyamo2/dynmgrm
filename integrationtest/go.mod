@@ -5,7 +5,7 @@ go 1.21
 replace github.com/miyamo2/dynmgrm => ../
 
 require (
-	github.com/aws/aws-sdk-go v1.55.3
+	github.com/aws/aws-sdk-go v1.55.5
 	github.com/google/go-cmp v0.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/miyamo2/dynmgrm v0.0.0-00010101000000-000000000000
@@ -20,7 +20,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.14.9 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.15 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.15 // indirect
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.34.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.34.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.22.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.9.16 // indirect
