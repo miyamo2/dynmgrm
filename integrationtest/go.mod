@@ -5,7 +5,7 @@ go 1.21
 replace github.com/miyamo2/dynmgrm => ../
 
 require (
-	github.com/aws/aws-sdk-go v1.54.20
+	github.com/aws/aws-sdk-go v1.55.3
 	github.com/google/go-cmp v0.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/miyamo2/dynmgrm v0.0.0-00010101000000-000000000000
