@@ -24,6 +24,8 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
+      - uses: Kesin11/actions-timeline@v2
+
       - uses: actions/checkout@v4
 
       - name: Run Snyk to check for vulnerabilities
