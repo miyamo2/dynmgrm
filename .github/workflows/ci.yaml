@@ -31,6 +31,8 @@ jobs:
           - 8000:8000
 
     steps:
+      - uses: Kesin11/actions-timeline@v2
+
       - uses: actions/checkout@v4
 
       - name: Setup Go
