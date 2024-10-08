@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.1 - 2024-10-09
+
+⬆️ Upgrading dependencies
+
+- `github.com/aws/aws-sdk-go-v2/service/dynamodb` 1.34.3 -> 1.36.1
+- `gorm.io/gorm` 1.25.10 -> 1.25.12
+- `github.com/miyamo2/sqldav` 0.2.0 -> 0.2.1
+
 ## 0.9.0 - 2024-07-13
 
 ### 💥 Breaking Changes
