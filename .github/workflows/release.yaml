@@ -37,7 +37,7 @@ jobs:
         working-directory: ./tools
         run: |
           go mod tidy
-          go install github.com/golang/mock/mockgen
+          go install go.uber.org/mock/mockgen
 
       - name: Go Generate
         run: |

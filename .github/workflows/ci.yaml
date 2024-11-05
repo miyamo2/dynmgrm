@@ -46,7 +46,7 @@ jobs:
         working-directory: ./tools
         run: |
           go mod tidy
-          go install github.com/golang/mock/mockgen
+          go install go.uber.org/mock/mockgen
           go install honnef.co/go/tools/cmd/staticcheck
 
       - name: Go Generate
