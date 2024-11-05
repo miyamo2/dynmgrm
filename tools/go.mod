@@ -1,6 +1,6 @@
 module github.com/miyamo2/dynmgrm/tools
 
-go 1.22.4
+go 1.22
 
 require (
 	go.uber.org/mock v0.5.0
