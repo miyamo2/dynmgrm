@@ -22,6 +22,7 @@ import (
 type MockDBOpener struct {
 	ctrl     *gomock.Controller
 	recorder *MockDBOpenerMockRecorder
+	isgomock struct{}
 }
 
 // MockDBOpenerMockRecorder is the mock recorder for MockDBOpener.
@@ -88,6 +89,7 @@ func (mr *MockDBOpenerMockRecorder) DriverName() *gomock.Call {
 type MockCallbacksRegisterer struct {
 	ctrl     *gomock.Controller
 	recorder *MockCallbacksRegistererMockRecorder
+	isgomock struct{}
 }
 
 // MockCallbacksRegistererMockRecorder is the mock recorder for MockCallbacksRegisterer.
