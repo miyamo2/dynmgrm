@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goversion: [">=1.21.0"]
+        goversion: [">=1.22.0"]
     env:
       AWS_ACCESS_KEY_ID: ABC1234567890
       AWS_SECRET_ACCESS_KEY: ABC1234567890

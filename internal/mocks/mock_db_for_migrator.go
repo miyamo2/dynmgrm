@@ -20,6 +20,7 @@ import (
 type MockDBForMigrator struct {
 	ctrl     *gomock.Controller
 	recorder *MockDBForMigratorMockRecorder
+	isgomock struct{}
 }
 
 // MockDBForMigratorMockRecorder is the mock recorder for MockDBForMigrator.
@@ -40,24 +41,24 @@ func (m *MockDBForMigrator) EXPECT() *MockDBForMigratorMockRecorder {
 }
 
 // AddError mocks base method.
-func (m *MockDBForMigrator) AddError(arg0 error) error {
+func (m *MockDBForMigrator) AddError(err error) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddError", arg0)
+	ret := m.ctrl.Call(m, "AddError", err)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddError indicates an expected call of AddError.
-func (mr *MockDBForMigratorMockRecorder) AddError(arg0 any) *gomock.Call {
+func (mr *MockDBForMigratorMockRecorder) AddError(err any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddError", reflect.TypeOf((*MockDBForMigrator)(nil).AddError), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddError", reflect.TypeOf((*MockDBForMigrator)(nil).AddError), err)
 }
 
 // Exec mocks base method.
-func (m *MockDBForMigrator) Exec(arg0 string, arg1 ...any) *gorm.DB {
+func (m *MockDBForMigrator) Exec(sql string, values ...any) *gorm.DB {
 	m.ctrl.T.Helper()
-	varargs := []any{arg0}
-	for _, a := range arg1 {
+	varargs := []any{sql}
+	for _, a := range values {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "Exec", varargs...)
@@ -66,8 +67,8 @@ func (m *MockDBForMigrator) Exec(arg0 string, arg1 ...any) *gorm.DB {
 }
 
 // Exec indicates an expected call of Exec.
-func (mr *MockDBForMigratorMockRecorder) Exec(arg0 any, arg1 ...any) *gomock.Call {
+func (mr *MockDBForMigratorMockRecorder) Exec(sql any, values ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{arg0}, arg1...)
+	varargs := append([]any{sql}, values...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Exec", reflect.TypeOf((*MockDBForMigrator)(nil).Exec), varargs...)
 }

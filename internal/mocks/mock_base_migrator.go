@@ -22,6 +22,7 @@ import (
 type MockBaseMigrator struct {
 	ctrl     *gomock.Controller
 	recorder *MockBaseMigratorMockRecorder
+	isgomock struct{}
 }
 
 // MockBaseMigratorMockRecorder is the mock recorder for MockBaseMigrator.
@@ -42,38 +43,38 @@ func (m *MockBaseMigrator) EXPECT() *MockBaseMigratorMockRecorder {
 }
 
 // AddColumn mocks base method.
-func (m *MockBaseMigrator) AddColumn(arg0 any, arg1 string) error {
+func (m *MockBaseMigrator) AddColumn(dst any, field string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddColumn", arg0, arg1)
+	ret := m.ctrl.Call(m, "AddColumn", dst, field)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddColumn indicates an expected call of AddColumn.
-func (mr *MockBaseMigratorMockRecorder) AddColumn(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) AddColumn(dst, field any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddColumn", reflect.TypeOf((*MockBaseMigrator)(nil).AddColumn), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddColumn", reflect.TypeOf((*MockBaseMigrator)(nil).AddColumn), dst, field)
 }
 
 // AlterColumn mocks base method.
-func (m *MockBaseMigrator) AlterColumn(arg0 any, arg1 string) error {
+func (m *MockBaseMigrator) AlterColumn(dst any, field string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AlterColumn", arg0, arg1)
+	ret := m.ctrl.Call(m, "AlterColumn", dst, field)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AlterColumn indicates an expected call of AlterColumn.
-func (mr *MockBaseMigratorMockRecorder) AlterColumn(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) AlterColumn(dst, field any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlterColumn", reflect.TypeOf((*MockBaseMigrator)(nil).AlterColumn), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlterColumn", reflect.TypeOf((*MockBaseMigrator)(nil).AlterColumn), dst, field)
 }
 
 // AutoMigrate mocks base method.
-func (m *MockBaseMigrator) AutoMigrate(arg0 ...any) error {
+func (m *MockBaseMigrator) AutoMigrate(dst ...any) error {
 	m.ctrl.T.Helper()
 	varargs := []any{}
-	for _, a := range arg0 {
+	for _, a := range dst {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "AutoMigrate", varargs...)
@@ -82,59 +83,59 @@ func (m *MockBaseMigrator) AutoMigrate(arg0 ...any) error {
 }
 
 // AutoMigrate indicates an expected call of AutoMigrate.
-func (mr *MockBaseMigratorMockRecorder) AutoMigrate(arg0 ...any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) AutoMigrate(dst ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AutoMigrate", reflect.TypeOf((*MockBaseMigrator)(nil).AutoMigrate), arg0...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AutoMigrate", reflect.TypeOf((*MockBaseMigrator)(nil).AutoMigrate), dst...)
 }
 
 // ColumnTypes mocks base method.
-func (m *MockBaseMigrator) ColumnTypes(arg0 any) ([]gorm.ColumnType, error) {
+func (m *MockBaseMigrator) ColumnTypes(dst any) ([]gorm.ColumnType, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ColumnTypes", arg0)
+	ret := m.ctrl.Call(m, "ColumnTypes", dst)
 	ret0, _ := ret[0].([]gorm.ColumnType)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ColumnTypes indicates an expected call of ColumnTypes.
-func (mr *MockBaseMigratorMockRecorder) ColumnTypes(arg0 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) ColumnTypes(dst any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ColumnTypes", reflect.TypeOf((*MockBaseMigrator)(nil).ColumnTypes), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ColumnTypes", reflect.TypeOf((*MockBaseMigrator)(nil).ColumnTypes), dst)
 }
 
 // CreateConstraint mocks base method.
-func (m *MockBaseMigrator) CreateConstraint(arg0 any, arg1 string) error {
+func (m *MockBaseMigrator) CreateConstraint(dst any, name string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateConstraint", arg0, arg1)
+	ret := m.ctrl.Call(m, "CreateConstraint", dst, name)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateConstraint indicates an expected call of CreateConstraint.
-func (mr *MockBaseMigratorMockRecorder) CreateConstraint(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) CreateConstraint(dst, name any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateConstraint", reflect.TypeOf((*MockBaseMigrator)(nil).CreateConstraint), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateConstraint", reflect.TypeOf((*MockBaseMigrator)(nil).CreateConstraint), dst, name)
 }
 
 // CreateIndex mocks base method.
-func (m *MockBaseMigrator) CreateIndex(arg0 any, arg1 string) error {
+func (m *MockBaseMigrator) CreateIndex(dst any, name string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateIndex", arg0, arg1)
+	ret := m.ctrl.Call(m, "CreateIndex", dst, name)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateIndex indicates an expected call of CreateIndex.
-func (mr *MockBaseMigratorMockRecorder) CreateIndex(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) CreateIndex(dst, name any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateIndex", reflect.TypeOf((*MockBaseMigrator)(nil).CreateIndex), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateIndex", reflect.TypeOf((*MockBaseMigrator)(nil).CreateIndex), dst, name)
 }
 
 // CreateTable mocks base method.
-func (m *MockBaseMigrator) CreateTable(arg0 ...any) error {
+func (m *MockBaseMigrator) CreateTable(dst ...any) error {
 	m.ctrl.T.Helper()
 	varargs := []any{}
-	for _, a := range arg0 {
+	for _, a := range dst {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "CreateTable", varargs...)
@@ -143,23 +144,23 @@ func (m *MockBaseMigrator) CreateTable(arg0 ...any) error {
 }
 
 // CreateTable indicates an expected call of CreateTable.
-func (mr *MockBaseMigratorMockRecorder) CreateTable(arg0 ...any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) CreateTable(dst ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTable", reflect.TypeOf((*MockBaseMigrator)(nil).CreateTable), arg0...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTable", reflect.TypeOf((*MockBaseMigrator)(nil).CreateTable), dst...)
 }
 
 // CreateView mocks base method.
-func (m *MockBaseMigrator) CreateView(arg0 string, arg1 gorm.ViewOption) error {
+func (m *MockBaseMigrator) CreateView(name string, option gorm.ViewOption) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateView", arg0, arg1)
+	ret := m.ctrl.Call(m, "CreateView", name, option)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateView indicates an expected call of CreateView.
-func (mr *MockBaseMigratorMockRecorder) CreateView(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) CreateView(name, option any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateView", reflect.TypeOf((*MockBaseMigrator)(nil).CreateView), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateView", reflect.TypeOf((*MockBaseMigrator)(nil).CreateView), name, option)
 }
 
 // CurrentDatabase mocks base method.
@@ -177,66 +178,66 @@ func (mr *MockBaseMigratorMockRecorder) CurrentDatabase() *gomock.Call {
 }
 
 // CurrentTable mocks base method.
-func (m *MockBaseMigrator) CurrentTable(arg0 *gorm.Statement) any {
+func (m *MockBaseMigrator) CurrentTable(stmt *gorm.Statement) any {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CurrentTable", arg0)
+	ret := m.ctrl.Call(m, "CurrentTable", stmt)
 	ret0, _ := ret[0].(any)
 	return ret0
 }
 
 // CurrentTable indicates an expected call of CurrentTable.
-func (mr *MockBaseMigratorMockRecorder) CurrentTable(arg0 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) CurrentTable(stmt any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CurrentTable", reflect.TypeOf((*MockBaseMigrator)(nil).CurrentTable), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CurrentTable", reflect.TypeOf((*MockBaseMigrator)(nil).CurrentTable), stmt)
 }
 
 // DropColumn mocks base method.
-func (m *MockBaseMigrator) DropColumn(arg0 any, arg1 string) error {
+func (m *MockBaseMigrator) DropColumn(dst any, field string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DropColumn", arg0, arg1)
+	ret := m.ctrl.Call(m, "DropColumn", dst, field)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DropColumn indicates an expected call of DropColumn.
-func (mr *MockBaseMigratorMockRecorder) DropColumn(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) DropColumn(dst, field any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropColumn", reflect.TypeOf((*MockBaseMigrator)(nil).DropColumn), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropColumn", reflect.TypeOf((*MockBaseMigrator)(nil).DropColumn), dst, field)
 }
 
 // DropConstraint mocks base method.
-func (m *MockBaseMigrator) DropConstraint(arg0 any, arg1 string) error {
+func (m *MockBaseMigrator) DropConstraint(dst any, name string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DropConstraint", arg0, arg1)
+	ret := m.ctrl.Call(m, "DropConstraint", dst, name)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DropConstraint indicates an expected call of DropConstraint.
-func (mr *MockBaseMigratorMockRecorder) DropConstraint(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) DropConstraint(dst, name any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropConstraint", reflect.TypeOf((*MockBaseMigrator)(nil).DropConstraint), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropConstraint", reflect.TypeOf((*MockBaseMigrator)(nil).DropConstraint), dst, name)
 }
 
 // DropIndex mocks base method.
-func (m *MockBaseMigrator) DropIndex(arg0 any, arg1 string) error {
+func (m *MockBaseMigrator) DropIndex(dst any, name string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DropIndex", arg0, arg1)
+	ret := m.ctrl.Call(m, "DropIndex", dst, name)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DropIndex indicates an expected call of DropIndex.
-func (mr *MockBaseMigratorMockRecorder) DropIndex(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) DropIndex(dst, name any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropIndex", reflect.TypeOf((*MockBaseMigrator)(nil).DropIndex), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropIndex", reflect.TypeOf((*MockBaseMigrator)(nil).DropIndex), dst, name)
 }
 
 // DropTable mocks base method.
-func (m *MockBaseMigrator) DropTable(arg0 ...any) error {
+func (m *MockBaseMigrator) DropTable(dst ...any) error {
 	m.ctrl.T.Helper()
 	varargs := []any{}
-	for _, a := range arg0 {
+	for _, a := range dst {
 		varargs = append(varargs, a)
 	}
 	ret := m.ctrl.Call(m, "DropTable", varargs...)
@@ -245,23 +246,23 @@ func (m *MockBaseMigrator) DropTable(arg0 ...any) error {
 }
 
 // DropTable indicates an expected call of DropTable.
-func (mr *MockBaseMigratorMockRecorder) DropTable(arg0 ...any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) DropTable(dst ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropTable", reflect.TypeOf((*MockBaseMigrator)(nil).DropTable), arg0...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropTable", reflect.TypeOf((*MockBaseMigrator)(nil).DropTable), dst...)
 }
 
 // DropView mocks base method.
-func (m *MockBaseMigrator) DropView(arg0 string) error {
+func (m *MockBaseMigrator) DropView(name string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DropView", arg0)
+	ret := m.ctrl.Call(m, "DropView", name)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DropView indicates an expected call of DropView.
-func (mr *MockBaseMigratorMockRecorder) DropView(arg0 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) DropView(name any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropView", reflect.TypeOf((*MockBaseMigrator)(nil).DropView), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DropView", reflect.TypeOf((*MockBaseMigrator)(nil).DropView), name)
 }
 
 // FullDataTypeOf mocks base method.
@@ -279,18 +280,18 @@ func (mr *MockBaseMigratorMockRecorder) FullDataTypeOf(arg0 any) *gomock.Call {
 }
 
 // GetIndexes mocks base method.
-func (m *MockBaseMigrator) GetIndexes(arg0 any) ([]gorm.Index, error) {
+func (m *MockBaseMigrator) GetIndexes(dst any) ([]gorm.Index, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetIndexes", arg0)
+	ret := m.ctrl.Call(m, "GetIndexes", dst)
 	ret0, _ := ret[0].([]gorm.Index)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetIndexes indicates an expected call of GetIndexes.
-func (mr *MockBaseMigratorMockRecorder) GetIndexes(arg0 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) GetIndexes(dst any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIndexes", reflect.TypeOf((*MockBaseMigrator)(nil).GetIndexes), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetIndexes", reflect.TypeOf((*MockBaseMigrator)(nil).GetIndexes), dst)
 }
 
 // GetTables mocks base method.
@@ -309,170 +310,170 @@ func (mr *MockBaseMigratorMockRecorder) GetTables() *gomock.Call {
 }
 
 // GetTypeAliases mocks base method.
-func (m *MockBaseMigrator) GetTypeAliases(arg0 string) []string {
+func (m *MockBaseMigrator) GetTypeAliases(databaseTypeName string) []string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTypeAliases", arg0)
+	ret := m.ctrl.Call(m, "GetTypeAliases", databaseTypeName)
 	ret0, _ := ret[0].([]string)
 	return ret0
 }
 
 // GetTypeAliases indicates an expected call of GetTypeAliases.
-func (mr *MockBaseMigratorMockRecorder) GetTypeAliases(arg0 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) GetTypeAliases(databaseTypeName any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTypeAliases", reflect.TypeOf((*MockBaseMigrator)(nil).GetTypeAliases), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTypeAliases", reflect.TypeOf((*MockBaseMigrator)(nil).GetTypeAliases), databaseTypeName)
 }
 
 // HasColumn mocks base method.
-func (m *MockBaseMigrator) HasColumn(arg0 any, arg1 string) bool {
+func (m *MockBaseMigrator) HasColumn(dst any, field string) bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasColumn", arg0, arg1)
+	ret := m.ctrl.Call(m, "HasColumn", dst, field)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
 // HasColumn indicates an expected call of HasColumn.
-func (mr *MockBaseMigratorMockRecorder) HasColumn(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) HasColumn(dst, field any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasColumn", reflect.TypeOf((*MockBaseMigrator)(nil).HasColumn), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasColumn", reflect.TypeOf((*MockBaseMigrator)(nil).HasColumn), dst, field)
 }
 
 // HasConstraint mocks base method.
-func (m *MockBaseMigrator) HasConstraint(arg0 any, arg1 string) bool {
+func (m *MockBaseMigrator) HasConstraint(dst any, name string) bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasConstraint", arg0, arg1)
+	ret := m.ctrl.Call(m, "HasConstraint", dst, name)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
 // HasConstraint indicates an expected call of HasConstraint.
-func (mr *MockBaseMigratorMockRecorder) HasConstraint(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) HasConstraint(dst, name any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasConstraint", reflect.TypeOf((*MockBaseMigrator)(nil).HasConstraint), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasConstraint", reflect.TypeOf((*MockBaseMigrator)(nil).HasConstraint), dst, name)
 }
 
 // HasIndex mocks base method.
-func (m *MockBaseMigrator) HasIndex(arg0 any, arg1 string) bool {
+func (m *MockBaseMigrator) HasIndex(dst any, name string) bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasIndex", arg0, arg1)
+	ret := m.ctrl.Call(m, "HasIndex", dst, name)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
 // HasIndex indicates an expected call of HasIndex.
-func (mr *MockBaseMigratorMockRecorder) HasIndex(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) HasIndex(dst, name any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasIndex", reflect.TypeOf((*MockBaseMigrator)(nil).HasIndex), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasIndex", reflect.TypeOf((*MockBaseMigrator)(nil).HasIndex), dst, name)
 }
 
 // HasTable mocks base method.
-func (m *MockBaseMigrator) HasTable(arg0 any) bool {
+func (m *MockBaseMigrator) HasTable(dst any) bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "HasTable", arg0)
+	ret := m.ctrl.Call(m, "HasTable", dst)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
 // HasTable indicates an expected call of HasTable.
-func (mr *MockBaseMigratorMockRecorder) HasTable(arg0 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) HasTable(dst any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasTable", reflect.TypeOf((*MockBaseMigrator)(nil).HasTable), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasTable", reflect.TypeOf((*MockBaseMigrator)(nil).HasTable), dst)
 }
 
 // MigrateColumn mocks base method.
-func (m *MockBaseMigrator) MigrateColumn(arg0 any, arg1 *schema.Field, arg2 gorm.ColumnType) error {
+func (m *MockBaseMigrator) MigrateColumn(dst any, field *schema.Field, columnType gorm.ColumnType) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MigrateColumn", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "MigrateColumn", dst, field, columnType)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // MigrateColumn indicates an expected call of MigrateColumn.
-func (mr *MockBaseMigratorMockRecorder) MigrateColumn(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) MigrateColumn(dst, field, columnType any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MigrateColumn", reflect.TypeOf((*MockBaseMigrator)(nil).MigrateColumn), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MigrateColumn", reflect.TypeOf((*MockBaseMigrator)(nil).MigrateColumn), dst, field, columnType)
 }
 
 // MigrateColumnUnique mocks base method.
-func (m *MockBaseMigrator) MigrateColumnUnique(arg0 any, arg1 *schema.Field, arg2 gorm.ColumnType) error {
+func (m *MockBaseMigrator) MigrateColumnUnique(dst any, field *schema.Field, columnType gorm.ColumnType) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "MigrateColumnUnique", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "MigrateColumnUnique", dst, field, columnType)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // MigrateColumnUnique indicates an expected call of MigrateColumnUnique.
-func (mr *MockBaseMigratorMockRecorder) MigrateColumnUnique(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) MigrateColumnUnique(dst, field, columnType any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MigrateColumnUnique", reflect.TypeOf((*MockBaseMigrator)(nil).MigrateColumnUnique), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MigrateColumnUnique", reflect.TypeOf((*MockBaseMigrator)(nil).MigrateColumnUnique), dst, field, columnType)
 }
 
 // RenameColumn mocks base method.
-func (m *MockBaseMigrator) RenameColumn(arg0 any, arg1, arg2 string) error {
+func (m *MockBaseMigrator) RenameColumn(dst any, oldName, field string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RenameColumn", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "RenameColumn", dst, oldName, field)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RenameColumn indicates an expected call of RenameColumn.
-func (mr *MockBaseMigratorMockRecorder) RenameColumn(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) RenameColumn(dst, oldName, field any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameColumn", reflect.TypeOf((*MockBaseMigrator)(nil).RenameColumn), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameColumn", reflect.TypeOf((*MockBaseMigrator)(nil).RenameColumn), dst, oldName, field)
 }
 
 // RenameIndex mocks base method.
-func (m *MockBaseMigrator) RenameIndex(arg0 any, arg1, arg2 string) error {
+func (m *MockBaseMigrator) RenameIndex(dst any, oldName, newName string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RenameIndex", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "RenameIndex", dst, oldName, newName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RenameIndex indicates an expected call of RenameIndex.
-func (mr *MockBaseMigratorMockRecorder) RenameIndex(arg0, arg1, arg2 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) RenameIndex(dst, oldName, newName any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameIndex", reflect.TypeOf((*MockBaseMigrator)(nil).RenameIndex), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameIndex", reflect.TypeOf((*MockBaseMigrator)(nil).RenameIndex), dst, oldName, newName)
 }
 
 // RenameTable mocks base method.
-func (m *MockBaseMigrator) RenameTable(arg0, arg1 any) error {
+func (m *MockBaseMigrator) RenameTable(oldName, newName any) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RenameTable", arg0, arg1)
+	ret := m.ctrl.Call(m, "RenameTable", oldName, newName)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RenameTable indicates an expected call of RenameTable.
-func (mr *MockBaseMigratorMockRecorder) RenameTable(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) RenameTable(oldName, newName any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameTable", reflect.TypeOf((*MockBaseMigrator)(nil).RenameTable), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenameTable", reflect.TypeOf((*MockBaseMigrator)(nil).RenameTable), oldName, newName)
 }
 
 // RunWithValue mocks base method.
-func (m *MockBaseMigrator) RunWithValue(arg0 any, arg1 func(*gorm.Statement) error) error {
+func (m *MockBaseMigrator) RunWithValue(value any, fc func(*gorm.Statement) error) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RunWithValue", arg0, arg1)
+	ret := m.ctrl.Call(m, "RunWithValue", value, fc)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RunWithValue indicates an expected call of RunWithValue.
-func (mr *MockBaseMigratorMockRecorder) RunWithValue(arg0, arg1 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) RunWithValue(value, fc any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunWithValue", reflect.TypeOf((*MockBaseMigrator)(nil).RunWithValue), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunWithValue", reflect.TypeOf((*MockBaseMigrator)(nil).RunWithValue), value, fc)
 }
 
 // TableType mocks base method.
-func (m *MockBaseMigrator) TableType(arg0 any) (gorm.TableType, error) {
+func (m *MockBaseMigrator) TableType(dst any) (gorm.TableType, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TableType", arg0)
+	ret := m.ctrl.Call(m, "TableType", dst)
 	ret0, _ := ret[0].(gorm.TableType)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // TableType indicates an expected call of TableType.
-func (mr *MockBaseMigratorMockRecorder) TableType(arg0 any) *gomock.Call {
+func (mr *MockBaseMigratorMockRecorder) TableType(dst any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TableType", reflect.TypeOf((*MockBaseMigrator)(nil).TableType), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TableType", reflect.TypeOf((*MockBaseMigrator)(nil).TableType), dst)
 }

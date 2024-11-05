@@ -20,6 +20,7 @@ import (
 type MockBuilder struct {
 	ctrl     *gomock.Controller
 	recorder *MockBuilderMockRecorder
+	isgomock struct{}
 }
 
 // MockBuilderMockRecorder is the mock recorder for MockBuilder.
@@ -85,15 +86,15 @@ func (mr *MockBuilderMockRecorder) WriteByte(arg0 any) *gomock.Call {
 }
 
 // WriteQuoted mocks base method.
-func (m *MockBuilder) WriteQuoted(arg0 any) {
+func (m *MockBuilder) WriteQuoted(field any) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "WriteQuoted", arg0)
+	m.ctrl.Call(m, "WriteQuoted", field)
 }
 
 // WriteQuoted indicates an expected call of WriteQuoted.
-func (mr *MockBuilderMockRecorder) WriteQuoted(arg0 any) *gomock.Call {
+func (mr *MockBuilderMockRecorder) WriteQuoted(field any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteQuoted", reflect.TypeOf((*MockBuilder)(nil).WriteQuoted), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteQuoted", reflect.TypeOf((*MockBuilder)(nil).WriteQuoted), field)
 }
 
 // WriteString mocks base method.
