@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.0 - 2024-10-09
+
+### 🐭 Required Go version
+
+Required Go version is now 1.22.0 or later.
+
+### ⬆️ Upgrading dependencies
+
+- `github.com/aws/aws-sdk-go-v2/service/dynamodb` 1.36.1 -> 1.36.3
+- `go.uber.org/mock` 0.4.0 -> 0.5.0
+
 ## 0.9.1 - 2024-10-09
 
 ⬆️ Upgrading dependencies
