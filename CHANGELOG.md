@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.10.0 - 2024-10-09
+## 0.10.0 - 2024-11-05
 
 ### 🐭 Required Go version
 
