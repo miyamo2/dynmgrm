@@ -42,9 +42,12 @@ jobs:
           cache: true
           cache-dependency-path: go.sum
 
-      - name: Setup mockgen
+      - name: Setup toolchains
+        working-directory: ./tools
         run: |
-          go install go.uber.org/mock/mockgen@latest
+          go mod tidy
+          go install github.com/golang/mock/mockgen
+          go install honnef.co/go/tools/cmd/staticcheck
 
       - name: Go Generate
         run: |
@@ -56,10 +59,6 @@ jobs:
         uses: reviewdog/action-setup@v1
         with:
           reviewdog_version: latest
-
-      - name: Setup staticcheck
-        run: |
-          go install honnef.co/go/tools/cmd/staticcheck@latest
 
       - name: staticcheck with reviewdog
         env:

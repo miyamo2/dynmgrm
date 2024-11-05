@@ -33,9 +33,11 @@ jobs:
           cache: true
           cache-dependency-path: go.sum
 
-      - name: Setup mockgen
+      - name: Setup toolchains
+        working-directory: ./tools
         run: |
-          go install go.uber.org/mock/mockgen@latest
+          go mod tidy
+          go install github.com/golang/mock/mockgen
 
       - name: Go Generate
         run: |
