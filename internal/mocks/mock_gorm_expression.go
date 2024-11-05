@@ -20,6 +20,7 @@ import (
 type MockExpression struct {
 	ctrl     *gomock.Controller
 	recorder *MockExpressionMockRecorder
+	isgomock struct{}
 }
 
 // MockExpressionMockRecorder is the mock recorder for MockExpression.
@@ -40,13 +41,13 @@ func (m *MockExpression) EXPECT() *MockExpressionMockRecorder {
 }
 
 // Build mocks base method.
-func (m *MockExpression) Build(arg0 clause.Builder) {
+func (m *MockExpression) Build(builder clause.Builder) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "Build", arg0)
+	m.ctrl.Call(m, "Build", builder)
 }
 
 // Build indicates an expected call of Build.
-func (mr *MockExpressionMockRecorder) Build(arg0 any) *gomock.Call {
+func (mr *MockExpressionMockRecorder) Build(builder any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockExpression)(nil).Build), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Build", reflect.TypeOf((*MockExpression)(nil).Build), builder)
 }
