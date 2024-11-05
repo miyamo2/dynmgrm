@@ -1,6 +1,6 @@
 module github.com/miyamo2/dynmgrm
 
-go 1.21
+go 1.22
 
 require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.36.2
