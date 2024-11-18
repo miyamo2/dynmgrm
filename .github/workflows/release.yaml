@@ -51,7 +51,7 @@ jobs:
           go test $TARGET -v -coverpkg=$TARGET -coverprofile=coverage.out
 
       - name: Upload unit test coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.out
@@ -71,7 +71,7 @@ jobs:
           go test -v -coverpkg=${{ format('github.com/{0}', github.repository) }} -coverprofile=coverage.out
 
       - name: Upload integration test coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./integrationtest/coverage.out
