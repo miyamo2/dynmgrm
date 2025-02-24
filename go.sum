@@ -22,8 +22,8 @@ github.com/btnguyen2k/consu/g18 v0.1.0 h1:IoS5w5QlOfkcrNOHJyICD6PgqLh+J5fIDqy3vR
 github.com/btnguyen2k/consu/g18 v0.1.0/go.mod h1:gTPcr87XdCLDISusRQyDey22/ZOw6bLh6EChxTLx6/c=
 github.com/btnguyen2k/consu/reddo v0.1.9 h1:NZyEzRcDXzksNMnvZVZyJmGN6ZQQmHg4hIPCPbfsCBE=
 github.com/btnguyen2k/consu/reddo v0.1.9/go.mod h1:pdY5oIVX3noZIaZu3nvoKZ59+seXL/taXNGWh9xJDbg=
-github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
-github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
+github.com/google/go-cmp v0.7.0/go.mod h1:pXiqmnSA92OHEEa9HXL2W4E7lf9JzCmGVUdgjX3N/iU=
 github.com/iancoleman/strcase v0.3.0 h1:nTXanmYxhfFAMjZL34Ov6gkzEsSJZ5DbhxWjvSASxEI=
 github.com/iancoleman/strcase v0.3.0/go.mod h1:iwCmte+B7n89clKwxIoIXy/HfoL7AsD47ZCWhYzw7ho=
 github.com/jinzhu/inflection v1.0.0 h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD/E=
