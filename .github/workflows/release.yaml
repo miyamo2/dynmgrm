@@ -22,12 +22,12 @@ jobs:
           - 8000:8000
 
     steps:
-      - uses: Kesin11/actions-timeline@v2
+      - uses: Kesin11/actions-timeline@427ee2cf860166e404d0d69b4f2b24012bb7af4f # v2.2.3
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34 # v5.3.0
         with:
           go-version: ">=1.22.0"
           cache: true
@@ -51,7 +51,7 @@ jobs:
           go test $TARGET -v -coverpkg=$TARGET -coverprofile=coverage.out
 
       - name: Upload unit test coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.out
@@ -71,7 +71,7 @@ jobs:
           go test -v -coverpkg=${{ format('github.com/{0}', github.repository) }} -coverprofile=coverage.out
 
       - name: Upload integration test coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./integrationtest/coverage.out
@@ -96,7 +96,7 @@ jobs:
           echo "**Full Changelog**: https://github.com/miyamo2/dynmgrm/compare/${PRETAG}...${CURRENTTAG}" >> diff-changelog.txt
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@c95fe1489396fe8a9eb87c0abf8aa5b2ef267fda # v2.2.1
         with:
           tag_name: ${{ steps.versioning.outputs.version }}
           generate_release_notes: false
