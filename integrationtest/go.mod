@@ -6,7 +6,7 @@ replace github.com/miyamo2/dynmgrm => ../
 
 require (
 	github.com/aws/aws-sdk-go v1.55.6
-	github.com/google/go-cmp v0.6.0
+	github.com/google/go-cmp v0.7.0
 	github.com/joho/godotenv v1.5.1
 	github.com/miyamo2/dynmgrm v0.0.0-00010101000000-000000000000
 	github.com/miyamo2/godynamo v1.4.0
