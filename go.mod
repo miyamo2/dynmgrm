@@ -8,7 +8,7 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/miyamo2/godynamo v1.4.0
 	github.com/miyamo2/sqldav v0.2.1
-	go.uber.org/mock v0.5.0
+	go.uber.org/mock v0.5.1
 	gorm.io/gorm v1.25.12
 )
 
