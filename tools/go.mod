@@ -3,7 +3,7 @@ module github.com/miyamo2/dynmgrm/tools
 go 1.22.1
 
 require (
-	go.uber.org/mock v0.5.0
+	go.uber.org/mock v0.5.1
 	honnef.co/go/tools v0.5.1
 )
 
