@@ -1,6 +1,7 @@
 module github.com/miyamo2/dynmgrm
 
 go 1.22
+toolchain go1.24.1
 
 require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.40.1
@@ -8,7 +9,7 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/miyamo2/godynamo v1.4.0
 	github.com/miyamo2/sqldav v0.2.1
-	go.uber.org/mock v0.5.0
+	go.uber.org/mock v0.5.2
 	gorm.io/gorm v1.25.12
 )
 
